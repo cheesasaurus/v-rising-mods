@@ -1,5 +1,4 @@
 ﻿using BepInEx;
-using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using CastleHeartPolice.Config;
 using CastleHeartPolice.Services;
@@ -16,12 +15,10 @@ namespace CastleHeartPolice;
 public class Plugin : BasePlugin
 {
     Harmony _harmony;
-    public static ManualLogSource Logger;
 
     public override void Load()
     {
         // Plugin startup logic
-        Logger = Log;
         LogUtil.Init(Log);
         CastleHeartPoliceConfig.Init(Config);
         var territoryScoresConfig = TerritoryScoresConfig.Init("territoryScores.json");

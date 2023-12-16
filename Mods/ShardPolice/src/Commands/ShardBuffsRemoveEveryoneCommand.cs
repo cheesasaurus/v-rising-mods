@@ -2,6 +2,7 @@ using Bloodstone.API;
 using ProjectM;
 using ShardPolice.Utils;
 using VampireCommandFramework;
+using VRisingMods.Core.Utilities;
 
 namespace ShardPolice.Commands;
 
@@ -17,7 +18,7 @@ public class ShardBuffsRemoveEveryoneCommand {
             }
             
         }
-        Plugin.Logger.LogInfo($"Shard buffs were removed from all players by {ctx.User.CharacterName} (steam#{ctx.User.PlatformId}).");
+        LogUtil.LogInfo($"Shard buffs were removed from all players by {ctx.User.CharacterName} (steam#{ctx.User.PlatformId}).");
         ctx.Reply("Removed shard buffs from all players.");
     }
 

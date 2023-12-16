@@ -9,7 +9,12 @@ public static class LogUtil {
         Logger = logger;
     }
 
-    public static void LogMessage(string str) {
-        Logger.LogMessage(str);
+    public static void LogMessage(object data) {
+        Logger.LogMessage(data);
     }
+
+    public static void LogInfo(object data) {
+        Logger.LogInfo(data);
+    }
+    
 }

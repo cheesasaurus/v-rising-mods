@@ -2,6 +2,7 @@ using Bloodstone.API;
 using ProjectM;
 using ShardPolice.Utils;
 using VampireCommandFramework;
+using VRisingMods.Core.Utilities;
 
 namespace ShardPolice.Commands;
 
@@ -30,7 +31,7 @@ public class ShardBuffsRemoveCommand {
         }
 
         ServerChatUtils.SendSystemMessageToClient(VWorld.Server.EntityManager, targetUser, $"Your shard buffs were removed by an admin ({ctx.User.CharacterName})");
-        Plugin.Logger.LogInfo($"Shard buffs were removed from player {properlyCasedName} (steam#{targetUser.PlatformId}) by admin {ctx.User.CharacterName} (steam#{ctx.User.PlatformId}).");
+        LogUtil.LogInfo($"Shard buffs were removed from player {properlyCasedName} (steam#{targetUser.PlatformId}) by admin {ctx.User.CharacterName} (steam#{ctx.User.PlatformId}).");
         ctx.Reply($"Removed shard buffs from {properlyCasedName}.");
     }
 

@@ -6,6 +6,7 @@ using Unity.Collections;
 using Unity.Entities;
 using System.Collections.Generic;
 using ProjectM.Network;
+using VRisingMods.Core.Utilities;
 
 namespace ShardPolice.Hooks;
 
@@ -26,7 +27,7 @@ public static class ShardBuffSpawnedHook
         foreach (var psb in buffTracker.PlayerShardBuffs()) {
             var wasABuffRemoved = ShardBuffUtil.TryRemoveShardBuffsFromPlayerExceptOne(psb.Character, psb.LatestShardBuffGuid);
             if (wasABuffRemoved) {
-                Plugin.Logger.LogInfo($"Limited shard buffs for player {psb.CharacterName} (steam#{psb.User.PlatformId}). Only the {ShardBuffUtil.ShardName(psb.LatestShardBuffGuid)} buff was kept.");
+                LogUtil.LogInfo($"Limited shard buffs for player {psb.CharacterName} (steam#{psb.User.PlatformId}). Only the {ShardBuffUtil.ShardName(psb.LatestShardBuffGuid)} buff was kept.");
             }
         }
     }
