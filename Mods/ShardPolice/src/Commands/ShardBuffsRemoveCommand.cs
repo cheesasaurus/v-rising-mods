@@ -18,12 +18,12 @@ public class ShardBuffsRemoveCommand {
             return;
         }
         
-        if (!UserUtil.TryFindUserByName(playerName, out var nullableUser)) {
+        if (!UserUtil.TryFindUserByName(playerName, out var user)) {
             ctx.Reply($"No player found named \"{playerName}\"");
             return;
         }
 
-        var targetUser = nullableUser.Value;
+        var targetUser = user.User;
         var properlyCasedName = targetUser.CharacterName;
         var wasABuffRemoved = ShardBuffUtil.TryRemoveShardBuffsFromPlayer(targetUser.LocalCharacter._Entity);
         if (!wasABuffRemoved) {

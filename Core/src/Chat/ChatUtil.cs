@@ -14,14 +14,10 @@ public static class ChatUtil {
         if (!foundSender) {
             return;
         }
-        
-        // todo: better way to get user+charactrer combo
-        var character = user.Value.LocalCharacter;
-        var playerCharacter = VWorld.Server.EntityManager.GetComponentData<PlayerCharacter>(character._Entity);
 
         var fromCharacter = new FromCharacter() {
-			User = playerCharacter.UserEntity,
-			Character = character._Entity,
+			User = user.Entity,
+			Character = user.User.LocalCharacter._Entity,
 		};
 
         var messageEvent = new ChatMessageEvent() {

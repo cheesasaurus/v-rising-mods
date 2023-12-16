@@ -13,9 +13,9 @@ public class ShardBuffsRemoveEveryoneCommand {
     [Command("shard-buffs-remove-everyone", shortHand: "sbre", description: "remove shard buffs from everyone", adminOnly: true)]
     public void Execute(ChatCommandContext ctx) {
         foreach (var user in UserUtil.FindAllUsers()) {
-            var wasABuffRemoved = ShardBuffUtil.TryRemoveShardBuffsFromPlayer(user.LocalCharacter._Entity);
+            var wasABuffRemoved = ShardBuffUtil.TryRemoveShardBuffsFromPlayer(user.User.LocalCharacter._Entity);
             if (wasABuffRemoved) {
-                ServerChatUtils.SendSystemMessageToClient(VWorld.Server.EntityManager, user, $"Your shard buffs were removed by an admin ({ctx.User.CharacterName})");
+                ServerChatUtils.SendSystemMessageToClient(VWorld.Server.EntityManager, user.User, $"Your shard buffs were removed by an admin ({ctx.User.CharacterName})");
             }
             
         }

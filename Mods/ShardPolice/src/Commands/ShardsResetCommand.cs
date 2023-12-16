@@ -14,7 +14,7 @@ public class ShardsResetCommand {
     [Command("shards-reset", description: "reset all shards", adminOnly: true)]
     public void Execute(ChatCommandContext ctx) {
         foreach (var user in UserUtil.FindAllUsers()) {
-            ShardBuffUtil.TryRemoveShardBuffsFromPlayer(user.LocalCharacter._Entity);
+            ShardBuffUtil.TryRemoveShardBuffsFromPlayer(user.User.LocalCharacter._Entity);
         }
         ShardItemUtil.RemovePlacedShardsAndDropNearCharacterToDespawn(ctx.User.LocalCharacter._Entity);
         ShardItemUtil.PrepareShardItemsToDespawn();
