@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
 using EventScheduler.Config;
 using EventScheduler.Models;
+using EventScheduler.Repositories;
 using VRisingMods.Core.Chat;
 using VRisingMods.Core.Player;
 using VRisingMods.Core.Utilities;
@@ -10,10 +10,11 @@ namespace EventScheduler;
 
 
 public class EventRunner {
-    private Dictionary<string, DateTime> LastRuns = new(); // todo: this will need to be persisted
+    private EventHistoryRepository EventHistory;
     private EventsConfig EventsConfig;
-    public EventRunner(EventsConfig eventsConfig) {
+    public EventRunner(EventsConfig eventsConfig, EventHistoryRepository eventHistory) {
         EventsConfig = eventsConfig;
+        EventHistory = eventHistory;
     }
 
     public void Tick() {
@@ -21,7 +22,7 @@ public class EventRunner {
             var nextRun = NextRun(scheduledEvent);
             if (nextRun <= DateTime.Now) {
                 LogUtil.LogMessage($"{DateTime.Now}: Running the event {scheduledEvent.EventId}");
-                LastRuns[scheduledEvent.EventId] = nextRun;
+                EventHistory.SetLastRun(scheduledEvent.EventId, nextRun);
                 RunChatCommands(scheduledEvent);
             }
         }
@@ -41,7 +42,7 @@ public class EventRunner {
     private DateTime NextRun(ScheduledEvent scheduledEvent) {
         var now = DateTime.Now;
         var firstRun = scheduledEvent.Schedule.FirstRun;
-        var ran = LastRuns.TryGetValue(scheduledEvent.EventId, out var lastRun);
+        var ran = EventHistory.TryGetLastRun(scheduledEvent.EventId, out var lastRun);
         if (!ran || firstRun > now) {
             return firstRun;
         }
