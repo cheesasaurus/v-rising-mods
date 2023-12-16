@@ -1,17 +1,28 @@
 monorepo for various V Rising mods
 
-can automatically copy built plugins to your local server, by setting the environment variable `VRisingServerPath`.
+
+## Deploying built mods to local game server
+You can automatically copy built plugins to your local server, by setting the environment variable `VRisingServerPath`.\
 example value: `E:\Games\SteamLibrary\steamapps\common\VRisingDedicatedServer`
 
 
-## setup a new mod
-Preparation (only required once): cd to `templates` and install the mod template. `dotnet new install VRisingMods.ModTemplate`
-cd back to the project root when done.
+## Setting up a new mod
 
-1. cd to `Mods` and then use the template. e.g. `dotnet new vrisingmod2 -n NameOfYourMod --description "Description of your mod" --use-bloodstone --use-vcf`
+There's a powershell script to easily do this.\
+e.g. `./newmod NameOfMyMod`
+
+### If you don't have powershell
+Preparation (only required once):
+1. cd to `templates`
+2. install the mod template. `dotnet new install VRisingMods.ModTemplate`
+3. cd back to the project root when done.
+
+After preparation
+1. cd to `Mods`
+2. use the template. e.g. `dotnet new vrisingmod2 -n NameOfYourMod --description="Description of your mod" --use-bloodstone --use-vcf`
 
 
-## notes
+## Notes
 - a `<ProjectReference>` to a "class library" project requires the library dll to be shipped alongside the main dll. not ideal
 - but an `<Import>` of a "shared" project does what I want
 
