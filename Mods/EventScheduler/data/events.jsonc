@@ -6,7 +6,7 @@
             "firstRun": "2023-12-15 20:00:00"
         },
         "executingAdmin": {
-            // commands have to be executed by a user, so we specify which user
+            // chat commands have to be executed by a user, so we specify which user
             "steamId": 123456
         },
         "chatCommands": [

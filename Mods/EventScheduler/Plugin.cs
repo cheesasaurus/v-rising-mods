@@ -1,12 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using Bloodstone.Hooks;
 using EventScheduler.Config;
 using HarmonyLib;
 using VampireCommandFramework;
-using VRisingMods.Core.Chat;
 using VRisingMods.Core.Utilities;
 
 namespace EventScheduler;
@@ -18,6 +15,7 @@ namespace EventScheduler;
 public class Plugin : BasePlugin
 {
     Harmony _harmony;
+    EventRunner eventRunner;
 
     public override void Load()
     {
@@ -26,6 +24,7 @@ public class Plugin : BasePlugin
         Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
 
         var eventsConfig = EventsConfig.Init(MyPluginInfo.PLUGIN_GUID, "events.jsonc");
+        eventRunner = new EventRunner(eventsConfig);
 
         // Harmony patching
         _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
@@ -37,24 +36,16 @@ public class Plugin : BasePlugin
         GameFrame.OnUpdate += Tick;
     }
 
-    private static int lastSecondLogged = 0;
-
-    private void Tick() {
-        var now = DateTime.Now;
-        var second = now.Second;
-        if (second != lastSecondLogged && second % 5 == 0) {
-            lastSecondLogged = second;
-            // Log.LogMessage($"5 seconds passed. ${now}");
-            // ChatUtil.ForgeMessage("Dingus", ".shard-buffs-remove-everyone", ProjectM.Network.ChatMessageType.Global);
-        }
-    }
-
     public override bool Unload()
     {
         GameFrame.OnUpdate -= Tick;
         CommandRegistry.UnregisterAssembly();
         _harmony?.UnpatchSelf();
         return true;
+    }
+
+    private void Tick() {
+        eventRunner.Tick();
     }
 
     // // Uncomment for example commmand or delete
