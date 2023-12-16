@@ -4,7 +4,14 @@ can automatically copy built plugins to your local server, by setting the enviro
 example value: `E:\Games\SteamLibrary\steamapps\common\VRisingDedicatedServer`
 
 
-### notes
+## setup a new mod
+Preparation (only required once): cd to `templates` and install the mod template. `dotnet new install VRisingMods.ModTemplate`
+cd back to the project root when done.
+
+1. cd to `Mods` and then use the template. e.g. `dotnet new vrisingmod2 -n NameOfYourMod --use-vcf --description "Description of your mod"`
+
+
+## notes
 - a `<ProjectReference>` to a "class library" project requires the library dll to be shipped alongside the main dll. not ideal
 - but an `<Import>` of a "shared" project does what I want
 

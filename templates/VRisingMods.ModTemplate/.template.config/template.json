@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "deca",
+  "classifications": [
+    "VRising",
+    "Plugin"
+  ],
+  "generatorVersions": "[1.0.0.0-*)",
+  "identity": "VRisingMods.ModTemplate",
+  "name": "Starter project for V Rising mods",
+  "shortName": "vrisingmod2",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "MOUTHWASH",
+  "preferNameDirectory": true,
+  "preferDefaultName": false,
+  "defaultName": "MyFirstVRisingMod",
+  "postActions": [{
+    "description": "Getting Started with V Rising Modding",
+    "actionId": "AC1156F7-BB77-4DB8-B28F-24EEBCCA1E5C",
+    "manualInstructions": [
+      {
+        "text": "Visit https://wiki.vrisingmods.com/ and join https://vrisingmods.com/discord to chat with other modders."
+      }
+    ]
+  }],
+  "symbols": {
+    "description": {
+      "type": "parameter",
+      "displayName": "Description",
+      "datatype": "string",
+      "isRequired": false,
+      "description": "Description of ",
+      "replaces": "My first plugin",
+      "defaultValue": "Created with VRising.ModTemplate, you should edit this."
+    },
+    "UseBloodstone": {
+      "type": "parameter",
+      "datatype": "bool",
+      "isRequired": false,
+      "description": "To automatically setup and use Bloodstone.",
+      "defaultValue": "false",
+      "displayName": "Use Bloodstone"
+    },
+    "UseVCF": {
+      "type": "parameter",
+      "datatype": "bool",
+      "isRequired": false,
+      "description": "To automatically setup and use VampireCommandFramework.",
+      "defaultValue": "false",
+      "displayName": "Use VCF"
+    }
+  }
+}
