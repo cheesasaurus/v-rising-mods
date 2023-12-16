@@ -1,7 +1,11 @@
-﻿using BepInEx;
+﻿using System;
+using System.Threading.Tasks;
+using BepInEx;
 using BepInEx.Unity.IL2CPP;
+using Bloodstone.Hooks;
 using HarmonyLib;
 using VampireCommandFramework;
+using VRisingMods.Core.Chat;
 using VRisingMods.Core.Utilities;
 
 namespace EventScheduler;
@@ -26,10 +30,25 @@ public class Plugin : BasePlugin
 
         // Register all commands in the assembly with VCF
         CommandRegistry.RegisterAll();
+
+        GameFrame.OnUpdate += Tick;
+    }
+
+    private static int lastSecondLogged = 0;
+
+    private void Tick() {
+        var now = DateTime.Now;
+        var second = now.Second;
+        if (second != lastSecondLogged && second % 5 == 0) {
+            lastSecondLogged = second;
+            // Log.LogMessage($"5 seconds passed. ${now}");
+            // ChatUtil.ForgeMessage("Dingus", ".shard-buffs-remove-everyone", ProjectM.Network.ChatMessageType.Global);
+        }
     }
 
     public override bool Unload()
     {
+        GameFrame.OnUpdate -= Tick;
         CommandRegistry.UnregisterAssembly();
         _harmony?.UnpatchSelf();
         return true;
