@@ -11,17 +11,6 @@
     <RootNamespace>MyMod</RootNamespace>
   </PropertyGroup>
 
-  <Import Project="..\..\ThunderstoreManifest.props"/>
-
-  <Target Name="ThunderstoreDist" AfterTargets="AfterBuild">
-    <WriteLinesToFile Lines="$(ThunderstoreManifestContent)" File="dist/thunderstore/temp/manifest.json" WriteOnlyWhenDifferent="true" Overwrite="true" />
-    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="dist/thunderstore/temp" />
-    <Copy SourceFiles="images/icon.png" DestinationFolder="dist/thunderstore/temp"/>
-    <Copy SourceFiles="README.md" DestinationFolder="dist/thunderstore/temp"/>
-    <ZipDirectory SourceDirectory="dist/thunderstore/temp" DestinationFile="dist/thunderstore/$(AssemblyName).zip" Overwrite="true"></ZipDirectory>
-    <RemoveDir Directories="dist/thunderstore/temp"/>
-  </Target>
-
   <Target Name="ModpackDist" AfterTargets="AfterBuild">
     <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="../../dist/modpack" />
   </Target>
@@ -41,5 +30,6 @@
   </ItemGroup>
 
   <Import Project="..\..\Core\Core.projitems" Label="Shared" />
+  <Import Project="..\..\ThunderstoreDist.props"/>
   
 </Project>

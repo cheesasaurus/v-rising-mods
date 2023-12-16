@@ -15,6 +15,6 @@
     }
   },
   "usageExamples": [
-    "dotnet new vrising mod -n GasMod -vcf -bloodstone"
+    "dotnet new vrisingmod2 -n GasMod -vcf -bloodstone"
   ]
 }

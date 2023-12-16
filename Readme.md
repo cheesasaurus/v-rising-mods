@@ -8,7 +8,7 @@ example value: `E:\Games\SteamLibrary\steamapps\common\VRisingDedicatedServer`
 Preparation (only required once): cd to `templates` and install the mod template. `dotnet new install VRisingMods.ModTemplate`
 cd back to the project root when done.
 
-1. cd to `Mods` and then use the template. e.g. `dotnet new vrisingmod2 -n NameOfYourMod --use-vcf --description "Description of your mod"`
+1. cd to `Mods` and then use the template. e.g. `dotnet new vrisingmod2 -n NameOfYourMod --description "Description of your mod" --use-bloodstone --use-vcf`
 
 
 ## notes
