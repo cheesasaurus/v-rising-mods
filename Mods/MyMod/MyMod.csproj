@@ -5,10 +5,36 @@
     <AssemblyName>MyMod</AssemblyName>
     <Description>My Mod</Description>
     <Version>1.0.0</Version>
+    <WebsiteURL>https://github.com/cheesasaurus/v-rising-mods/tree/master/$(AssemblyName)</WebsiteURL>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RootNamespace>MyMod</RootNamespace>
   </PropertyGroup>
+
+  <Target Name="ThunderstoreDist" AfterTargets="AfterBuild">
+    <PropertyGroup>
+      <ManifestContent>
+        <![CDATA[
+{
+    "name": "$(AssemblyName)",
+    "version_number": "$(Version)",
+    "website_url": "$(WebsiteURL)",
+    "description": "$(Description)",
+    "dependencies": [
+        "BepInEx-BepInExPack_V_Rising-1.668.5",
+        "deca-Bloodstone-0.1.4"
+    ]
+}
+     ]]>
+      </ManifestContent>
+    </PropertyGroup>
+    <WriteLinesToFile Lines="$(ManifestContent)" File="dist/thunderstore/temp/manifest.json" WriteOnlyWhenDifferent="true" Overwrite="true" />
+    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="dist/thunderstore/temp" />
+    <Copy SourceFiles="images/icon.png" DestinationFolder="dist/thunderstore/temp"/>
+    <Copy SourceFiles="README.md" DestinationFolder="dist/thunderstore/temp"/>
+    <ZipDirectory SourceDirectory="dist/thunderstore/temp" DestinationFile="dist/thunderstore/$(AssemblyName).zip" Overwrite="true"></ZipDirectory>
+    <RemoveDir Directories="dist/thunderstore/temp"/>
+  </Target>
 
   <ItemGroup>
     <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.668" IncludeAssets="compile" />
