@@ -41,9 +41,13 @@ public class EventRunner {
     private DateTime NextRun(ScheduledEvent scheduledEvent) {
         var now = DateTime.Now;
         var firstRun = scheduledEvent.Schedule.FirstRun;
-        // keep in mind that the schedule might be edited after already running
         var ran = LastRuns.TryGetValue(scheduledEvent.EventId, out var lastRun);
         if (!ran || firstRun > now) {
+            return firstRun;
+        }
+
+        // keep in mind that the schedule might be edited after already running
+        if (lastRun < firstRun) {
             return firstRun;
         }
 
