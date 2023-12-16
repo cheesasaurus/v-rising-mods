@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		nuget.config = nuget.config
 	EndProjectSection
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SharedProject1", "SharedProject1\SharedProject1.shproj", "{DC2BC0A9-2F5B-4A41-9159-90A5436F5D40}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Core", "Core\Core.shproj", "{449C6A26-FCDC-4326-B23B-66131A5B324F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,7 +30,7 @@ Global
 		SolutionGuid = {BB932ADA-A93C-424A-BA50-0701A23783DC}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		SharedProject1\SharedProject1.projitems*{7367f2d5-6ab6-4786-8eb6-1c3c0cb16c07}*SharedItemsImports = 5
-		SharedProject1\SharedProject1.projitems*{dc2bc0a9-2f5b-4a41-9159-90a5436f5d40}*SharedItemsImports = 13
+		Core\Core.projitems*{449c6a26-fcdc-4326-b23b-66131a5b324f}*SharedItemsImports = 13
+		Core\Core.projitems*{7367f2d5-6ab6-4786-8eb6-1c3c0cb16c07}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

@@ -2,7 +2,7 @@
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using VampireCommandFramework;
-using UtilityLibraries3;
+using Core.StringExtensions;
 
 namespace MyMod;
 

@@ -1,6 +1,7 @@
-namespace UtilityLibraries2;
+#nullable enable
+namespace Core.StringExtensions;
 
-public static class StringLibrary
+public static class Extensions
 {
     public static bool StartsWithUpper(this string? str)
     {
