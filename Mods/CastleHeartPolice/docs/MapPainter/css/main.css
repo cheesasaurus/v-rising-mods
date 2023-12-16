@@ -1,0 +1,63 @@
+body {
+    margin: 0;
+}
+
+main {
+    height: 100vh;
+    width: 100vw;
+}
+
+#map-container {
+    position: relative;
+}
+
+#map-container canvas {
+    position: absolute;
+}
+
+.territory-area {
+    position: absolute;
+    display: block;
+    opacity: 0.3;
+}
+.territory-area:hover {
+    background-color: magenta;
+}
+
+.flex-container {
+    display: flex;
+    overflow: hidden;
+}
+
+#controls-container {
+    border-right: 2px solid black;
+    padding: 5px;
+    min-width: 240px;
+}
+
+#map-scroll-container {
+    overflow: auto;
+}
+
+.download-map-container {
+    text-align: center;
+}
+
+#btn-download-map {
+    margin-top: 20px;
+}
+
+.output-section {
+    margin-top: 50px;
+    text-align: center;
+}
+
+#output-json {
+    width: calc(90%);
+    height: 300px;
+}
+
+#btn-download-json {
+    margin: 5px;
+}
+

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Territory Editor</title>
+        <link rel="icon" type="image/png" href="images/favicon.png">
+        <script src="js/main.js" type="module"></script>
+        <link type="text/css" rel="stylesheet" href="css/main.css"></link>
+    </head>
+    <body>
+        <main class="flex-container">
+            <section id="controls-container">
+                <div>
+                    <input type="checkbox" id="checkbox-show-bounding-rectangles" checked /> Show Bounding Rectangles
+                </div>
+                <div>
+                    <input type="checkbox" id="checkbox-show-territory-ids" checked /> Show Territory IDs
+                </div>
+                <div class="download-map-container">
+                    <button id="btn-download-map">download map</button>
+                </div>
+                <div class="output-section">
+                    territoryScores.json
+                    <textarea id="output-json"></textarea>
+                    <button id="btn-download-json">download json</button>
+                    <button id="btn-import-json">import json</button>
+                </div>
+            </section>
+            <section id="map-scroll-container">
+                <div id="map-container">
+                    <canvas id="canvas" width="100" height="100"></canvas>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>

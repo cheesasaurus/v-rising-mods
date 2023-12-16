@@ -1,0 +1,2112 @@
+{
+  "Min": {
+    "x": 1329,
+    "y": 689
+  },
+  "Max": {
+    "x": 5401,
+    "y": 7011
+  },
+  "Territories": [
+    {
+      "CastleTerritoryId": 100,
+      "BlockCount": 138,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2029,
+          "y": 5569
+        },
+        "Max": {
+          "x": 2221,
+          "y": 5701
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 101,
+      "BlockCount": 123,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 1949,
+          "y": 5519
+        },
+        "Max": {
+          "x": 2081,
+          "y": 5661
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 60,
+      "BlockCount": 101,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2009,
+          "y": 3839
+        },
+        "Max": {
+          "x": 2161,
+          "y": 3951
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 46,
+      "BlockCount": 110,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3429,
+          "y": 3699
+        },
+        "Max": {
+          "x": 3581,
+          "y": 3841
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 91,
+      "BlockCount": 153,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4539,
+          "y": 4809
+        },
+        "Max": {
+          "x": 4751,
+          "y": 4931
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 47,
+      "BlockCount": 90,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3329,
+          "y": 3639
+        },
+        "Max": {
+          "x": 3441,
+          "y": 3771
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 92,
+      "BlockCount": 141,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4539,
+          "y": 4969
+        },
+        "Max": {
+          "x": 4701,
+          "y": 5111
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 48,
+      "BlockCount": 107,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3389,
+          "y": 3519
+        },
+        "Max": {
+          "x": 3531,
+          "y": 3641
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 49,
+      "BlockCount": 91,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3159,
+          "y": 3699
+        },
+        "Max": {
+          "x": 3321,
+          "y": 3791
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 50,
+      "BlockCount": 105,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3119,
+          "y": 3769
+        },
+        "Max": {
+          "x": 3331,
+          "y": 3861
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 36,
+      "BlockCount": 108,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4519,
+          "y": 3309
+        },
+        "Max": {
+          "x": 4671,
+          "y": 3461
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 37,
+      "BlockCount": 114,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4589,
+          "y": 3229
+        },
+        "Max": {
+          "x": 4701,
+          "y": 3361
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 38,
+      "BlockCount": 178,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4679,
+          "y": 3259
+        },
+        "Max": {
+          "x": 4841,
+          "y": 3451
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 123,
+      "BlockCount": 172,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2279,
+          "y": 6459
+        },
+        "Max": {
+          "x": 2451,
+          "y": 6611
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 124,
+      "BlockCount": 180,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2349,
+          "y": 6629
+        },
+        "Max": {
+          "x": 2531,
+          "y": 6771
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 119,
+      "BlockCount": 111,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3429,
+          "y": 6029
+        },
+        "Max": {
+          "x": 3621,
+          "y": 6131
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 120,
+      "BlockCount": 129,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3469,
+          "y": 6119
+        },
+        "Max": {
+          "x": 3651,
+          "y": 6241
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 111,
+      "BlockCount": 223,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2659,
+          "y": 5849
+        },
+        "Max": {
+          "x": 2811,
+          "y": 6051
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 77,
+      "BlockCount": 161,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2599,
+          "y": 4279
+        },
+        "Max": {
+          "x": 2731,
+          "y": 4461
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 107,
+      "BlockCount": 210,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4039,
+          "y": 5369
+        },
+        "Max": {
+          "x": 4221,
+          "y": 5551
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 78,
+      "BlockCount": 170,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2709,
+          "y": 4189
+        },
+        "Max": {
+          "x": 2831,
+          "y": 4381
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 65,
+      "BlockCount": 92,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3829,
+          "y": 3919
+        },
+        "Max": {
+          "x": 3941,
+          "y": 4051
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 66,
+      "BlockCount": 138,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4059,
+          "y": 3909
+        },
+        "Max": {
+          "x": 4201,
+          "y": 4031
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 67,
+      "BlockCount": 131,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3899,
+          "y": 3979
+        },
+        "Max": {
+          "x": 4061,
+          "y": 4121
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 131,
+      "BlockCount": 165,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3109,
+          "y": 6779
+        },
+        "Max": {
+          "x": 3241,
+          "y": 6961
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 132,
+      "BlockCount": 149,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2969,
+          "y": 6729
+        },
+        "Max": {
+          "x": 3091,
+          "y": 6921
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 133,
+      "BlockCount": 183,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2839,
+          "y": 6759
+        },
+        "Max": {
+          "x": 2961,
+          "y": 7001
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 95,
+      "BlockCount": 175,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2869,
+          "y": 5079
+        },
+        "Max": {
+          "x": 3011,
+          "y": 5251
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 128,
+      "BlockCount": 134,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4459,
+          "y": 6359
+        },
+        "Max": {
+          "x": 4601,
+          "y": 6521
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 90,
+      "BlockCount": 168,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4419,
+          "y": 4669
+        },
+        "Max": {
+          "x": 4531,
+          "y": 4941
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 33,
+      "BlockCount": 115,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4199,
+          "y": 3189
+        },
+        "Max": {
+          "x": 4341,
+          "y": 3321
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 34,
+      "BlockCount": 128,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4239,
+          "y": 3369
+        },
+        "Max": {
+          "x": 4391,
+          "y": 3501
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 35,
+      "BlockCount": 86,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4399,
+          "y": 3389
+        },
+        "Max": {
+          "x": 4491,
+          "y": 3501
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 116,
+      "BlockCount": 191,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4569,
+          "y": 5829
+        },
+        "Max": {
+          "x": 4741,
+          "y": 6011
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 117,
+      "BlockCount": 112,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4459,
+          "y": 5789
+        },
+        "Max": {
+          "x": 4591,
+          "y": 5901
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 16,
+      "BlockCount": 101,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3189,
+          "y": 3079
+        },
+        "Max": {
+          "x": 3321,
+          "y": 3201
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 83,
+      "BlockCount": 132,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4559,
+          "y": 4319
+        },
+        "Max": {
+          "x": 4751,
+          "y": 4461
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 84,
+      "BlockCount": 164,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4469,
+          "y": 4189
+        },
+        "Max": {
+          "x": 4651,
+          "y": 4341
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 108,
+      "BlockCount": 104,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2259,
+          "y": 5839
+        },
+        "Max": {
+          "x": 2371,
+          "y": 5971
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 109,
+      "BlockCount": 161,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2479,
+          "y": 5789
+        },
+        "Max": {
+          "x": 2621,
+          "y": 5951
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 110,
+      "BlockCount": 110,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2259,
+          "y": 5979
+        },
+        "Max": {
+          "x": 2421,
+          "y": 6071
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 76,
+      "BlockCount": 232,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2279,
+          "y": 4269
+        },
+        "Max": {
+          "x": 2481,
+          "y": 4461
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 105,
+      "BlockCount": 112,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3509,
+          "y": 5379
+        },
+        "Max": {
+          "x": 3691,
+          "y": 5481
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 106,
+      "BlockCount": 146,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3709,
+          "y": 5359
+        },
+        "Max": {
+          "x": 3971,
+          "y": 5491
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 59,
+      "BlockCount": 153,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4859,
+          "y": 3519
+        },
+        "Max": {
+          "x": 5031,
+          "y": 3661
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 94,
+      "BlockCount": 136,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2599,
+          "y": 5089
+        },
+        "Max": {
+          "x": 2801,
+          "y": 5211
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 127,
+      "BlockCount": 192,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3959,
+          "y": 6499
+        },
+        "Max": {
+          "x": 4131,
+          "y": 6651
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 45,
+      "BlockCount": 194,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2599,
+          "y": 3639
+        },
+        "Max": {
+          "x": 2821,
+          "y": 3801
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 31,
+      "BlockCount": 119,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4019,
+          "y": 3159
+        },
+        "Max": {
+          "x": 4171,
+          "y": 3331
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 32,
+      "BlockCount": 90,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4089,
+          "y": 3369
+        },
+        "Max": {
+          "x": 4231,
+          "y": 3511
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 118,
+      "BlockCount": 199,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3089,
+          "y": 6159
+        },
+        "Max": {
+          "x": 3231,
+          "y": 6361
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 8,
+      "BlockCount": 116,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4379,
+          "y": 2649
+        },
+        "Max": {
+          "x": 4491,
+          "y": 2801
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 9,
+      "BlockCount": 106,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4199,
+          "y": 2599
+        },
+        "Max": {
+          "x": 4301,
+          "y": 2761
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 10,
+      "BlockCount": 103,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4319,
+          "y": 2569
+        },
+        "Max": {
+          "x": 4431,
+          "y": 2751
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 104,
+      "BlockCount": 158,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3269,
+          "y": 5449
+        },
+        "Max": {
+          "x": 3481,
+          "y": 5571
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 62,
+      "BlockCount": 92,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3289,
+          "y": 4029
+        },
+        "Max": {
+          "x": 3411,
+          "y": 4151
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 63,
+      "BlockCount": 138,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3349,
+          "y": 3879
+        },
+        "Max": {
+          "x": 3501,
+          "y": 4051
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 64,
+      "BlockCount": 129,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3119,
+          "y": 3899
+        },
+        "Max": {
+          "x": 3281,
+          "y": 4071
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 56,
+      "BlockCount": 147,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4459,
+          "y": 3489
+        },
+        "Max": {
+          "x": 4601,
+          "y": 3661
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 57,
+      "BlockCount": 104,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4659,
+          "y": 3679
+        },
+        "Max": {
+          "x": 4771,
+          "y": 3841
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 58,
+      "BlockCount": 114,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4669,
+          "y": 3499
+        },
+        "Max": {
+          "x": 4831,
+          "y": 3611
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 42,
+      "BlockCount": 106,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2459,
+          "y": 3589
+        },
+        "Max": {
+          "x": 2601,
+          "y": 3741
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 89,
+      "BlockCount": 167,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3669,
+          "y": 4819
+        },
+        "Max": {
+          "x": 3841,
+          "y": 4971
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 43,
+      "BlockCount": 81,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2289,
+          "y": 3609
+        },
+        "Max": {
+          "x": 2401,
+          "y": 3721
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 44,
+      "BlockCount": 108,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2299,
+          "y": 3739
+        },
+        "Max": {
+          "x": 2461,
+          "y": 3861
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 29,
+      "BlockCount": 94,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3549,
+          "y": 3219
+        },
+        "Max": {
+          "x": 3731,
+          "y": 3321
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 30,
+      "BlockCount": 104,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3579,
+          "y": 3329
+        },
+        "Max": {
+          "x": 3771,
+          "y": 3431
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 114,
+      "BlockCount": 197,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3889,
+          "y": 5819
+        },
+        "Max": {
+          "x": 4131,
+          "y": 5961
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 115,
+      "BlockCount": 147,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3959,
+          "y": 5969
+        },
+        "Max": {
+          "x": 4131,
+          "y": 6131
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 13,
+      "BlockCount": 121,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2639,
+          "y": 2899
+        },
+        "Max": {
+          "x": 2831,
+          "y": 3011
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 81,
+      "BlockCount": 129,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3869,
+          "y": 4189
+        },
+        "Max": {
+          "x": 4011,
+          "y": 4341
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 14,
+      "BlockCount": 101,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2639,
+          "y": 3019
+        },
+        "Max": {
+          "x": 2791,
+          "y": 3111
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 82,
+      "BlockCount": 128,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4019,
+          "y": 4189
+        },
+        "Max": {
+          "x": 4141,
+          "y": 4341
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 15,
+      "BlockCount": 98,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2499,
+          "y": 2919
+        },
+        "Max": {
+          "x": 2631,
+          "y": 3051
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 6,
+      "BlockCount": 136,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3869,
+          "y": 2709
+        },
+        "Max": {
+          "x": 4001,
+          "y": 2881
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 72,
+      "BlockCount": 95,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 5279,
+          "y": 4019
+        },
+        "Max": {
+          "x": 5401,
+          "y": 4151
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 7,
+      "BlockCount": 146,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3989,
+          "y": 2579
+        },
+        "Max": {
+          "x": 4121,
+          "y": 2761
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 73,
+      "BlockCount": 109,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 5099,
+          "y": 3979
+        },
+        "Max": {
+          "x": 5231,
+          "y": 4161
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 74,
+      "BlockCount": 148,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 1749,
+          "y": 4249
+        },
+        "Max": {
+          "x": 1931,
+          "y": 4421
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 139,
+      "BlockCount": 248,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4219,
+          "y": 6739
+        },
+        "Max": {
+          "x": 4381,
+          "y": 6951
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 75,
+      "BlockCount": 185,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 1609,
+          "y": 4279
+        },
+        "Max": {
+          "x": 1761,
+          "y": 4461
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 99,
+      "BlockCount": 166,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4349,
+          "y": 5099
+        },
+        "Max": {
+          "x": 4501,
+          "y": 5281
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 54,
+      "BlockCount": 87,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4109,
+          "y": 3549
+        },
+        "Max": {
+          "x": 4231,
+          "y": 3661
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 55,
+      "BlockCount": 80,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4159,
+          "y": 3759
+        },
+        "Max": {
+          "x": 4291,
+          "y": 3891
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 39,
+      "BlockCount": 97,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2079,
+          "y": 3639
+        },
+        "Max": {
+          "x": 2181,
+          "y": 3791
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 87,
+      "BlockCount": 248,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3309,
+          "y": 4879
+        },
+        "Max": {
+          "x": 3551,
+          "y": 5101
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 40,
+      "BlockCount": 136,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 1949,
+          "y": 3549
+        },
+        "Max": {
+          "x": 2111,
+          "y": 3681
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 88,
+      "BlockCount": 185,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3109,
+          "y": 4749
+        },
+        "Max": {
+          "x": 3331,
+          "y": 4881
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 41,
+      "BlockCount": 97,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 1929,
+          "y": 3679
+        },
+        "Max": {
+          "x": 2031,
+          "y": 3821
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 28,
+      "BlockCount": 93,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3429,
+          "y": 3389
+        },
+        "Max": {
+          "x": 3541,
+          "y": 3541
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 20,
+      "BlockCount": 163,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4579,
+          "y": 3049
+        },
+        "Max": {
+          "x": 4761,
+          "y": 3191
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 21,
+      "BlockCount": 167,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4539,
+          "y": 2909
+        },
+        "Max": {
+          "x": 4741,
+          "y": 3051
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 11,
+      "BlockCount": 181,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2319,
+          "y": 2909
+        },
+        "Max": {
+          "x": 2461,
+          "y": 3121
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 12,
+      "BlockCount": 92,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2419,
+          "y": 3079
+        },
+        "Max": {
+          "x": 2561,
+          "y": 3191
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 71,
+      "BlockCount": 104,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4919,
+          "y": 4079
+        },
+        "Max": {
+          "x": 5071,
+          "y": 4211
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 102,
+      "BlockCount": 142,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2589,
+          "y": 5459
+        },
+        "Max": {
+          "x": 2741,
+          "y": 5601
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 137,
+      "BlockCount": 183,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3939,
+          "y": 6719
+        },
+        "Max": {
+          "x": 4141,
+          "y": 6871
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 103,
+      "BlockCount": 161,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2609,
+          "y": 5599
+        },
+        "Max": {
+          "x": 2811,
+          "y": 5741
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 138,
+      "BlockCount": 239,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3849,
+          "y": 6809
+        },
+        "Max": {
+          "x": 4061,
+          "y": 7011
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 61,
+      "BlockCount": 148,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2659,
+          "y": 3819
+        },
+        "Max": {
+          "x": 2811,
+          "y": 3991
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 129,
+      "BlockCount": 120,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 5249,
+          "y": 6409
+        },
+        "Max": {
+          "x": 5381,
+          "y": 6541
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 130,
+      "BlockCount": 221,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 5149,
+          "y": 6479
+        },
+        "Max": {
+          "x": 5381,
+          "y": 6671
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 52,
+      "BlockCount": 112,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3859,
+          "y": 3509
+        },
+        "Max": {
+          "x": 4001,
+          "y": 3671
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 53,
+      "BlockCount": 99,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4039,
+          "y": 3689
+        },
+        "Max": {
+          "x": 4141,
+          "y": 3851
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 125,
+      "BlockCount": 131,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3059,
+          "y": 6479
+        },
+        "Max": {
+          "x": 3191,
+          "y": 6641
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 126,
+      "BlockCount": 135,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2889,
+          "y": 6529
+        },
+        "Max": {
+          "x": 3051,
+          "y": 6681
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 25,
+      "BlockCount": 101,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2889,
+          "y": 3129
+        },
+        "Max": {
+          "x": 3021,
+          "y": 3241
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 26,
+      "BlockCount": 107,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2959,
+          "y": 3259
+        },
+        "Max": {
+          "x": 3101,
+          "y": 3381
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 27,
+      "BlockCount": 120,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3109,
+          "y": 3189
+        },
+        "Max": {
+          "x": 3241,
+          "y": 3321
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 18,
+      "BlockCount": 70,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4149,
+          "y": 2849
+        },
+        "Max": {
+          "x": 4261,
+          "y": 2941
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 19,
+      "BlockCount": 114,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4179,
+          "y": 3009
+        },
+        "Max": {
+          "x": 4291,
+          "y": 3181
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 113,
+      "BlockCount": 180,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3139,
+          "y": 5969
+        },
+        "Max": {
+          "x": 3351,
+          "y": 6101
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 79,
+      "BlockCount": 151,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3359,
+          "y": 4189
+        },
+        "Max": {
+          "x": 3491,
+          "y": 4361
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 80,
+      "BlockCount": 137,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3209,
+          "y": 4209
+        },
+        "Max": {
+          "x": 3361,
+          "y": 4341
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 4,
+      "BlockCount": 143,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3249,
+          "y": 2729
+        },
+        "Max": {
+          "x": 3421,
+          "y": 2871
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 68,
+      "BlockCount": 126,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4699,
+          "y": 3909
+        },
+        "Max": {
+          "x": 4821,
+          "y": 4061
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 5,
+      "BlockCount": 101,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3169,
+          "y": 2689
+        },
+        "Max": {
+          "x": 3301,
+          "y": 2811
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 69,
+      "BlockCount": 180,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4539,
+          "y": 3949
+        },
+        "Max": {
+          "x": 4701,
+          "y": 4131
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 70,
+      "BlockCount": 127,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4389,
+          "y": 3909
+        },
+        "Max": {
+          "x": 4551,
+          "y": 4061
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 134,
+      "BlockCount": 113,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3529,
+          "y": 6819
+        },
+        "Max": {
+          "x": 3631,
+          "y": 6991
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 135,
+      "BlockCount": 103,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3699,
+          "y": 6779
+        },
+        "Max": {
+          "x": 3821,
+          "y": 6911
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 136,
+      "BlockCount": 143,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3619,
+          "y": 6889
+        },
+        "Max": {
+          "x": 3831,
+          "y": 7011
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 96,
+      "BlockCount": 174,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3739,
+          "y": 5079
+        },
+        "Max": {
+          "x": 3901,
+          "y": 5271
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 97,
+      "BlockCount": 97,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3569,
+          "y": 5139
+        },
+        "Max": {
+          "x": 3701,
+          "y": 5271
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 98,
+      "BlockCount": 139,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3489,
+          "y": 5219
+        },
+        "Max": {
+          "x": 3651,
+          "y": 5341
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 51,
+      "BlockCount": 122,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3739,
+          "y": 3729
+        },
+        "Max": {
+          "x": 3941,
+          "y": 3881
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 0,
+      "BlockCount": 370,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2279,
+          "y": 689
+        },
+        "Max": {
+          "x": 2521,
+          "y": 921
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 93,
+      "BlockCount": 339,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 1329,
+          "y": 5159
+        },
+        "Max": {
+          "x": 1541,
+          "y": 5411
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 121,
+      "BlockCount": 105,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3899,
+          "y": 6099
+        },
+        "Max": {
+          "x": 4031,
+          "y": 6231
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 122,
+      "BlockCount": 120,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3759,
+          "y": 6119
+        },
+        "Max": {
+          "x": 3911,
+          "y": 6251
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 22,
+      "BlockCount": 110,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2689,
+          "y": 3299
+        },
+        "Max": {
+          "x": 2821,
+          "y": 3431
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 23,
+      "BlockCount": 81,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2729,
+          "y": 3189
+        },
+        "Max": {
+          "x": 2851,
+          "y": 3301
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 24,
+      "BlockCount": 152,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2529,
+          "y": 3399
+        },
+        "Max": {
+          "x": 2721,
+          "y": 3541
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 17,
+      "BlockCount": 76,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 4089,
+          "y": 2889
+        },
+        "Max": {
+          "x": 4181,
+          "y": 3031
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 85,
+      "BlockCount": 121,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 5039,
+          "y": 4189
+        },
+        "Max": {
+          "x": 5191,
+          "y": 4331
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 86,
+      "BlockCount": 122,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 5229,
+          "y": 4179
+        },
+        "Max": {
+          "x": 5371,
+          "y": 4331
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 112,
+      "BlockCount": 217,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2829,
+          "y": 5789
+        },
+        "Max": {
+          "x": 3001,
+          "y": 5981
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 1,
+      "BlockCount": 100,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2999,
+          "y": 2639
+        },
+        "Max": {
+          "x": 3111,
+          "y": 2811
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 2,
+      "BlockCount": 95,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 2899,
+          "y": 2699
+        },
+        "Max": {
+          "x": 2991,
+          "y": 2811
+        }
+      },
+      "Score": 1
+    },
+    {
+      "CastleTerritoryId": 3,
+      "BlockCount": 89,
+      "BoundingRectangle": {
+        "Min": {
+          "x": 3069,
+          "y": 2589
+        },
+        "Max": {
+          "x": 3181,
+          "y": 2721
+        }
+      },
+      "Score": 1
+    }
+  ]
+}
