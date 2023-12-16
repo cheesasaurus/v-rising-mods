@@ -1,6 +1,6 @@
 using ProjectM;
 
-namespace ShardPolice.Prefabs;
+namespace VRisingMods.Core.Prefabs;
 
 public class ShardPrefabs {
     public static readonly PrefabGUID AB_Interact_RetrieveRelic_Cast = new PrefabGUID(1144010242);

@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using Bloodstone.API;
 using ProjectM;
 using ProjectM.Shared;
-using ShardPolice.Prefabs;
 using Unity.Collections;
 using Unity.Entities;
+using VRisingMods.Core.Item;
+using VRisingMods.Core.Prefabs;
 
 namespace ShardPolice.Utils;
 

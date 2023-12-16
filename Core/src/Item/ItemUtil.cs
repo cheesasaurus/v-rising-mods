@@ -3,7 +3,7 @@ using Bloodstone.API;
 using ProjectM;
 using Unity.Entities;
 
-namespace ShardPolice.Utils;
+namespace VRisingMods.Core.Item;
 
 
 public static class ItemUtil {

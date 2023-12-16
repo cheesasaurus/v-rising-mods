@@ -2,7 +2,7 @@ using Bloodstone.API;
 using ProjectM.Network;
 using Unity.Entities;
 
-namespace ShardPolice.Utils;
+namespace VRisingMods.Core.Utilities;
 
 
 public static class NetworkedEntityUtil {

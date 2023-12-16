@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using Bloodstone.API;
 using ProjectM;
-using ShardPolice.Prefabs;
 using Unity.Entities;
+using VRisingMods.Core.Prefabs;
 
-namespace ShardPolice.Utils;
+namespace VRisingMods.Core.Buff;
 
 public class ShardBuffUtil {
 

@@ -1,5 +1,4 @@
 using Bloodstone.API;
-using ShardPolice.Utils;
 using HarmonyLib;
 using ProjectM;
 using Unity.Collections;
@@ -7,6 +6,7 @@ using Unity.Entities;
 using System.Collections.Generic;
 using ProjectM.Network;
 using VRisingMods.Core.Utilities;
+using VRisingMods.Core.Buff;
 
 namespace ShardPolice.Hooks;
 

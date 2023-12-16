@@ -1,8 +1,8 @@
 using HarmonyLib;
 using ProjectM;
 using ProjectM.Shared;
-using ShardPolice.Utils;
 using Unity.Entities;
+using VRisingMods.Core.CastleRaid;
 
 namespace ShardPolice.Patches;
 

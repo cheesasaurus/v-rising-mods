@@ -4,7 +4,7 @@ using ProjectM.Network;
 using ProjectM.Shared;
 using Unity.Entities;
 
-namespace ShardPolice.Utils;
+namespace VRisingMods.Core.Buff;
 
 public class BuffUtil {
     public static void GiveBuffToPlayer(Entity character, PrefabGUID buffPrefabGUID) {

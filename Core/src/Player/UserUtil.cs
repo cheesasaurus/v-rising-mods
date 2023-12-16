@@ -4,7 +4,7 @@ using ProjectM.Network;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace ShardPolice.Utils;
+namespace VRisingMods.Core.Player;
 
 
 public static class UserUtil {

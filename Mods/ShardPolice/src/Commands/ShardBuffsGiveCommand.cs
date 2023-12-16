@@ -1,5 +1,5 @@
-using ShardPolice.Utils;
 using VampireCommandFramework;
+using VRisingMods.Core.Buff;
 
 namespace ShardPolice.Commands;
 
