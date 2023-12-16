@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreLibrary", "CoreLibrary\CoreLibrary.csproj", "{76D7A7C1-7959-43AA-AC18-583DF9F2CCBF}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMod", "Mods\MyMod\MyMod.csproj", "{7367F2D5-6AB6-4786-8EB6-1C3C0CB16C07}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FC2F1760-CC2A-4656-AFE2-BF78AD2E05D4}"
@@ -20,10 +18,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{76D7A7C1-7959-43AA-AC18-583DF9F2CCBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{76D7A7C1-7959-43AA-AC18-583DF9F2CCBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{76D7A7C1-7959-43AA-AC18-583DF9F2CCBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{76D7A7C1-7959-43AA-AC18-583DF9F2CCBF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7367F2D5-6AB6-4786-8EB6-1C3C0CB16C07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7367F2D5-6AB6-4786-8EB6-1C3C0CB16C07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7367F2D5-6AB6-4786-8EB6-1C3C0CB16C07}.Release|Any CPU.ActiveCfg = Release|Any CPU

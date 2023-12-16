@@ -19,9 +19,5 @@
     <PackageReference Include="VRising.Bloodstone" Version="0.1.*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\CoreLibrary\CoreLibrary.csproj" />
-  </ItemGroup>
-
   <Import Project="..\..\SharedProject1\SharedProject1.projitems" Label="Shared" />
 </Project>
