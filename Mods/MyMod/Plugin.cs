@@ -2,7 +2,7 @@
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using VampireCommandFramework;
-using UtilityLibraries2;
+using UtilityLibraries3;
 
 namespace MyMod;
 
@@ -28,8 +28,8 @@ public class Plugin : BasePlugin
 
         var bigDingus = "Dingus";
         var littleDingus = "dingus";
-        Log.LogMessage($"big dingus is big? {bigDingus.StartsWithUpper2()}");
-        Log.LogMessage($"little dingus is big? {littleDingus.StartsWithUpper2()}");
+        Log.LogMessage($"big dingus is big? {bigDingus.StartsWithUpper()}");
+        Log.LogMessage($"little dingus is big? {littleDingus.StartsWithUpper()}");
     }
 
     public override bool Unload()
