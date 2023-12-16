@@ -25,7 +25,7 @@ public class Plugin : BasePlugin
         Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
 
         var eventsConfig = EventsConfig.Init(MyPluginInfo.PLUGIN_GUID, "events.jsonc");
-        var eventHistory = new EventHistoryRepository();
+        var eventHistory = new EventHistoryRepository(MyPluginInfo.PLUGIN_GUID, "EventHistory.db");
         eventRunner = new EventRunner(eventsConfig, eventHistory);
 
         // Harmony patching

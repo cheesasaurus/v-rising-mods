@@ -27,6 +27,7 @@
     <PackageReference Include="VRising.Unhollowed.Client" Version="0.6.5.*" />
     <PackageReference Include="VRising.VampireCommandFramework" Version="0.8.*" />
     <PackageReference Include="VRising.Bloodstone" Version="0.1.*" />
+    <PackageReference Include="LiteDB" Version="5.0.17" />
   </ItemGroup>
 
   <Import Project="..\..\Core\Core.projitems" Label="Shared" />
