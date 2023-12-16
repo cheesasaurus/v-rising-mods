@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using Bloodstone.Hooks;
+using EventScheduler.Config;
 using HarmonyLib;
 using VampireCommandFramework;
 using VRisingMods.Core.Chat;
@@ -23,6 +24,8 @@ public class Plugin : BasePlugin
         // Plugin startup logic
         LogUtil.Init(Log);
         Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
+
+        var eventsConfig = EventsConfig.Init(MyPluginInfo.PLUGIN_GUID, "events.jsonc");
 
         // Harmony patching
         _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);

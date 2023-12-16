@@ -1,0 +1,18 @@
+[
+    {
+        "eventId": "Bi-Weekly Shard Reset",
+        "schedule": {
+            "frequency": "2 weeks",
+            "firstRun": "2023-12-15 20:00:00"
+        },
+        "executingAdmin": {
+            // commands have to be executed by a user, so we specify which user
+            "steamId": 123456
+        },
+        "chatCommands": [
+            ".shards-reset",
+            ".buff all rage 2h",
+            ".buff all witch 2h"
+        ]
+    }
+]
