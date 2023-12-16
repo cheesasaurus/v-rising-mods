@@ -13,6 +13,7 @@ Set-Location "../"
 # create mod
 Set-Location "./Mods"
 dotnet new vrisingmod2 -n "$modname" --description="Description of your mod" --use-bloodstone --use-vcf
+Write-Output "Created new mod at ./Mods/$modname/"
 Set-Location "../"
 
-Write-Output "Created new mod at ./Mods/$modname/"
+dotnet sln add "./Mods/$modname/$modname.csproj"
