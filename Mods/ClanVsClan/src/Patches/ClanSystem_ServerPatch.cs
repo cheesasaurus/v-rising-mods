@@ -1,12 +1,12 @@
-using System.Text;
 using Bloodstone.API;
-using ClanVsClan.Utils;
 using HarmonyLib;
 using ProjectM;
 using ProjectM.Gameplay.Clan;
 using ProjectM.Network;
 using Unity.Collections;
 using Unity.Entities;
+using VRisingMods.Core.CastleRaid;
+using VRisingMods.Core.Utilities;
 
 namespace ClanVsClan.Patches;
 

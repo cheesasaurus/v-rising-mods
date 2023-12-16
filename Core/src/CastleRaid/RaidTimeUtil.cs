@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Bloodstone.API;
 using ProjectM;
 
-namespace ClanVsClan.Utils;
+namespace VRisingMods.Core.CastleRaid;
 
 public static class RaidTimeUtil {
     private static List<DayOfWeek> WeekendDays = [DayOfWeek.Saturday, DayOfWeek.Sunday];
