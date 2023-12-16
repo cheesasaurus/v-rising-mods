@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreLibrary", "CoreLibrary\CoreLibrary.csproj", "{76D7A7C1-7959-43AA-AC18-583DF9F2CCBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreLibrary", "CoreLibrary\CoreLibrary.csproj", "{76D7A7C1-7959-43AA-AC18-583DF9F2CCBF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMod", "Mods\MyMod\MyMod.csproj", "{7367F2D5-6AB6-4786-8EB6-1C3C0CB16C07}"
 EndProject
@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		nuget.config = nuget.config
 	EndProjectSection
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SharedProject1", "SharedProject1\SharedProject1.shproj", "{DC2BC0A9-2F5B-4A41-9159-90A5436F5D40}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,5 +34,9 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BB932ADA-A93C-424A-BA50-0701A23783DC}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		SharedProject1\SharedProject1.projitems*{7367f2d5-6ab6-4786-8eb6-1c3c0cb16c07}*SharedItemsImports = 5
+		SharedProject1\SharedProject1.projitems*{dc2bc0a9-2f5b-4a41-9159-90a5436f5d40}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
