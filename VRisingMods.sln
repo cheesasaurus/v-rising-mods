@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMod", "Mods\MyMod\MyMod.csproj", "{7367F2D5-6AB6-4786-8EB6-1C3C0CB16C07}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FC2F1760-CC2A-4656-AFE2-BF78AD2E05D4}"
 	ProjectSection(SolutionItems) = preProject
 		nuget.config = nuget.config
@@ -14,11 +12,11 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Core", "Core\Core.shproj", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mods", "Mods", "{A93311F4-BAF5-41DF-BF06-E421E2FF0CA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShardPolice", "Mods\ShardPolice\ShardPolice.csproj", "{88EE04A1-9FE0-46C7-BA03-48B498C5CA7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShardPolice", "Mods\ShardPolice\ShardPolice.csproj", "{88EE04A1-9FE0-46C7-BA03-48B498C5CA7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CastleHeartPolice", "Mods\CastleHeartPolice\CastleHeartPolice.csproj", "{64C3EECF-4980-4942-9954-35C08915A887}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CastleHeartPolice", "Mods\CastleHeartPolice\CastleHeartPolice.csproj", "{64C3EECF-4980-4942-9954-35C08915A887}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClanVsClan", "Mods\ClanVsClan\ClanVsClan.csproj", "{357D272A-B23F-4F04-8D5D-CCEA0CB4F1F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClanVsClan", "Mods\ClanVsClan\ClanVsClan.csproj", "{357D272A-B23F-4F04-8D5D-CCEA0CB4F1F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,10 +24,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7367F2D5-6AB6-4786-8EB6-1C3C0CB16C07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7367F2D5-6AB6-4786-8EB6-1C3C0CB16C07}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7367F2D5-6AB6-4786-8EB6-1C3C0CB16C07}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7367F2D5-6AB6-4786-8EB6-1C3C0CB16C07}.Release|Any CPU.Build.0 = Release|Any CPU
 		{88EE04A1-9FE0-46C7-BA03-48B498C5CA7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{88EE04A1-9FE0-46C7-BA03-48B498C5CA7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88EE04A1-9FE0-46C7-BA03-48B498C5CA7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -46,16 +40,18 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {BB932ADA-A93C-424A-BA50-0701A23783DC}
-	EndGlobalSection
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Core\Core.projitems*{449c6a26-fcdc-4326-b23b-66131a5b324f}*SharedItemsImports = 13
-		Core\Core.projitems*{7367f2d5-6ab6-4786-8eb6-1c3c0cb16c07}*SharedItemsImports = 5
-	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{88EE04A1-9FE0-46C7-BA03-48B498C5CA7D} = {A93311F4-BAF5-41DF-BF06-E421E2FF0CA7}
 		{64C3EECF-4980-4942-9954-35C08915A887} = {A93311F4-BAF5-41DF-BF06-E421E2FF0CA7}
 		{357D272A-B23F-4F04-8D5D-CCEA0CB4F1F9} = {A93311F4-BAF5-41DF-BF06-E421E2FF0CA7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BB932ADA-A93C-424A-BA50-0701A23783DC}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Core\Core.projitems*{357d272a-b23f-4f04-8d5d-ccea0cb4f1f9}*SharedItemsImports = 5
+		Core\Core.projitems*{449c6a26-fcdc-4326-b23b-66131a5b324f}*SharedItemsImports = 13
+		Core\Core.projitems*{64c3eecf-4980-4942-9954-35c08915a887}*SharedItemsImports = 5
+		Core\Core.projitems*{88ee04a1-9fe0-46c7-ba03-48b498c5ca7d}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal
