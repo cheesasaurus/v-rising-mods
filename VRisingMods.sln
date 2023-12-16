@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShardPolice", "Mods\ShardPo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CastleHeartPolice", "Mods\CastleHeartPolice\CastleHeartPolice.csproj", "{64C3EECF-4980-4942-9954-35C08915A887}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClanVsClan", "Mods\ClanVsClan\ClanVsClan.csproj", "{357D272A-B23F-4F04-8D5D-CCEA0CB4F1F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,10 @@ Global
 		{64C3EECF-4980-4942-9954-35C08915A887}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64C3EECF-4980-4942-9954-35C08915A887}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64C3EECF-4980-4942-9954-35C08915A887}.Release|Any CPU.Build.0 = Release|Any CPU
+		{357D272A-B23F-4F04-8D5D-CCEA0CB4F1F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{357D272A-B23F-4F04-8D5D-CCEA0CB4F1F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{357D272A-B23F-4F04-8D5D-CCEA0CB4F1F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{357D272A-B23F-4F04-8D5D-CCEA0CB4F1F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,5 +56,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{88EE04A1-9FE0-46C7-BA03-48B498C5CA7D} = {A93311F4-BAF5-41DF-BF06-E421E2FF0CA7}
 		{64C3EECF-4980-4942-9954-35C08915A887} = {A93311F4-BAF5-41DF-BF06-E421E2FF0CA7}
+		{357D272A-B23F-4F04-8D5D-CCEA0CB4F1F9} = {A93311F4-BAF5-41DF-BF06-E421E2FF0CA7}
 	EndGlobalSection
 EndGlobal
