@@ -20,6 +20,7 @@ Preparation (only required once):
 After preparation
 1. cd to `Mods`
 2. use the template. e.g. `dotnet new vrisingmod2 -n NameOfYourMod --description="Description of your mod" --use-bloodstone --use-vcf`
+3. add the mod's project file to the solution. e.g. `dotnet sln add "./Mods/NameOfYourMod/NameOfYourMod.csproj"`
 
 
 ## Notes
