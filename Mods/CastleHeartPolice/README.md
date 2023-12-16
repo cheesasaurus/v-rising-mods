@@ -66,6 +66,6 @@ CastleHeartScoreStrategy = EveryHeartWorthOnePoint
 
 You can edit `$(VRisingServerPath)/BepInEx/config/CastleHeartPolice/territoryScores.json` manually.
 
-But I highly recommend using [this tool](https://cheesasaurus.github.io/v-rising-castle-heart-police/MapPainter/index.html) to generate the json file for you to copy/paste.
+But I highly recommend using [this tool](https://cheesasaurus.github.io/v-rising-mods/MapPainter/index.html) to generate the json file for you to copy/paste.
 - It can also generate a map for you to share with the players on your server.
 - demo: https://www.youtube.com/watch?v=QddkJ2aoed8
