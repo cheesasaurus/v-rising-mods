@@ -12,6 +12,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Core", "Core\Core.shproj", "{449C6A26-FCDC-4326-B23B-66131A5B324F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mods", "Mods", "{A93311F4-BAF5-41DF-BF06-E421E2FF0CA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShardPolice", "Mods\ShardPolice\ShardPolice.csproj", "{88EE04A1-9FE0-46C7-BA03-48B498C5CA7D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +26,10 @@ Global
 		{7367F2D5-6AB6-4786-8EB6-1C3C0CB16C07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7367F2D5-6AB6-4786-8EB6-1C3C0CB16C07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7367F2D5-6AB6-4786-8EB6-1C3C0CB16C07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88EE04A1-9FE0-46C7-BA03-48B498C5CA7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88EE04A1-9FE0-46C7-BA03-48B498C5CA7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88EE04A1-9FE0-46C7-BA03-48B498C5CA7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88EE04A1-9FE0-46C7-BA03-48B498C5CA7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,5 +40,8 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Core\Core.projitems*{449c6a26-fcdc-4326-b23b-66131a5b324f}*SharedItemsImports = 13
 		Core\Core.projitems*{7367f2d5-6ab6-4786-8eb6-1c3c0cb16c07}*SharedItemsImports = 5
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{88EE04A1-9FE0-46C7-BA03-48B498C5CA7D} = {A93311F4-BAF5-41DF-BF06-E421E2FF0CA7}
 	EndGlobalSection
 EndGlobal

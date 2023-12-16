@@ -5,7 +5,7 @@
     <AssemblyName>MyMod</AssemblyName>
     <Description>My Mod</Description>
     <Version>1.0.0</Version>
-    <WebsiteURL>https://github.com/cheesasaurus/v-rising-mods/tree/master/$(AssemblyName)</WebsiteURL>
+    <WebsiteURL>https://github.com/cheesasaurus/v-rising-mods/tree/master/Mods/$(AssemblyName)</WebsiteURL>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RootNamespace>MyMod</RootNamespace>
