@@ -7,7 +7,7 @@ namespace EventScheduler.Models;
 public class ScheduledEvent {
     public readonly ScheduledEventRaw _raw;
     public readonly string EventId;
-    public readonly int ExecuterSteamId;
+    public readonly ulong ExecuterSteamId;
     public readonly List<string> ChatCommands;
     public readonly Schedule Schedule;
 

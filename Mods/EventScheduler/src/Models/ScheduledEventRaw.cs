@@ -16,7 +16,7 @@ public class ScheduledEventRaw {
     }
 
     public class CommandExecuter {
-        public int steamId {get; set; }
+        public ulong steamId {get; set; }
     }
 
 }

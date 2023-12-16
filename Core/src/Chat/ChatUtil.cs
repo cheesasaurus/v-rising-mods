@@ -1,5 +1,4 @@
 using Bloodstone.API;
-using ProjectM;
 using ProjectM.Network;
 using VRisingMods.Core.Player;
 using VRisingMods.Core.Utilities;
@@ -7,17 +6,12 @@ using VRisingMods.Core.Utilities;
 namespace VRisingMods.Core.Chat;
 
 public static class ChatUtil {
-    public static void ForgeMessage(string senderName, string message, ChatMessageType messageType = ChatMessageType.Global) {
+    public static void ForgeMessage(UserModel userModel, string message, ChatMessageType messageType = ChatMessageType.Global) {
         var entityManager = VWorld.Server.EntityManager;
 
-        var foundSender = UserUtil.TryFindUserByName(senderName, out var user);
-        if (!foundSender) {
-            return;
-        }
-
         var fromCharacter = new FromCharacter() {
-			User = user.Entity,
-			Character = user.User.LocalCharacter._Entity,
+			User = userModel.Entity,
+			Character = userModel.User.LocalCharacter._Entity,
 		};
 
         var messageEvent = new ChatMessageEvent() {

@@ -16,5 +16,9 @@ public static class LogUtil {
     public static void LogInfo(object data) {
         Logger.LogInfo(data);
     }
+
+    public static void LogError(object data) {
+        Logger.LogError(data);
+    }
     
 }

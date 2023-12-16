@@ -38,4 +38,15 @@ public static class UserUtil {
         return false;
     }
 
+    public static bool TryFindUserByPlatformId(ulong platformId, out UserModel userModel) {
+        foreach (var user in FindAllUsers()) {
+            if (platformId.Equals(user.User.PlatformId)) {
+                userModel = user;
+                return true;
+            }
+        }
+        userModel = default;
+        return false;
+    }
+
 }

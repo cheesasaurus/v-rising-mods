@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EventScheduler.Config;
 using EventScheduler.Models;
 using VRisingMods.Core.Chat;
+using VRisingMods.Core.Player;
 using VRisingMods.Core.Utilities;
 
 namespace EventScheduler;
@@ -27,9 +28,13 @@ public class EventRunner {
     }
 
     private void RunChatCommands(ScheduledEvent scheduledEvent) {
+        var userExists = UserUtil.TryFindUserByPlatformId(scheduledEvent.ExecuterSteamId, out var executingUser);
+        if (!userExists) {
+            LogUtil.LogError($"Could not run event {scheduledEvent.EventId}: there is no user with steamId {scheduledEvent.ExecuterSteamId}");
+            return;
+        }
         foreach (var message in scheduledEvent.ChatCommands) {
-            // todo: actual configured steamId
-            ChatUtil.ForgeMessage("Dingus", message);
+            ChatUtil.ForgeMessage(executingUser, message);
         }
     }
 
