@@ -4,7 +4,7 @@ using ProjectM.Network;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace CastleHeartPolice.Utils;
+namespace VRisingMods.Core.Clan;
 
 public static class ClanUtil {
 

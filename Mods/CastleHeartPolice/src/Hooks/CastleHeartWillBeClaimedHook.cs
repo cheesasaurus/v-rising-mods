@@ -1,15 +1,14 @@
 using System.Text;
 using Bloodstone.API;
-using CastleHeartPolice.Prefabs;
 using CastleHeartPolice.Services;
-using CastleHeartPolice.Utils;
 using HarmonyLib;
 using ProjectM;
 using ProjectM.Gameplay.Systems;
 using ProjectM.Network;
-using ProjectM.UI.CastleHeartUI;
 using Unity.Collections;
 using Unity.Entities;
+using VRisingMods.Core.CastleTerritory;
+using VRisingMods.Core.Utilities;
 
 namespace CastleHeartPolice.Hooks;
 

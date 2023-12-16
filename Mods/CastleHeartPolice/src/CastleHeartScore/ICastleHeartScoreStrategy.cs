@@ -1,5 +1,5 @@
-using CastleHeartPolice.Models;
 using Unity.Entities;
+using VRisingMods.Core.CastleTerritory.Models;
 
 namespace CastleHeartPolice.CastleHeartScore;
 

@@ -3,7 +3,7 @@ using ProjectM;
 using ProjectM.Shared;
 using Unity.Entities;
 
-namespace CastleHeartPolice.Utils;
+namespace VRisingMods.Core.Utilities;
 
 public static class SystemPatchUtil {
     public static void CancelJob(Entity entity) {

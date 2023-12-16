@@ -1,13 +1,10 @@
-
-using ProjectM.CastleBuilding;
-using ProjectM.Terrain;
 using Unity.Entities;
 
-namespace CastleHeartPolice.Models;
+namespace VRisingMods.Core.CastleTerritory.Models;
 
 public class CastleTerritoryInfo {
     public int TerritoryId;
     public Entity Entity;
-    public CastleTerritory CastleTerritory;
+    public ProjectM.CastleBuilding.CastleTerritory CastleTerritory;
     public int BlockCount;
 }

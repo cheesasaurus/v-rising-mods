@@ -4,13 +4,13 @@ using System.IO;
 using System.Text.Json;
 using BepInEx;
 using Bloodstone.API;
-using CastleHeartPolice.Models;
 using CastleHeartPolice.Services;
 using ProjectM;
 using ProjectM.CastleBuilding;
 using ProjectM.Terrain;
 using Unity.Collections;
 using VampireCommandFramework;
+using VRisingMods.Core.CastleTerritory.Models;
 
 namespace CastleHeartPolice.Commands;
 

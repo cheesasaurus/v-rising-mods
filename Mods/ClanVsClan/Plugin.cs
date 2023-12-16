@@ -3,6 +3,7 @@ using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using VampireCommandFramework;
+using VRisingMods.Core.Utilities;
 
 namespace ClanVsClan;
 
@@ -19,6 +20,7 @@ public class Plugin : BasePlugin
     {
         // Plugin startup logic
         Logger = Log;
+        LogUtil.Init(Log);
         Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
 
         // Harmony patching

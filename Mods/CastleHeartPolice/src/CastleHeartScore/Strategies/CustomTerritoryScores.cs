@@ -1,8 +1,7 @@
 using CastleHeartPolice.Config;
-using CastleHeartPolice.Models;
-using CastleHeartPolice.Utils;
-using ProjectM.CastleBuilding;
 using Unity.Entities;
+using VRisingMods.Core.CastleTerritory;
+using VRisingMods.Core.CastleTerritory.Models;
 
 namespace CastleHeartPolice.CastleHeartScore.Strategies;
 

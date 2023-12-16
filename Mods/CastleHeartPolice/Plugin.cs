@@ -5,6 +5,7 @@ using CastleHeartPolice.Config;
 using CastleHeartPolice.Services;
 using HarmonyLib;
 using VampireCommandFramework;
+using VRisingMods.Core.Utilities;
 
 namespace CastleHeartPolice;
 
@@ -21,6 +22,7 @@ public class Plugin : BasePlugin
     {
         // Plugin startup logic
         Logger = Log;
+        LogUtil.Init(Log);
         CastleHeartPoliceConfig.Init(Config);
         var territoryScoresConfig = TerritoryScoresConfig.Init("territoryScores.json");
         RulesService.InitInstance(territoryScoresConfig);

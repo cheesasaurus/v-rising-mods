@@ -3,6 +3,7 @@ using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 #if(UseVCF)
 using VampireCommandFramework;
+using VRisingMods.Core.Utilities;
 #endif
 
 namespace MOUTHWASH;
@@ -22,6 +23,7 @@ public class Plugin : BasePlugin
     public override void Load()
     {
         // Plugin startup logic
+        LogUtil.Init(Log);
         Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
 
         // Harmony patching

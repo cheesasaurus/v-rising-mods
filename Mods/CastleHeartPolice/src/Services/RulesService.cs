@@ -1,11 +1,11 @@
 
 using System.Text;
-using Bloodstone.API;
 using CastleHeartPolice.CastleHeartScore;
 using CastleHeartPolice.Config;
 using CastleHeartPolice.Models;
-using CastleHeartPolice.Utils;
 using Unity.Entities;
+using VRisingMods.Core.CastleTerritory;
+using VRisingMods.Core.CastleTerritory.Models;
 
 namespace CastleHeartPolice.Services;
 

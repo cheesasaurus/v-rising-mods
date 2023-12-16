@@ -2,11 +2,10 @@ using System;
 using System.Text;
 using Bloodstone.API;
 using CastleHeartPolice.Services;
-using CastleHeartPolice.Utils;
-using ProjectM.Terrain;
 using Unity.Mathematics;
 using Unity.Transforms;
 using VampireCommandFramework;
+using VRisingMods.Core.CastleTerritory;
 
 namespace CastleHeartPolice.Commands;
 

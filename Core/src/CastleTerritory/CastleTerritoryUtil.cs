@@ -1,14 +1,13 @@
 using Bloodstone.API;
-using CastleHeartPolice.Models;
-using Il2CppInterop.Runtime;
 using ProjectM;
 using ProjectM.CastleBuilding;
 using ProjectM.Terrain;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using VRisingMods.Core.CastleTerritory.Models;
 
-namespace CastleHeartPolice.Utils;
+namespace VRisingMods.Core.CastleTerritory;
 
 public static class CastleTerritoryUtil {
 
@@ -45,7 +44,7 @@ public static class CastleTerritoryUtil {
             var blocks = entityManager.GetBuffer<CastleTerritoryBlocks>(spatialZone.ZoneEntity);
             foreach (var block in blocks) {
                 if (block.BlockCoordinate.Equals(blockCoords)) {
-                    var castleTerritory = entityManager.GetComponentData<CastleTerritory>(spatialZone.ZoneEntity);
+                    var castleTerritory = entityManager.GetComponentData<ProjectM.CastleBuilding.CastleTerritory>(spatialZone.ZoneEntity);
                     territoryInfo = new CastleTerritoryInfo() {
                         TerritoryId = castleTerritory.CastleTerritoryIndex,
                         Entity = spatialZone.ZoneEntity,
@@ -63,7 +62,7 @@ public static class CastleTerritoryUtil {
     public static bool TryFindTerritoryOfCastleHeart(Entity heartEntity, out CastleTerritoryInfo territoryInfo) {
         var entityManager = VWorld.Server.EntityManager;
         var castleHeart = entityManager.GetComponentData<CastleHeart>(heartEntity);
-        var castleTerritory = entityManager.GetComponentData<CastleTerritory>(castleHeart.CastleTerritoryEntity);
+        var castleTerritory = entityManager.GetComponentData<ProjectM.CastleBuilding.CastleTerritory>(castleHeart.CastleTerritoryEntity);
 
         var mapZoneCollectionSystem = VWorld.Server.GetExistingSystem<MapZoneCollectionSystem>();
         var mapZoneCollection = mapZoneCollectionSystem.GetMapZoneCollection();

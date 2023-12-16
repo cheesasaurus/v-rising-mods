@@ -7,7 +7,7 @@ using ProjectM.Network;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace CastleHeartPolice.Utils;
+namespace VRisingMods.Core.CastleTerritory;
 
 public static class CastleHeartUtil {
 
