@@ -22,6 +22,10 @@
     <RemoveDir Directories="dist/thunderstore/temp"/>
   </Target>
 
+  <Target Name="ModpackDist" AfterTargets="AfterBuild">
+    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="../../dist/modpack" />
+  </Target>
+
   <ItemGroup>
     <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.668" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.Core" Version="6.0.0-be.668" IncludeAssets="compile" />
