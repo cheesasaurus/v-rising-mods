@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace CastleHeartPolice.Config;
+namespace VRisingMods.Core.Config;
 
 public abstract class AbstractJsonConfig {
     protected string FilePath;
@@ -16,8 +16,8 @@ public abstract class AbstractJsonConfig {
 
     protected abstract void InitFromJson(string json);
 
-    public static T Init<T>(string filename) where T : AbstractJsonConfig {
-        var dir = Path.Combine(BepInEx.Paths.ConfigPath, MyPluginInfo.PLUGIN_GUID);
+    public static T Init<T>(string pluginGUID, string filename) where T : AbstractJsonConfig {
+        var dir = Path.Combine(BepInEx.Paths.ConfigPath, pluginGUID);
         Directory.CreateDirectory(dir);
         var filepath = Path.Combine(dir, filename);
 

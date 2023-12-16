@@ -21,7 +21,7 @@ public class Plugin : BasePlugin
         // Plugin startup logic
         LogUtil.Init(Log);
         CastleHeartPoliceConfig.Init(Config);
-        var territoryScoresConfig = TerritoryScoresConfig.Init("territoryScores.json");
+        var territoryScoresConfig = TerritoryScoresConfig.Init(MyPluginInfo.PLUGIN_GUID, "territoryScores.json");
         RulesService.InitInstance(territoryScoresConfig);
         Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
 

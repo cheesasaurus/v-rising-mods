@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text.Json;
+using VRisingMods.Core.Config;
 
 namespace CastleHeartPolice.Config;
 
@@ -38,8 +39,8 @@ public class TerritoryScoresConfig : AbstractJsonConfig {
         ScoreByTerritoryId = JsonSerializer.Deserialize<Dictionary<int, int>>(json);
     }
 
-    public static TerritoryScoresConfig Init(string filename) {
-        return Init<TerritoryScoresConfig>(filename);
+    public static TerritoryScoresConfig Init(string pluginGUID, string filename) {
+        return Init<TerritoryScoresConfig>(pluginGUID, filename);
     }
 
 }
