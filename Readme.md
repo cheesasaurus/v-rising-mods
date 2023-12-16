@@ -1,5 +1,12 @@
 monorepo for various V Rising mods
 
+## Repo Structure
+- Core: essentially a shared library for mods to use. **The existence of things in here must not cause side effects.**\
+No chat commands, no patches altering behavior, etc.
+- Mods: contains projects for each mod.
+- docs: web things for github pages
+- templates: templates for `dotnet new`
+
 
 ## Deploying built mods to local game server
 You can automatically copy built plugins to your local server, by setting the environment variable `VRisingServerPath`.\
