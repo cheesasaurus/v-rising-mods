@@ -8,9 +8,7 @@ No chat commands, no patches altering behavior, etc.
 - templates: templates for `dotnet new`
 
 
-## Deploying built mods to local game server
-You can automatically copy built plugins to your local server, by setting the environment variable `VRisingServerPath`.\
-example value: `E:\Games\SteamLibrary\steamapps\common\VRisingDedicatedServer`
+
 
 
 ## Setting up a new mod
@@ -28,6 +26,31 @@ After preparation
 1. cd to `Mods`
 2. use the template. e.g. `dotnet new vrisingmod2 -n NameOfYourMod --description="Description of your mod" --use-bloodstone --use-vcf`
 3. add the mod's project file to the solution. e.g. `dotnet sln add "./Mods/NameOfYourMod/NameOfYourMod.csproj"`
+
+
+## Building
+
+`dotnet publish`
+
+### Deploying built mods to local game server
+
+Running `dotnet publish` can automatically copy built plugins to your local server.
+
+Set the environment variable `VRisingServerPath`.\
+example value: `E:\Games\SteamLibrary\steamapps\common\VRisingDedicatedServer`
+
+### Bundling additional DLLs
+When a mod has some extra dependencies to be distributed alongside the usual plugin dll, they can be specified in the .csproj file for that mod.
+
+e.g.
+```
+<Target Name="PrepareLibsForDist" AfterTargets="Publish">
+  <PropertyGroup>
+    <PublishPath>$(OutputPath)/publish</PublishPath>
+    <DistAdditionalLibs>$(PublishPath)/LiteDB.dll;</DistAdditionalLibs>
+  </PropertyGroup>
+</Target>
+```
 
 
 ## Notes

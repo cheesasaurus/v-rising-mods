@@ -11,15 +11,6 @@
     <RootNamespace>ClanVsClan</RootNamespace>
   </PropertyGroup>
 
-  <Target Name="ModpackDist" AfterTargets="AfterBuild">
-    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="../../dist/modpack" />
-  </Target>
-
-  <Target Name="DeployToDev" AfterTargets="AfterBuild" Condition="'$(VRisingServerPath)' != ''">
-    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(VRisingServerPath)/BepInEx/BloodstonePlugins" />
-    <Message Text="Deployed plugin $(AssemblyName).dll to your local v rising server." Importance="High" />
-  </Target>
-
   <ItemGroup>
     <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.668" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.Core" Version="6.0.0-be.668" IncludeAssets="compile" />
@@ -29,7 +20,14 @@
     <PackageReference Include="VRising.Bloodstone" Version="0.1.*" />
   </ItemGroup>
 
+  <Target Name="PrepareLibsForDist" AfterTargets="Publish">
+    <PropertyGroup>
+      <PublishPath>$(OutputPath)/publish</PublishPath>
+      <DistAdditionalLibs></DistAdditionalLibs>
+    </PropertyGroup>
+  </Target>
+
   <Import Project="..\..\Core\Core.projitems" Label="Shared" />
-  <Import Project="..\..\ThunderstoreDist.props"/>
+  <Import Project="..\..\ModTasks.props"/>
   
 </Project>

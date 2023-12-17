@@ -19,13 +19,24 @@
   </PropertyGroup>
   
 
-  <Target Name="ThunderstoreDist" AfterTargets="AfterBuild">
+  <Target Name="ThunderstoreDist" AfterTargets="PrepareLibsForDist">
     <WriteLinesToFile Lines="$(ThunderstoreManifestContent)" File="dist/thunderstore/temp/manifest.json" WriteOnlyWhenDifferent="true" Overwrite="true" />
     <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="dist/thunderstore/temp" />
     <Copy SourceFiles="images/icon.png" DestinationFolder="dist/thunderstore/temp"/>
     <Copy SourceFiles="README.md" DestinationFolder="dist/thunderstore/temp"/>
+    <Copy SourceFiles="$(DistAdditionalLibs)" DestinationFolder="dist/thunderstore/temp"/>
     <ZipDirectory SourceDirectory="dist/thunderstore/temp" DestinationFile="dist/thunderstore/$(AssemblyName).zip" Overwrite="true"></ZipDirectory>
     <RemoveDir Directories="dist/thunderstore/temp"/>
+  </Target>
+
+  <Target Name="ModpackDist" AfterTargets="PrepareLibsForDist">
+    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll;$(DistAdditionalLibs)" DestinationFolder="../../dist/modpack" />
+  </Target>
+
+  <Target Name="DeployToDev" AfterTargets="PrepareLibsForDist" Condition="'$(VRisingServerPath)' != ''">
+    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(VRisingServerPath)/BepInEx/BloodstonePlugins" />
+    <Copy SourceFiles="$(DistAdditionalLibs)" DestinationFolder="$(VRisingServerPath)/BepInEx/Plugins" />
+    <Message Text="Deployed plugin $(AssemblyName).dll to your local v rising server." Importance="High" />
   </Target>
 
 </Project>
