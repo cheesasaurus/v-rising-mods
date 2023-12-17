@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>EventScheduler</AssemblyName>
-    <Description>Description of your mod</Description>
+    <Description>Enables server operators to schedule recurring Events.</Description>
     <Version>1.0.0</Version>
     <WebsiteURL>https://github.com/cheesasaurus/v-rising-mods/tree/master/Mods/$(AssemblyName)</WebsiteURL>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
