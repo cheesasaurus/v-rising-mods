@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Text.Json;
 using EventScheduler.Models;
 using VRisingMods.Core.Config;
@@ -26,7 +28,14 @@ public class EventsConfig : AbstractJsonConfig {
     }
 
     protected override void InitDefaults() {
-        ScheduledEvents = new();
+        var assembly = Assembly.GetExecutingAssembly();
+        var resourceName = "EventScheduler.resources.example-events.jsonc";
+
+        using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+        using (StreamReader reader = new StreamReader(stream)) {
+            string exampleJson = reader.ReadToEnd();
+            InitFromJson(exampleJson);
+        }
     }
 
     protected override void InitFromJson(string json) {
