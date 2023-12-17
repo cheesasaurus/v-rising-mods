@@ -51,3 +51,9 @@ e.g.
 
 If you want to deploy them to your local game server, you can use `dotnet publish "/p:DeployLibsToo=TRUE"`.\
 This only really needs to be done after you've added a new dependency, and requires a restart of the server.
+
+
+## Distribution
+Building creates a thunderstore package for each mod at `Mods/$(ModName)/dist/thunderstore/$(Modname).zip`
+
+Additionally, the assemblies from all mods are copied to `dist/modpack/` for convenience.
