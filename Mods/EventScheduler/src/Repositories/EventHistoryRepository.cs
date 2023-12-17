@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using BepInEx;
 using LiteDB;
-using VRisingMods.Core.Utilities;
 
 namespace EventScheduler.Repositories;
 
@@ -14,15 +13,14 @@ public class EventHistoryRepository {
         var dir = Path.Combine(bepinexPath, @"PluginSaveData", pluginGUID);
         Directory.CreateDirectory(dir);
         DbPath = Path.Combine(dir, filename);
-        LogUtil.LogMessage($"db path: {DbPath}");
 
-        using(var db = new LiteDatabase(DbPath)) {
+        using (var db = new LiteDatabase(DbPath)) {
             var collection = db.GetCollection<EventEntry>("events");
         }
     }
 
     public bool TryGetLastRun(string eventId, out DateTime lastRun) {
-        using(var db = new LiteDatabase(DbPath)) {
+        using (var db = new LiteDatabase(DbPath)) {
             var collection = db.GetCollection<EventEntry>("events");
             var entry = collection.FindById(eventId);
             if (entry is not null) {
@@ -35,7 +33,7 @@ public class EventHistoryRepository {
     }
 
     public void SetLastRun(string eventId, DateTime lastRun) {
-        using(var db = new LiteDatabase(DbPath)) {
+        using (var db = new LiteDatabase(DbPath)) {
             var collection = db.GetCollection<EventEntry>("events");
             collection.Upsert(new EventEntry() {
                 _id = eventId,
