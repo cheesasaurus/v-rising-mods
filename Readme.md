@@ -52,6 +52,9 @@ e.g.
 </Target>
 ```
 
+If you want to deploy them to your local game server, you can use `dotnet publish "/p:DeployLibsToo=TRUE"`.\
+This only really needs to be done after you've added a new dependency, and requires a restart of the server.
+
 
 ## Notes
 - a `<ProjectReference>` to a "class library" project requires the library dll to be shipped alongside the main dll. not ideal
