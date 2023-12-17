@@ -1,4 +1,5 @@
 [
+    // an event to reset shards every 2 weeks
     {
         // after you've decided on an eventId, it shouldn't be changed
         "eventId": "Bi-Weekly Shard Reset",
@@ -19,5 +20,21 @@
             ".buff all rage 2h",
             ".buff all witch 2h"
         ]
+    },
+
+    // an event to give players a gift every hour
+    {
+        "eventId": "Hourly lumber gift",
+        "schedule": {
+            "firstRun": "2069-12-15 20:00:00",
+            "frequency": "1 hour"
+        },
+        "executingAdmin": {
+            "steamId": 123456
+        },
+        "chatCommands": [
+            ".give all 9 wood"
+        ]
     }
+
 ]
