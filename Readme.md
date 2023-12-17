@@ -8,9 +8,6 @@ No chat commands, no patches altering behavior, etc.
 - templates: templates for `dotnet new`
 
 
-
-
-
 ## Setting up a new mod
 
 There's a powershell script to easily do this.\
@@ -54,11 +51,3 @@ e.g.
 
 If you want to deploy them to your local game server, you can use `dotnet publish "/p:DeployLibsToo=TRUE"`.\
 This only really needs to be done after you've added a new dependency, and requires a restart of the server.
-
-
-## Notes
-- a `<ProjectReference>` to a "class library" project requires the library dll to be shipped alongside the main dll. not ideal
-- but an `<Import>` of a "shared" project does what I want
-
-### resources
-- https://learn.microsoft.com/en-us/dotnet/core/tutorials/library-with-visual-studio?pivots=dotnet-6-0
