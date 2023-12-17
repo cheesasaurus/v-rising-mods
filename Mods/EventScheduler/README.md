@@ -2,6 +2,13 @@
 
 Enables server operators to schedule recurring Events.
 
+## Installation
+
+This mod comes with 2 DLLs which both need to be placed in `BepinEx/plugins`.
+- EventScheduler.dll
+- LiteDB.dll
+
+
 ## Scheduling an event
 
 An Event is really just a series of chat commands to be executed on a schedule.
