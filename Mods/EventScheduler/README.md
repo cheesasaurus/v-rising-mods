@@ -1,6 +1,10 @@
 # EventScheduler
 
+⚠️WIP⚠️
+
 Enables server operators to schedule recurring Events.
+
+This is a server-side mod.
 
 ## Installation
 

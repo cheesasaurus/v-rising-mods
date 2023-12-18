@@ -2,6 +2,10 @@
 
 ⚠️WIP⚠️
 
+Introduces optional rules related to Shards, and some admin commands.
+
+This is a server-side mod.
+
 ## Features
 
 - Limit players to 1 shard buff at a time. Activating a shard replaces any previously held shard buff with the new one.
