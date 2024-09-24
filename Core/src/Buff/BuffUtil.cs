@@ -2,6 +2,7 @@ using Bloodstone.API;
 using ProjectM;
 using ProjectM.Network;
 using ProjectM.Shared;
+using Stunlock.Core;
 using Unity.Entities;
 
 namespace VRisingMods.Core.Buff;
@@ -21,7 +22,7 @@ public class BuffUtil {
 			BuffPrefabGUID = buffPrefabGUID
 		};
 
-        var debugEventsSystem = VWorld.Server.GetExistingSystem<DebugEventsSystem>();
+        var debugEventsSystem = VWorld.Server.GetExistingSystemManaged<DebugEventsSystem>();
         debugEventsSystem.ApplyBuff(fromCharacter, buffEvent);
     }
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Bloodstone.API;
 using ProjectM;
+using Stunlock.Core;
 using Unity.Entities;
 using VRisingMods.Core.Prefabs;
 

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Bloodstone.API;
 using ProjectM;
 using ProjectM.Shared;
+using Stunlock.Core;
 using Unity.Collections;
 using Unity.Entities;
 using VRisingMods.Core.Item;

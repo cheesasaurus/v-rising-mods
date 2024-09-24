@@ -1,4 +1,5 @@
 using ProjectM;
+using Stunlock.Core;
 
 namespace VRisingMods.Core.Prefabs;
 

@@ -27,7 +27,7 @@ public static class CastleTerritoryUtil {
         float2 worldPos2 = worldPos.xz;
         var entityManager = VWorld.Server.EntityManager;
         
-        var mapZoneCollectionSystem = VWorld.Server.GetExistingSystem<MapZoneCollectionSystem>();
+        var mapZoneCollectionSystem = VWorld.Server.GetExistingSystemManaged<MapZoneCollectionSystem>();
         var mapZoneCollection = mapZoneCollectionSystem.GetMapZoneCollection();
         foreach (var spatialZone in mapZoneCollection._MapZoneLookup.GetValueArray(Allocator.Temp)) {
             if ((MapZoneFlags.CastleTerritory & spatialZone.ZoneFlags) == 0) {
@@ -64,7 +64,7 @@ public static class CastleTerritoryUtil {
         var castleHeart = entityManager.GetComponentData<CastleHeart>(heartEntity);
         var castleTerritory = entityManager.GetComponentData<ProjectM.CastleBuilding.CastleTerritory>(castleHeart.CastleTerritoryEntity);
 
-        var mapZoneCollectionSystem = VWorld.Server.GetExistingSystem<MapZoneCollectionSystem>();
+        var mapZoneCollectionSystem = VWorld.Server.GetExistingSystemManaged<MapZoneCollectionSystem>();
         var mapZoneCollection = mapZoneCollectionSystem.GetMapZoneCollection();
         
         if (mapZoneCollection._MapZoneLookup.TryGetValue(castleHeart.CastleTerritoryId, out var spatialZone)) {

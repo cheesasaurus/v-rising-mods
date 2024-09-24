@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using ProjectM.Network;
 using VRisingMods.Core.Utilities;
 using VRisingMods.Core.Buff;
+using Stunlock.Core;
 
 namespace ShardPolice.Hooks;
 
@@ -38,7 +39,7 @@ public static class ShardBuffSpawnedHook
     private class BuffTracker {
         public class PlayerShardBuff {
             public Entity Character;
-            public FixedString64 CharacterName;
+            public FixedString64Bytes CharacterName;
             public User User;
             public PrefabGUID LatestShardBuffGuid;
         }

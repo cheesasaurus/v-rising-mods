@@ -7,7 +7,7 @@ namespace VRisingMods.Core.CastleRaid;
 
 public static class RaidTimeUtil {
     private static List<DayOfWeek> WeekendDays = [DayOfWeek.Saturday, DayOfWeek.Sunday];
-    private static ServerGameSettingsSystem serverGameSettingsSystem = VWorld.Server.GetExistingSystem<ServerGameSettingsSystem>();
+    private static ServerGameSettingsSystem serverGameSettingsSystem = VWorld.Server.GetExistingSystemManaged<ServerGameSettingsSystem>();
 
     public static bool IsRaidTimeNow() {
         return IsRaidTime(DateTime.Now);
