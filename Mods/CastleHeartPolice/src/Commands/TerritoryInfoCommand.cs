@@ -17,6 +17,7 @@ public class TerritoryInfoCommand {
         var rulesService = RulesService.Instance;
         var worldPos = WorldPositionOfPlayerCharacter(ctx);
         var blockCoords = CastleTerritoryUtil.BlockCoordinatesFromWorldPosition(worldPos);
+        var worldBoundsCoords = CastleTerritoryUtil.TerritoryWorldBoundsCoordinatesFromWorldPosition(worldPos);
 
         var message = new StringBuilder("Territory Information\n");
 
@@ -30,6 +31,7 @@ public class TerritoryInfoCommand {
         }
 
         message.AppendLine($"Character's WorldPosition: {FormatFloat(worldPos.x)} {FormatFloat(worldPos.y)} {FormatFloat(worldPos.z)}");
+        message.AppendLine($"Character's WorldBoundsCoordinates: {worldBoundsCoords.x} {worldBoundsCoords.y}");
         message.AppendLine($"Character's BlockCoordinates: {blockCoords.x} {blockCoords.y}");
 
         ctx.Reply(message.ToString());

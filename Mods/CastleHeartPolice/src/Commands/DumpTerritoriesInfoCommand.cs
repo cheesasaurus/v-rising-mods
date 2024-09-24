@@ -69,7 +69,7 @@ public class DumpTerritoriesInfoCommand {
         var rulesService = RulesService.Instance;
         var mapZoneCollectionSystem = VWorld.Server.GetExistingSystemManaged<MapZoneCollectionSystem>();
         var mapZoneCollection = mapZoneCollectionSystem.GetMapZoneCollection();
-        foreach (var spatialZone in mapZoneCollection._MapZoneLookup.GetValueArray(Allocator.Temp)) {
+        foreach (var spatialZone in mapZoneCollection.MapZoneLookup.GetValueArray(Allocator.Temp)) {
             if ((MapZoneFlags.CastleTerritory & spatialZone.ZoneFlags) == 0) {
                 continue;
             }
