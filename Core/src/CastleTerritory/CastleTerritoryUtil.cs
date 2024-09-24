@@ -1,3 +1,4 @@
+using System;
 using Bloodstone.API;
 using ProjectM;
 using ProjectM.CastleBuilding;
@@ -17,26 +18,37 @@ public static class CastleTerritoryUtil {
     // I have no idea why, but the block coordinates origin and world coordinates origin don't exactly line up
     private static int2 BlockOffsetFromWorld = new int2(639, 639);
 
+    // Two units on the territory WorldBounds grid is equivalent to 1 unit on the world grid
+    private static int TerritoryWorldBoundsScale = 2;
+
+    // I have no idea why, but the territory WorldBounds origin and world coordinates origin don't exactly line up
+    private static int2 TerritoryWorldBoundsOffsetFromWorld = new int2(3200, 3200);
+
     public static int2 BlockCoordinatesFromWorldPosition(float3 worldPos) {
         var intWorldPos = new int2((int)worldPos.x, (int)worldPos.z);
         return (intWorldPos / BlockSize) + BlockOffsetFromWorld;
     }
 
+    public static float2 TerritoryWorldBoundsCoordinatesFromWorldPosition(float3 worldPos) {
+        var f2 = worldPos.xz;
+        return (f2 + TerritoryWorldBoundsOffsetFromWorld) * TerritoryWorldBoundsScale;
+    }
+
     public static bool TryFindTerritoryContaining(float3 worldPos, out CastleTerritoryInfo territoryInfo) {
         var blockCoords = BlockCoordinatesFromWorldPosition(worldPos);
-        float2 worldPos2 = worldPos.xz;
+        var worldPos2 = TerritoryWorldBoundsCoordinatesFromWorldPosition(worldPos);
         var entityManager = VWorld.Server.EntityManager;
         
-        var mapZoneCollectionSystem = VWorld.Server.GetExistingSystem<MapZoneCollectionSystem>();
+        var mapZoneCollectionSystem = VWorld.Server.GetExistingSystemManaged<MapZoneCollectionSystem>();
         var mapZoneCollection = mapZoneCollectionSystem.GetMapZoneCollection();
-        foreach (var spatialZone in mapZoneCollection._MapZoneLookup.GetValueArray(Allocator.Temp)) {
+        foreach (var spatialZone in mapZoneCollection.MapZoneLookup.GetValueArray(Allocator.Temp)) {
             if ((MapZoneFlags.CastleTerritory & spatialZone.ZoneFlags) == 0) {
                 // not a castle territory
                 continue;
             }
 
             // rough check (bounding rectangle, sometimes nearby territories' rectangles overlap)
-            if (!spatialZone.WorldBounds.Contains(worldPos2)) {
+            if (!IsPositionInBounds(worldPos2, spatialZone.WorldBounds)) {
                 continue;
             }
             
@@ -64,10 +76,10 @@ public static class CastleTerritoryUtil {
         var castleHeart = entityManager.GetComponentData<CastleHeart>(heartEntity);
         var castleTerritory = entityManager.GetComponentData<ProjectM.CastleBuilding.CastleTerritory>(castleHeart.CastleTerritoryEntity);
 
-        var mapZoneCollectionSystem = VWorld.Server.GetExistingSystem<MapZoneCollectionSystem>();
+        var mapZoneCollectionSystem = VWorld.Server.GetExistingSystemManaged<MapZoneCollectionSystem>();
         var mapZoneCollection = mapZoneCollectionSystem.GetMapZoneCollection();
         
-        if (mapZoneCollection._MapZoneLookup.TryGetValue(castleHeart.CastleTerritoryId, out var spatialZone)) {
+        if (mapZoneCollection.MapZoneLookup.TryGetValue(castleHeart.CastleTerritoryId, out var spatialZone)) {
             var blocks = entityManager.GetBuffer<CastleTerritoryBlocks>(spatialZone.ZoneEntity);
             territoryInfo = new CastleTerritoryInfo() {
                 TerritoryId = castleTerritory.CastleTerritoryIndex,
@@ -79,6 +91,15 @@ public static class CastleTerritoryUtil {
         }
         territoryInfo = default;
         return false;
+    }
+
+    // BoundsMinMax.Contains used to take care of this, but the signature changed in 1.0 and it seems to check something else now
+    public static bool IsPositionInBounds(float2 worldPosition, BoundsMinMax worldBounds) {
+        var xMin = Math.Min(worldBounds.Min.x, worldBounds.Max.x);
+        var xMax = Math.Max(worldBounds.Min.x, worldBounds.Max.x);
+        var yMin = Math.Min(worldBounds.Min.y, worldBounds.Max.y);
+        var yMax = Math.Max(worldBounds.Min.y, worldBounds.Max.y);
+        return xMin <= worldPosition.x && xMax >= worldPosition.x && yMin <= worldPosition.y && yMax >= worldPosition.y;
     }
 
 }

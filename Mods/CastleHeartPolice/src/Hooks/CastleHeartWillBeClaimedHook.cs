@@ -13,25 +13,23 @@ using VRisingMods.Core.Utilities;
 namespace CastleHeartPolice.Hooks;
 
 
-[HarmonyPatch(typeof(PylonstationSystem), nameof(PylonstationSystem.OnUpdate))]
+[HarmonyPatch(typeof(CastleHeartEventSystem), nameof(CastleHeartEventSystem.OnUpdate))]
 public static class CastleHeartWillBeClaimedHook {
-    
-    public static void Prefix(PylonstationSystem __instance) {
-        var jobs = __instance._ClaimPylonQuery.ToEntityArray(Allocator.Temp);
+
+    public static void Prefix(CastleHeartEventSystem __instance) {
+        var entityManager = VWorld.Server.EntityManager;
+        var jobs = __instance._CastleHeartInteractEventQuery.ToEntityArray(Allocator.Temp);
         foreach (var job in jobs) {
-            HandleCastleHeartWillBeClaimed(job);
+            var heartEvent = entityManager.GetComponentData<CastleHeartInteractEvent>(job);
+            if (heartEvent.EventType == CastleHeartInteractEventType.Claim) {
+                HandleCastleHeartWillBeClaimed(job, heartEvent);
+            }
         }
     }
 
-    private static void HandleCastleHeartWillBeClaimed(Entity job) {
+    private static void HandleCastleHeartWillBeClaimed(Entity job, CastleHeartInteractEvent heartEvent) {
         var entityManager = VWorld.Server.EntityManager;
-
-        var claimPylonEvent = entityManager.GetComponentData<ClaimPylonEvent>(job);
-        if (claimPylonEvent.IsConsoleCommand) {
-            return;
-        }
-        var castleHeart = CastleHeartUtil.FindCastleHeartById(claimPylonEvent.Workstation);
-        
+        var castleHeart = CastleHeartUtil.FindCastleHeartById(heartEvent.CastleHeart);        
         var fromCharacter = entityManager.GetComponentData<FromCharacter>(job);
         var user = entityManager.GetComponentData<User>(fromCharacter.User);
         var ruleResult = RulesService.Instance.CheckRuleClaimCastleHeart(fromCharacter.Character, castleHeart);
