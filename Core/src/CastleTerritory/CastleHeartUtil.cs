@@ -19,7 +19,6 @@ public static class CastleHeartUtil {
 
         var query = entityManager.CreateEntityQuery(new EntityQueryDesc() {
             All = new ComponentType[] {
-                ComponentType.ReadOnly<Pylonstation>(),
                 ComponentType.ReadOnly<CastleHeart>(),
             },
         });
@@ -53,7 +52,6 @@ public static class CastleHeartUtil {
 
         var query = entityManager.CreateEntityQuery(new EntityQueryDesc() {
             All = new ComponentType[] {
-                ComponentType.ReadOnly<Pylonstation>(),
                 ComponentType.ReadOnly<CastleHeart>(),
                 ComponentType.ReadOnly<Team>(),
             },
@@ -72,7 +70,6 @@ public static class CastleHeartUtil {
         var entityManager = VWorld.Server.EntityManager;
         var query = entityManager.CreateEntityQuery(new EntityQueryDesc() {
             All = new ComponentType[] {
-                ComponentType.ReadOnly<Pylonstation>(),
                 ComponentType.ReadOnly<CastleHeart>(),
                 ComponentType.ReadOnly<NetworkId>(),
             },
