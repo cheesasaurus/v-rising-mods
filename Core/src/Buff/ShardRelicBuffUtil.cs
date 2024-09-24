@@ -7,7 +7,7 @@ using VRisingMods.Core.Prefabs;
 
 namespace VRisingMods.Core.Buff;
 
-public class ShardBuffUtil {
+public class ShardRelicBuffUtil {
 
     private static readonly PrefabGUID[] ShardBuffs = {
         ShardPrefabs.AB_Interact_UseRelic_Behemoth_Buff,

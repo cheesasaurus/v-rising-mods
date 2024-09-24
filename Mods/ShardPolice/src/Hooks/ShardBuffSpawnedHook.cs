@@ -26,9 +26,9 @@ public static class ShardBuffSpawnedHook
             buffTracker.BuffWasSpawned(entity);
         }
         foreach (var psb in buffTracker.PlayerShardBuffs()) {
-            var wasABuffRemoved = ShardBuffUtil.TryRemoveShardBuffsFromPlayerExceptOne(psb.Character, psb.LatestShardBuffGuid);
+            var wasABuffRemoved = ShardRelicBuffUtil.TryRemoveShardBuffsFromPlayerExceptOne(psb.Character, psb.LatestShardBuffGuid);
             if (wasABuffRemoved) {
-                LogUtil.LogInfo($"Limited shard buffs for player {psb.CharacterName} (steam#{psb.User.PlatformId}). Only the {ShardBuffUtil.ShardName(psb.LatestShardBuffGuid)} buff was kept.");
+                LogUtil.LogInfo($"Limited shard buffs for player {psb.CharacterName} (steam#{psb.User.PlatformId}). Only the {ShardRelicBuffUtil.ShardName(psb.LatestShardBuffGuid)} buff was kept.");
             }
         }
     }
@@ -48,7 +48,7 @@ public static class ShardBuffSpawnedHook
         private Dictionary<Entity, PlayerShardBuff> _PlayerShardBuffs = new Dictionary<Entity, PlayerShardBuff>();
 
         public void BuffWasSpawned(Entity entity) {
-            if (!ShardBuffUtil.IsShardBuffRelated(entity)) {
+            if (!ShardRelicBuffUtil.IsShardBuffRelated(entity)) {
                 return;
             }
             var entityOwner = EntityManager.GetComponentData<EntityOwner>(entity);

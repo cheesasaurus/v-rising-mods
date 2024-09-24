@@ -17,10 +17,10 @@ This is a server-side mod.
   - `.shard-buffs-remove Bobby` removes the shard buffs from the player named "Bobby". (`.sbr Bobby` for short)
   - `.shard-buffs-remove-everyone` removes the shard buffs from all players. (`.sbre` for short)
   - Affected players are notified when their buffs are removed.
-- Command (admin only) to reset shards.
-  - `.shards-reset`
+- Command (admin only) to reset shards (the old placeable relics, not the new wearable ones).
+  - `.shard-reset-relics`
   - Players are notified when this is used.
-  - Removes shard buffs from all players and returns shards to their bosses.
+  - Removes shard buffs from all players and returns shards (relics) to their bosses.
   - demo: https://www.youtube.com/watch?v=cwIH6dwlZ8Q
 
 ## TODO (not implemented)

@@ -5,12 +5,11 @@ using ProjectM.Shared;
 using Stunlock.Core;
 using Unity.Collections;
 using Unity.Entities;
-using VRisingMods.Core.Item;
 using VRisingMods.Core.Prefabs;
 
 namespace ShardPolice.Utils;
 
-public static class ShardItemUtil {
+public static class ShardRelicItemUtil {
 
     private static readonly PrefabGUID[] ShardItems = {
         ShardPrefabs.Item_Building_Relic_Behemoth,
@@ -37,7 +36,7 @@ public static class ShardItemUtil {
         }
     }
 
-    public static void RemovePlacedShardsAndDropNearCharacterToDespawn(Entity character) {
+    public static void RemovePlacedShards() {
         var entityManager = VWorld.Server.EntityManager;
         var query = entityManager.CreateEntityQuery(new ComponentType[]{
             ComponentType.ReadOnly<Relic>(),
@@ -45,12 +44,7 @@ public static class ShardItemUtil {
         });
 
         foreach (var shardBuildingEntity in query.ToEntityArray(Allocator.Temp)) {
-            entityManager.TryGetComponentData<PrefabGUID>(shardBuildingEntity, out var buildingPrefabGUID);
-            if (ShardItemForBuilding.TryGetValue(buildingPrefabGUID, out var itemPrefabGUID)) {
-                if (ItemUtil.TryDropNewItemWithCustomLifetime(character, itemPrefabGUID, 1, 1)) {
-                    DestroyUtility.Destroy(entityManager, shardBuildingEntity, DestroyDebugReason.Consume);
-                }
-            }
+            DestroyUtility.Destroy(entityManager, shardBuildingEntity, DestroyDebugReason.Consume);
         }
     }
 
