@@ -21,7 +21,7 @@ public static class ShardBuffSpawnedHook
             return;
         }
         var buffTracker = new BuffTracker();
-        var events = __instance.__OnUpdate_LambdaJob0_entityQuery.ToEntityArray(Allocator.Temp);
+        var events = __instance._Query.ToEntityArray(Allocator.Temp);
         foreach (var entity in events) {
             buffTracker.BuffWasSpawned(entity);
         }
