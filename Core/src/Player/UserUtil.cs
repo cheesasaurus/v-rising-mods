@@ -15,13 +15,12 @@ public static class UserUtil {
         var query = entityManager.CreateEntityQuery(new ComponentType[]{userType});
 
         var entities = query.ToEntityArray(Allocator.Temp);
-        var users = query.ToComponentDataArray<User>(Allocator.Temp);
 
         var userModels = new List<UserModel>();
-        for (var i = 0; i < entities.Length; i++) {
+        foreach (var userEntity in entities) {
             userModels.Add(new UserModel {
-                Entity = entities[i],
-                User = users[i],
+                Entity = userEntity,
+                User = entityManager.GetComponentData<User>(userEntity),
             });
         }
         return userModels;
