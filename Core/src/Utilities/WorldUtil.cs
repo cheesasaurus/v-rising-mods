@@ -66,6 +66,26 @@ public static class WorldUtil
     /// </summary>
     public static bool IsClient => Application.productName == "VRising";
 
+    public static bool IsGameWorldCreated()
+    {
+        if (_clientWorld != null) {
+            return _clientWorld.IsCreated;
+        }
+        if (_serverWorld != null) {
+            return _serverWorld.IsCreated;
+        }
+
+        if (IsClient) {
+            return GetWorld("Client_0") is not null;
+        }
+        if (IsServer)
+        {
+            return GetWorld("Server") is not null;
+        }
+
+        return false;
+    }
+
     private static World GetWorld(string name)
     {
         foreach (var world in World.s_AllWorlds)
