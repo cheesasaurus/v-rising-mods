@@ -1,6 +1,8 @@
 ﻿using BepInEx;
 using BepInEx.Unity.IL2CPP;
+using Explorer.UI;
 using HarmonyLib;
+using UnityEngine;
 using VampireCommandFramework;
 using VRisingMods.Core.Utilities;
 
@@ -26,6 +28,36 @@ public class Plugin : BasePlugin
 
         // Register all commands in the assembly with VCF
         CommandRegistry.RegisterAll();
+
+        // init UI
+        initUI();
+    }
+
+    private void initUI() {
+        float startupDelay = 1f;
+        UniverseLib.Config.UniverseLibConfig config = new();
+        UniverseLib.Universe.Init(startupDelay, UIOnInitialized, UILogHandler, config);
+    }
+
+    void UIOnInitialized() {
+        // todo: not sure if this is the right place
+        Universe_OnInitialized();
+    }
+
+    public static UniverseLib.UI.UIBase UiBase { get; private set; }
+    void Universe_OnInitialized()
+    {
+        UiBase = UniverseLib.UI.UniversalUI.RegisterUI("my.unique.ID", UiUpdate);
+        MyPanel myPanel = new(UiBase);
+    }
+
+    void UiUpdate()
+    {
+        // Called once per frame when your UI is being displayed.
+    }
+
+    void UILogHandler(string message, LogType type) {
+
     }
 
     public override bool Unload()

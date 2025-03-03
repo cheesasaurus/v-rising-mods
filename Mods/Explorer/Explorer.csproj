@@ -18,12 +18,13 @@
     <PackageReference Include="VRising.Unhollowed.Client" Version="1.0.0.*" />
     <PackageReference Include="VRising.VampireCommandFramework" Version="0.8.*" />
     <PackageReference Include="VRising.Bloodstone" Version="0.1.*" />
+    <PackageReference Include="rainbowblood.UniverseLib.IL2CPP" Version="2.*" />
   </ItemGroup>
 
   <Target Name="PrepareLibsForDist" AfterTargets="Publish">
     <PropertyGroup>
       <PublishPath>$(OutputPath)/publish</PublishPath>
-      <DistAdditionalLibs></DistAdditionalLibs>
+      <DistAdditionalLibs>$(PublishPath)/UniverseLib.IL2CPP.dll</DistAdditionalLibs>
     </PropertyGroup>
   </Target>
 
