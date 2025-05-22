@@ -1,4 +1,3 @@
-using Bloodstone.API;
 using HarmonyLib;
 using ProjectM;
 using Unity.Collections;
@@ -44,7 +43,7 @@ public static class ShardBuffSpawnedHook
             public PrefabGUID LatestShardBuffGuid;
         }
 
-        private EntityManager EntityManager = VWorld.Game.EntityManager;
+        private EntityManager EntityManager = WorldUtil.Game.EntityManager;
         private Dictionary<Entity, PlayerShardBuff> _PlayerShardBuffs = new Dictionary<Entity, PlayerShardBuff>();
 
         public void BuffWasSpawned(Entity entity) {

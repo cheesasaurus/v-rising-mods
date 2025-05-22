@@ -1,5 +1,3 @@
-using Bloodstone.API;
-using ProjectM;
 using VampireCommandFramework;
 using VRisingMods.Core.Buff;
 using VRisingMods.Core.Chat;

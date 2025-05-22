@@ -18,7 +18,6 @@
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
     <PackageReference Include="VRising.Unhollowed.Client" Version="1.1.8.9179701" />
     <PackageReference Include="VRising.VampireCommandFramework" Version="0.10.2" />
-    <PackageReference Include="VRising.Bloodstone" Version="0.1.*" />
   </ItemGroup>
 
   <Target Name="PrepareLibsForDist" AfterTargets="Publish">

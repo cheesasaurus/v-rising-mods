@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using BepInEx;
-using Bloodstone.API;
 using CastleHeartPolice.Services;
 using ProjectM;
 using ProjectM.CastleBuilding;
@@ -11,6 +10,7 @@ using ProjectM.Terrain;
 using Unity.Collections;
 using VampireCommandFramework;
 using VRisingMods.Core.CastleTerritory.Models;
+using VRisingMods.Core.Utilities;
 
 namespace CastleHeartPolice.Commands;
 
@@ -65,9 +65,9 @@ public class DumpTerritoriesInfoCommand {
         var data = new DumpData();
         var territories = new List<CastleTerritoryDumpData>();
 
-        var entityManager = VWorld.Server.EntityManager;
+        var entityManager = WorldUtil.Server.EntityManager;
         var rulesService = RulesService.Instance;
-        var mapZoneCollectionSystem = VWorld.Server.GetExistingSystemManaged<MapZoneCollectionSystem>();
+        var mapZoneCollectionSystem = WorldUtil.Server.GetExistingSystemManaged<MapZoneCollectionSystem>();
         var mapZoneCollection = mapZoneCollectionSystem.GetMapZoneCollection();
         foreach (var spatialZone in mapZoneCollection.MapZoneLookup.GetValueArray(Allocator.Temp)) {
             if ((MapZoneFlags.CastleTerritory & spatialZone.ZoneFlags) == 0) {

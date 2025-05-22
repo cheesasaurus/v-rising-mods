@@ -1,11 +1,11 @@
 using System;
 using System.Text;
-using Bloodstone.API;
 using CastleHeartPolice.Services;
 using Unity.Mathematics;
 using Unity.Transforms;
 using VampireCommandFramework;
 using VRisingMods.Core.CastleTerritory;
+using VRisingMods.Core.Utilities;
 
 namespace CastleHeartPolice.Commands;
 
@@ -38,7 +38,7 @@ public class TerritoryInfoCommand {
     }
 
     private static float3 WorldPositionOfPlayerCharacter(ChatCommandContext ctx) {
-        var translationData = VWorld.Server.EntityManager.GetComponentData<Translation>(ctx.User.LocalCharacter._Entity);
+        var translationData = WorldUtil.Server.EntityManager.GetComponentData<Translation>(ctx.User.LocalCharacter._Entity);
         return translationData.Value;
     }
 

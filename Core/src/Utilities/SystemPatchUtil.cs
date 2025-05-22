@@ -1,4 +1,3 @@
-using Bloodstone.API;
 using ProjectM;
 using ProjectM.Shared;
 using Unity.Entities;
@@ -7,7 +6,7 @@ namespace VRisingMods.Core.Utilities;
 
 public static class SystemPatchUtil {
     public static void CancelJob(Entity entity) {
-        VWorld.Server.EntityManager.AddComponent<Disabled>(entity);
-        DestroyUtility.CreateDestroyEvent(VWorld.Server.EntityManager, entity, DestroyReason.Default, DestroyDebugReason.ByScript);
+        WorldUtil.Server.EntityManager.AddComponent<Disabled>(entity);
+        DestroyUtility.CreateDestroyEvent(WorldUtil.Server.EntityManager, entity, DestroyReason.Default, DestroyDebugReason.ByScript);
     }
 }

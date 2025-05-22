@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
-using Bloodstone.API;
 using ProjectM.Network;
 using Unity.Collections;
 using Unity.Entities;
+using VRisingMods.Core.Utilities;
 
 namespace VRisingMods.Core.Player;
 
 
 public static class UserUtil {
     public static List<UserModel> FindAllUsers() {
-        var entityManager = VWorld.Server.EntityManager;
+        var entityManager = WorldUtil.Server.EntityManager;
         var userType = ComponentType.ReadOnly<User>();
         var query = entityManager.CreateEntityQuery(new ComponentType[]{userType});
 

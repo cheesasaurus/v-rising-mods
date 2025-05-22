@@ -1,8 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
-using Bloodstone.API;
 using Il2CppInterop.Runtime;
-using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
 
 namespace VRisingMods.Core.Utilities;
@@ -12,12 +10,12 @@ public static class AotWorkaroundUtil {
 
     // alternative for Entitymanager.HasComponent
     public static bool HasComponent<T>(Entity entity) where T : struct  {
-        return VWorld.Server.EntityManager.HasComponent(entity, ComponentType<T>());
+        return WorldUtil.Server.EntityManager.HasComponent(entity, ComponentType<T>());
     }
 
     // more convenient than Entitymanager.AddComponent
     public static bool AddComponent<T>(Entity entity) where T : struct  {
-        return VWorld.Server.EntityManager.AddComponent(entity, ComponentType<T>());
+        return WorldUtil.Server.EntityManager.AddComponent(entity, ComponentType<T>());
     }
 
     // alternative for Entitymanager.AddComponentData
@@ -28,12 +26,12 @@ public static class AotWorkaroundUtil {
 
     // alternative for Entitymanager.RemoveComponent
     public static bool RemoveComponent<T>(Entity entity) where T : struct  {
-        return VWorld.Server.EntityManager.RemoveComponent(entity, ComponentType<T>());
+        return WorldUtil.Server.EntityManager.RemoveComponent(entity, ComponentType<T>());
     }
 
     // alternative for EntityMManager.GetComponentData
     public unsafe static T GetComponentData<T>(Entity entity) where T : struct  {
-        void* rawPointer = VWorld.Server.EntityManager.GetComponentDataRawRO(entity, ComponentTypeIndex<T>());
+        void* rawPointer = WorldUtil.Server.EntityManager.GetComponentDataRawRO(entity, ComponentTypeIndex<T>());
         return Marshal.PtrToStructure<T>(new System.IntPtr(rawPointer));
     }
 
@@ -44,7 +42,7 @@ public static class AotWorkaroundUtil {
         var byteArray = StructureToByteArray(componentData);
         fixed (byte* data = byteArray) {
             //UnsafeUtility.CopyStructureToPtr(ref componentData, data);
-            VWorld.Server.EntityManager.SetComponentDataRaw(entity, ComponentTypeIndex<T>(), data, size);
+            WorldUtil.Server.EntityManager.SetComponentDataRaw(entity, ComponentTypeIndex<T>(), data, size);
         }
     }
 

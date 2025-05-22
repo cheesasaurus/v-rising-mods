@@ -1,8 +1,6 @@
 using System.Text;
-using Bloodstone.API;
 using CastleHeartPolice.Services;
 using HarmonyLib;
-using ProjectM;
 using ProjectM.Gameplay.Systems;
 using ProjectM.Network;
 using Unity.Collections;
@@ -18,7 +16,7 @@ namespace CastleHeartPolice.Hooks;
 public static class CastleHeartWillBeClaimedHook {
 
     public static void Prefix(CastleHeartEventSystem __instance) {
-        var entityManager = VWorld.Server.EntityManager;
+        var entityManager = WorldUtil.Server.EntityManager;
         var jobs = __instance._CastleHeartInteractEventQuery.ToEntityArray(Allocator.Temp);
         foreach (var job in jobs) {
             var heartEvent = entityManager.GetComponentData<CastleHeartInteractEvent>(job);
@@ -29,7 +27,7 @@ public static class CastleHeartWillBeClaimedHook {
     }
 
     private static void HandleCastleHeartWillBeClaimed(Entity job, CastleHeartInteractEvent heartEvent) {
-        var entityManager = VWorld.Server.EntityManager;
+        var entityManager = WorldUtil.Server.EntityManager;
         var castleHeart = CastleHeartUtil.FindCastleHeartById(heartEvent.CastleHeart);        
         var fromCharacter = entityManager.GetComponentData<FromCharacter>(job);
         var user = entityManager.GetComponentData<User>(fromCharacter.User);

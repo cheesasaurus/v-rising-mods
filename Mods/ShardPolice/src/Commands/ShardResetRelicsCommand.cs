@@ -1,5 +1,3 @@
-using Bloodstone.API;
-using ProjectM;
 using ShardPolice.Utils;
 using VampireCommandFramework;
 using VRisingMods.Core.Buff;

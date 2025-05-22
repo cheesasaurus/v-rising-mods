@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using Bloodstone.API;
 using ProjectM;
 using ProjectM.Shared;
 using Stunlock.Core;
 using Unity.Collections;
 using Unity.Entities;
 using VRisingMods.Core.Prefabs;
+using VRisingMods.Core.Utilities;
 
 namespace ShardPolice.Utils;
 
@@ -26,7 +26,7 @@ public static class ShardRelicItemUtil {
     };
 
     public static void PrepareShardItemsToDespawn() {
-        var entityManager = VWorld.Server.EntityManager;
+        var entityManager = WorldUtil.Server.EntityManager;
         var query = entityManager.CreateEntityQuery(new ComponentType[]{
             ComponentType.ReadOnly<Relic>(),
             ComponentType.ReadOnly<LifeTime>(),
@@ -37,7 +37,7 @@ public static class ShardRelicItemUtil {
     }
 
     public static void RemovePlacedShards() {
-        var entityManager = VWorld.Server.EntityManager;
+        var entityManager = WorldUtil.Server.EntityManager;
         var query = entityManager.CreateEntityQuery(new ComponentType[]{
             ComponentType.ReadOnly<Relic>(),
             ComponentType.ReadOnly<BlueprintData>(),
@@ -49,7 +49,7 @@ public static class ShardRelicItemUtil {
     }
 
     private static void PrepareShardItemToDespawn(Entity entity) {
-        var entityManager = VWorld.Server.EntityManager;
+        var entityManager = WorldUtil.Server.EntityManager;
         if (entityManager.TryGetComponentData<LifeTime>(entity, out var lifeTime)) {
             lifeTime.Duration = 0;
             entityManager.SetComponentData(entity, lifeTime);

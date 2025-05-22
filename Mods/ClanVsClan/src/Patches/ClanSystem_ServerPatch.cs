@@ -1,6 +1,4 @@
-using Bloodstone.API;
 using HarmonyLib;
-using ProjectM;
 using ProjectM.Gameplay.Clan;
 using ProjectM.Network;
 using Unity.Collections;
@@ -40,7 +38,7 @@ public static class ClanSystem_ServerPatch
     }
 
     private static void HandleInviteResponse(Entity job) {
-        var entityManager = VWorld.Server.EntityManager;
+        var entityManager = WorldUtil.Server.EntityManager;
         var inviteResponse = entityManager.GetComponentData<ClanEvents_Client.ClanInviteResponse>(job);
         if (!inviteResponse.Response.Equals(InviteRequestResponse.Accept)) {
             return;
@@ -58,7 +56,7 @@ public static class ClanSystem_ServerPatch
     }
 
     private static void CancelClanJobWithMessage(Entity job, string message) {
-        var entityManager = VWorld.Server.EntityManager;
+        var entityManager = WorldUtil.Server.EntityManager;
         var fromCharacter = entityManager.GetComponentData<FromCharacter>(job);
         var user = entityManager.GetComponentData<User>(fromCharacter.User);
         ChatUtil.SendSystemMessageToClient(user, message);

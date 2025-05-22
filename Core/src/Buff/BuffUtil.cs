@@ -1,15 +1,15 @@
-using Bloodstone.API;
 using ProjectM;
 using ProjectM.Network;
 using ProjectM.Shared;
 using Stunlock.Core;
 using Unity.Entities;
+using VRisingMods.Core.Utilities;
 
 namespace VRisingMods.Core.Buff;
 
 public class BuffUtil {
     public static void GiveBuffToPlayer(Entity character, PrefabGUID buffPrefabGUID) {
-        var playerCharacter = VWorld.Server.EntityManager.GetComponentData<PlayerCharacter>(character);
+        var playerCharacter = WorldUtil.Server.EntityManager.GetComponentData<PlayerCharacter>(character);
 
 		var fromCharacter = new FromCharacter()
 		{
@@ -22,12 +22,12 @@ public class BuffUtil {
 			BuffPrefabGUID = buffPrefabGUID
 		};
 
-        var debugEventsSystem = VWorld.Server.GetExistingSystemManaged<DebugEventsSystem>();
+        var debugEventsSystem = WorldUtil.Server.GetExistingSystemManaged<DebugEventsSystem>();
         debugEventsSystem.ApplyBuff(fromCharacter, buffEvent);
     }
 
     public static bool TryRemoveBuffFromPlayer(Entity character, PrefabGUID buffPrefabGUID) {
-        var entityManager = VWorld.Server.EntityManager;
+        var entityManager = WorldUtil.Server.EntityManager;
         var playerHasBuff = BuffUtility.TryGetBuff(entityManager, character, buffPrefabGUID, out var buffEntity);
         if (playerHasBuff) {
             DestroyUtility.Destroy(entityManager, buffEntity, DestroyDebugReason.TryRemoveBuff);

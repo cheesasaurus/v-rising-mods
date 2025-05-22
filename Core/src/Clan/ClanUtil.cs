@@ -1,15 +1,15 @@
-using Bloodstone.API;
 using ProjectM;
 using ProjectM.Network;
 using Unity.Collections;
 using Unity.Entities;
+using VRisingMods.Core.Utilities;
 
 namespace VRisingMods.Core.Clan;
 
 public static class ClanUtil {
 
     public static bool TryFindClan(NetworkId clanId, out Entity clanTeam) {
-        var entityManager = VWorld.Server.EntityManager;
+        var entityManager = WorldUtil.Server.EntityManager;
 
         var query = entityManager.CreateEntityQuery(new EntityQueryDesc() {
             All = new ComponentType[] {

@@ -1,5 +1,4 @@
 using System;
-using Bloodstone.API;
 using ProjectM;
 using ProjectM.CastleBuilding;
 using ProjectM.Terrain;
@@ -7,6 +6,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using VRisingMods.Core.CastleTerritory.Models;
+using VRisingMods.Core.Utilities;
 
 namespace VRisingMods.Core.CastleTerritory;
 
@@ -37,9 +37,9 @@ public static class CastleTerritoryUtil {
     public static bool TryFindTerritoryContaining(float3 worldPos, out CastleTerritoryInfo territoryInfo) {
         var blockCoords = BlockCoordinatesFromWorldPosition(worldPos);
         var worldPos2 = TerritoryWorldBoundsCoordinatesFromWorldPosition(worldPos);
-        var entityManager = VWorld.Server.EntityManager;
+        var entityManager = WorldUtil.Server.EntityManager;
         
-        var mapZoneCollectionSystem = VWorld.Server.GetExistingSystemManaged<MapZoneCollectionSystem>();
+        var mapZoneCollectionSystem = WorldUtil.Server.GetExistingSystemManaged<MapZoneCollectionSystem>();
         var mapZoneCollection = mapZoneCollectionSystem.GetMapZoneCollection();
         foreach (var spatialZone in mapZoneCollection.MapZoneLookup.GetValueArray(Allocator.Temp)) {
             if ((MapZoneFlags.CastleTerritory & spatialZone.ZoneFlags) == 0) {
@@ -72,11 +72,11 @@ public static class CastleTerritoryUtil {
     }
 
     public static bool TryFindTerritoryOfCastleHeart(Entity heartEntity, out CastleTerritoryInfo territoryInfo) {
-        var entityManager = VWorld.Server.EntityManager;
+        var entityManager = WorldUtil.Server.EntityManager;
         var castleHeart = entityManager.GetComponentData<CastleHeart>(heartEntity);
         var castleTerritory = entityManager.GetComponentData<ProjectM.CastleBuilding.CastleTerritory>(castleHeart.CastleTerritoryEntity);
 
-        var mapZoneCollectionSystem = VWorld.Server.GetExistingSystemManaged<MapZoneCollectionSystem>();
+        var mapZoneCollectionSystem = WorldUtil.Server.GetExistingSystemManaged<MapZoneCollectionSystem>();
         var mapZoneCollection = mapZoneCollectionSystem.GetMapZoneCollection();
         
         if (mapZoneCollection.MapZoneLookup.TryGetValue(castleHeart.CastleTerritoryId, out var spatialZone)) {

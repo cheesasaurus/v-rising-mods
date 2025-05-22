@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using Bloodstone.API;
-using ProjectM;
 using Stunlock.Core;
 using Unity.Entities;
 using VRisingMods.Core.Prefabs;
+using VRisingMods.Core.Utilities;
 
 namespace VRisingMods.Core.Buff;
 
@@ -55,7 +54,7 @@ public class ShardRelicBuffUtil {
     }
 
     public static bool IsShardBuffRelated(Entity entity) {
-        var entityManager = VWorld.Server.EntityManager;
+        var entityManager = WorldUtil.Server.EntityManager;
         if (!entityManager.HasComponent<PrefabGUID>(entity)) {
             return false;
         }

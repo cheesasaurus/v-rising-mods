@@ -1,5 +1,4 @@
 using System.Text;
-using Bloodstone.API;
 using CastleHeartPolice.Services;
 using HarmonyLib;
 using ProjectM;
@@ -27,13 +26,13 @@ public static class CastleHeartWillBePlacedHook {
     }
     
     private static bool IsCastleHeart(Entity job) {
-        var entityManager = VWorld.Server.EntityManager;
+        var entityManager = WorldUtil.Server.EntityManager;
         var buildTileModelData = entityManager.GetComponentData<BuildTileModelEvent>(job);
         return buildTileModelData.PrefabGuid.Equals(TileModelPrefabs.TM_BloodFountain_Pylon_Station);
     }
 
     private static void HandleCastleHeartWillBePlaced(Entity job) {
-        var entityManager = VWorld.Server.EntityManager;
+        var entityManager = WorldUtil.Server.EntityManager;
         var buildTileModelData = entityManager.GetComponentData<BuildTileModelEvent>(job);
         var worldPos = buildTileModelData.SpawnTranslation.Value;
         var foundTerritory = CastleTerritoryUtil.TryFindTerritoryContaining(worldPos, out var territoryInfo);
