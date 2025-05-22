@@ -5,7 +5,7 @@ namespace CastleHeartPolice.Models;
 // result of checking a rule
 public class CheckRuleResult {
     public bool IsViolation = false;
-    public List<string> ViolationReasons = [];
+    public List<string> ViolationReasons = new() { };
 
     public CheckRuleResult AddViolation(string reason) {
         IsViolation = true;

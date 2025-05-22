@@ -9,14 +9,15 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RootNamespace>EventScheduler</RootNamespace>
+    <BepInExVersion>6.0.0-be.733</BepInExVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.691" IncludeAssets="compile" />
-    <PackageReference Include="BepInEx.Core" Version="6.0.0-be.691" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="$(BepInExVersion)" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.Core" Version="$(BepInExVersion)" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
-    <PackageReference Include="VRising.Unhollowed.Client" Version="1.0.0.*" />
-    <PackageReference Include="VRising.VampireCommandFramework" Version="0.8.*" />
+    <PackageReference Include="VRising.Unhollowed.Client" Version="1.1.8.9179701" />
+    <PackageReference Include="VRising.VampireCommandFramework" Version="0.10.2" />
     <PackageReference Include="VRising.Bloodstone" Version="0.1.*" />
     <PackageReference Include="LiteDB" Version="5.0.17" />
   </ItemGroup>

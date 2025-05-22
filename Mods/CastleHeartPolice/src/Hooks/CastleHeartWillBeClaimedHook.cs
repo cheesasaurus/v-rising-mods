@@ -8,6 +8,7 @@ using ProjectM.Network;
 using Unity.Collections;
 using Unity.Entities;
 using VRisingMods.Core.CastleTerritory;
+using VRisingMods.Core.Chat;
 using VRisingMods.Core.Utilities;
 
 namespace CastleHeartPolice.Hooks;
@@ -38,7 +39,7 @@ public static class CastleHeartWillBeClaimedHook {
             foreach (var reason in ruleResult.ViolationReasons) {
                 message.AppendLine($"{reason}");
             }
-            ServerChatUtils.SendSystemMessageToClient(entityManager, user, message.ToString());
+            ChatUtil.SendSystemMessageToClient(user, message.ToString());
             SystemPatchUtil.CancelJob(job);
         }
     }

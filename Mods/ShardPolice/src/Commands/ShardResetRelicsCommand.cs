@@ -3,6 +3,7 @@ using ProjectM;
 using ShardPolice.Utils;
 using VampireCommandFramework;
 using VRisingMods.Core.Buff;
+using VRisingMods.Core.Chat;
 using VRisingMods.Core.Player;
 using VRisingMods.Core.Utilities;
 
@@ -18,7 +19,7 @@ public class ShardResetRelicsCommand {
         }
         ShardRelicItemUtil.RemovePlacedShards();
         ShardRelicItemUtil.PrepareShardItemsToDespawn();
-        ServerChatUtils.SendSystemMessageToAllClients(VWorld.Server.EntityManager, "Soul Shards (placeable relics) have been reset!");
+        ChatUtil.SendSystemMessageToAllClients("Soul Shards (placeable relics) have been reset!");
         LogUtil.LogMessage($"Shards (placeable relics) were reset by {ctx.User.CharacterName} (steam#{ctx.User.PlatformId})");
     }
 

@@ -7,6 +7,7 @@ using ProjectM.Gameplay.Clan;
 using ProjectM.Network;
 using Unity.Collections;
 using Unity.Entities;
+using VRisingMods.Core.Chat;
 using VRisingMods.Core.Clan;
 using VRisingMods.Core.Utilities;
 
@@ -44,7 +45,7 @@ public static class PlayerAcceptedClanInviteHook
             foreach (var reason in ruleResult.ViolationReasons) {
                 message.AppendLine($"{reason}");
             }
-            ServerChatUtils.SendSystemMessageToClient(entityManager, user, message.ToString());
+            ChatUtil.SendSystemMessageToClient(user, message.ToString());
             SystemPatchUtil.CancelJob(job);
         }
     }

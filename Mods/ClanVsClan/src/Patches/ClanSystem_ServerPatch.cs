@@ -6,6 +6,7 @@ using ProjectM.Network;
 using Unity.Collections;
 using Unity.Entities;
 using VRisingMods.Core.CastleRaid;
+using VRisingMods.Core.Chat;
 using VRisingMods.Core.Utilities;
 
 namespace ClanVsClan.Patches;
@@ -60,7 +61,7 @@ public static class ClanSystem_ServerPatch
         var entityManager = VWorld.Server.EntityManager;
         var fromCharacter = entityManager.GetComponentData<FromCharacter>(job);
         var user = entityManager.GetComponentData<User>(fromCharacter.User);
-        ServerChatUtils.SendSystemMessageToClient(entityManager, user, message);
+        ChatUtil.SendSystemMessageToClient(user, message);
         SystemPatchUtil.CancelJob(job);
     }
 
