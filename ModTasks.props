@@ -9,8 +9,8 @@
   "website_url": "$(WebsiteURL)",
   "description": "$(Description)",
   "dependencies": [
-      "BepInEx-BepInExPack_V_Rising-1.668.5",
-      "deca-VampireCommandFramework-0.8.0"
+      "BepInEx-BepInExPack_V_Rising-1.733.2",
+      "deca-VampireCommandFramework-0.10.2"
   ]
 }
     ]]>
@@ -33,7 +33,7 @@
   </Target>
 
   <Target Name="DeployToDev" AfterTargets="PrepareLibsForDist" Condition="'$(VRisingServerPath)' != ''">
-    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(VRisingServerPath)/BepInEx/BloodstonePlugins" />
+    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(VRisingServerPath)/BepInEx/BloodpebblePlugins" />
     <Copy SourceFiles="$(DistAdditionalLibs)" DestinationFolder="$(VRisingServerPath)/BepInEx/Plugins" Condition="$(DeployLibsToo) != ''"/>
     <Message Text="Deployed plugin $(AssemblyName).dll to your local v rising server." Importance="High" />
   </Target>
