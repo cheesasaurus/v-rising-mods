@@ -23,6 +23,7 @@
     <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="dist/thunderstore/temp" />
     <Copy SourceFiles="images/icon.png" DestinationFolder="dist/thunderstore/temp"/>
     <Copy SourceFiles="README.md" DestinationFolder="dist/thunderstore/temp"/>
+    <Copy SourceFiles="CHANGELOG.md" DestinationFolder="dist/thunderstore/temp"/>
     <Copy SourceFiles="$(DistAdditionalLibs)" DestinationFolder="dist/thunderstore/temp"/>
     <ZipDirectory SourceDirectory="dist/thunderstore/temp" DestinationFile="dist/thunderstore/$(AssemblyName).zip" Overwrite="true"></ZipDirectory>
     <RemoveDir Directories="dist/thunderstore/temp"/>
