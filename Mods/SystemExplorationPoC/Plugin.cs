@@ -82,14 +82,36 @@ public class Plugin : BasePlugin
     private IList<Type> FindSystemGroupTypes()
     {
         var systemGroupTypes = new List<Type>();
-        Assembly assembly = typeof(ProjectM.ReactToContestEventGroup).Assembly;
-        foreach (var type in assembly.GetTypes())
+        Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        var assemblyCount = assemblies.Length;
+        var counter = 0;
+        foreach (var assembly in assemblies)
         {
-            if (type.IsSubclassOf(typeof(Unity.Entities.ComponentSystemGroup)))
+            Log.LogInfo($"scanning assembly {++counter} of {assemblyCount}");
+            try
             {
-                systemGroupTypes.Add(type);
+                foreach (var type in assembly.GetTypes())
+                {
+                    try
+                    {
+                        if (type.IsSubclassOf(typeof(Unity.Entities.ComponentSystemGroup)))
+                        {
+                            systemGroupTypes.Add(type);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.LogWarning(ex);
+                    }
+
+                }
             }
-        }
+            catch(Exception ex)
+            {
+                Log.LogWarning(ex);
+            }
+            
+        }        
         return systemGroupTypes;
     }
 
