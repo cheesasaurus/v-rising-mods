@@ -80,12 +80,13 @@ public class Plugin : BasePlugin
             WriteIndented = true
         };
         //TestJson(jsonOptions);
-        var json = JsonSerializer.Serialize(treeRoots[0], jsonOptions);
+        //var json = JsonSerializer.Serialize(treeRoots[0], jsonOptions);
         //Log.LogInfo(json);
 
-
-
-
+        var stringifier = new SystemsTreeStringifier();
+        var systemsString = stringifier.CreateString(treeRoots, world);
+        Log.LogInfo(systemsString);
+        // todo: write to file
     }
 
     public override bool Unload()

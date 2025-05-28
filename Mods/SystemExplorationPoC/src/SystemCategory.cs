@@ -1,6 +1,6 @@
 namespace SystemExplorationPoC;
 
-enum SystemCategory
+public enum SystemCategory
 {
     Group, // is a ComponentSystemGroup
     Base, // is a ComponentSystemBase, but not a group

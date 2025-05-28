@@ -4,7 +4,7 @@ using Unity.Entities;
 
 namespace SystemExplorationPoC;
 
-class SystemsTreeNode
+public class SystemsTreeNode
 {
     public SystemCategory Category;
     public Type Type;
