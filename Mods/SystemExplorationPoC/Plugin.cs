@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Il2CppInterop.Runtime;
+using Unity.Collections;
 using Unity.Entities;
 using VampireCommandFramework;
 using VRisingMods.Core.Utilities;
@@ -66,10 +69,23 @@ public class Plugin : BasePlugin
             unmanagedSystemsDict.TryAdd(systemHandle, unmanagedSystemType);
         }
 
-        LogSystemGroups(world, systemGroupInstances, managedSystemsDict, unmanagedSystemsDict);
-
+        //LogSystemGroups(world, systemGroupInstances, managedSystemsDict, unmanagedSystemsDict);
 
         // todo: build a tree with groups and all the systems in them. ordered by update order if possible. note that groups can contain more groups.
+        var treeRoots = BuildSystemsTree(world, systemGroupInstances, managedSystemsDict, unmanagedSystemsDict);
+        Log.LogInfo($"There are {treeRoots.Count} root systems in world {world.Name}");
+
+        var jsonOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true
+        };
+        //TestJson(jsonOptions);
+        var json = JsonSerializer.Serialize(treeRoots[0], jsonOptions);
+        //Log.LogInfo(json);
+
+
+
+
     }
 
     public override bool Unload()
@@ -192,10 +208,131 @@ public class Plugin : BasePlugin
                     Log.LogInfo($"  unknown system");
                 }
             }
-
-            // todo: log more stuff
         }
         Log.LogInfo("[end Listing system groups]================================================");
+    }
+
+    private IList<SystemsTreeNode> BuildSystemsTree(
+        World world,
+        IList<(Type, ComponentSystemGroup)> systemGroupInstances,
+        Dictionary<SystemHandle, (Type, ComponentSystemBase)> managedSystemsDict,
+        Dictionary<SystemHandle, Type> unmanagedSystemsDict
+    )
+    {
+        var allNodesDict = new Dictionary<SystemHandle, SystemsTreeNode>();
+
+        // first pass: ensure all groups have a node in the dict
+        foreach (var (systemGroupType, systemGroup) in systemGroupInstances)
+        {
+            var groupNode = new SystemsTreeNode
+            {
+                Category = SystemCategory.Group,
+                Type = systemGroupType,
+                SystemHandle = systemGroup.SystemHandle,
+                Instance = systemGroup,
+                Children = new List<SystemsTreeNode>(),
+            };
+            if (!allNodesDict.ContainsKey(systemGroup.SystemHandle))
+            {
+                allNodesDict.Add(systemGroup.SystemHandle, groupNode);
+            }
+        }
+
+        // second pass: add edges for group nodes, and initialize non-group nodes in Dict
+        foreach (var (systemGroupType, systemGroup) in systemGroupInstances)
+        {
+            var parentNode = allNodesDict[systemGroup.SystemHandle];
+
+            var orderedSubsystems = systemGroup.GetAllSystems();
+            foreach (var subsystemHandle in orderedSubsystems)
+            {
+                SystemCategory subsystemCategory = SystemCategory.Unknown;
+                Type subsystemType = null;
+                ComponentSystemBase subsystemInstance = null;
+
+                if (managedSystemsDict.ContainsKey(subsystemHandle))
+                {
+                    var (bestKnownType, subsystem) = managedSystemsDict[subsystemHandle];
+                    subsystemCategory = (subsystem is ComponentSystemGroup) ? SystemCategory.Group : SystemCategory.Base;
+                    subsystemType = bestKnownType;
+                    subsystemInstance = subsystem;
+                }
+                else if (unmanagedSystemsDict.ContainsKey(subsystemHandle))
+                {
+                    subsystemCategory = SystemCategory.Unmanaged;
+                    subsystemType = unmanagedSystemsDict[subsystemHandle];
+                }
+
+                SystemsTreeNode childNode;
+                if (allNodesDict.ContainsKey(subsystemHandle))
+                {
+                    childNode = allNodesDict[subsystemHandle];
+                }
+                else
+                {
+                    childNode = new SystemsTreeNode
+                    {
+                        Category = subsystemCategory,
+                        Type = subsystemType,
+                        SystemHandle = subsystemHandle,
+                        Instance = subsystemInstance,
+                        Children = new List<SystemsTreeNode>(),
+                    };
+                    allNodesDict.Add(subsystemHandle, childNode);
+                }
+                parentNode.Children.Add(childNode);
+                childNode.Parent = parentNode;
+            }
+        }
+
+        // third pass: find root groups
+        var ungroupedNodes = new HashSet<SystemsTreeNode>();
+        foreach (var (systemGroupType, systemGroup) in systemGroupInstances)
+        {
+            var node = allNodesDict[systemGroup.SystemHandle];
+            if (node.Parent is null)
+            {
+                ungroupedNodes.Add(node);
+            }
+        }
+
+        // now add all other ungrouped systems
+        foreach (var systemHandle in world.Unmanaged.GetAllSystems(Allocator.Temp))
+        {
+            if (allNodesDict.ContainsKey(systemHandle))
+            {
+                continue;
+            }
+            SystemCategory subsystemCategory = SystemCategory.Unknown;
+            Type subsystemType = null;
+            ComponentSystemBase subsystemInstance = null;
+
+            if (managedSystemsDict.ContainsKey(systemHandle))
+            {
+                var (bestKnownType, subsystem) = managedSystemsDict[systemHandle];
+                subsystemCategory = (subsystem is ComponentSystemGroup) ? SystemCategory.Group : SystemCategory.Base;
+                subsystemType = bestKnownType;
+                subsystemInstance = subsystem;
+            }
+            else if (unmanagedSystemsDict.ContainsKey(systemHandle))
+            {
+                subsystemCategory = SystemCategory.Unmanaged;
+                subsystemType = unmanagedSystemsDict[systemHandle];
+            }
+
+            var node = new SystemsTreeNode
+            {
+                Category = subsystemCategory,
+                Type = subsystemType,
+                SystemHandle = systemHandle,
+                Instance = subsystemInstance,
+                Children = new List<SystemsTreeNode>(),
+            };
+            allNodesDict.Add(systemHandle, node);
+            ungroupedNodes.Add(node);
+        }
+
+        return ungroupedNodes.ToList();
     }
 
     private IList<Type> FindSystemGroupTypes()
@@ -234,7 +371,7 @@ public class Plugin : BasePlugin
         return systemGroupTypes;
     }
 
-    
+
 
     // todo: we should scan all assemblies once, but this is a proof-of-concept and i'm too lazy to refactor
     private IList<Type> FindComponentSystemBaseTypes()
@@ -315,7 +452,7 @@ public class Plugin : BasePlugin
                             continue;
                         }
                         iSystemTypes.Add(type);
-                        
+
                     }
                     catch (Exception ex)
                     {
@@ -342,6 +479,20 @@ public class Plugin : BasePlugin
             var systemGroup = system.Cast<ProjectM.ReactToContestEventGroup>();
             Log.LogInfo($"group contains {systemGroup.GetAllSystems().Length} systems");
         }
+    }
+
+    private void TestJson(JsonSerializerOptions jsonOptions)
+    {
+        var testNode = new SystemsTreeNode
+        {
+            Category = SystemCategory.Group,
+            Type = null,
+            SystemHandle = SystemHandle.Null,
+            Instance = null,
+            Children = new List<SystemsTreeNode>(),
+        };
+        var testJson = JsonSerializer.Serialize(testNode, jsonOptions);
+        Log.LogInfo(testJson);
     }
     
 }
