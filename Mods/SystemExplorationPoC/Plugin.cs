@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Il2CppInterop.Runtime;
-using StableNameDotNet;
 using Unity.Entities;
 using VampireCommandFramework;
 using VRisingMods.Core.Utilities;
@@ -36,25 +34,33 @@ public class Plugin : BasePlugin
         // TrySomething();
 
         var world = WorldUtil.Game;
-        var systemGroupTypes = FindSystemGroupTypes();
-        var systemGroupInstances = new List<(Type, ComponentSystemGroup)>();
-        var notFoundSystemGroupTypes = new List<Type>();
-        foreach (var systemGroupType in systemGroupTypes)
-        {
-            var systemInstance = world.GetExistingSystemManaged(Il2CppType.From(systemGroupType));
-            if (systemInstance is null)
-            {
-                notFoundSystemGroupTypes.Add(systemGroupType);
-                continue;
-            }
-            var systemGroupInstance = systemInstance.Cast<ComponentSystemGroup>();
 
-            // use a tuple to remember the original type
-            // todo: or somehow cast it in here. not sure how to do it with a dynamic type though.
-            systemGroupInstances.Add((systemGroupType, systemGroupInstance));
+        var systemGroupTypes = FindSystemGroupTypes();
+        var systemGroupInstances = FindSystemGroupInstances(world, systemGroupTypes);
+
+        var systemBaseTypes = FindComponentSystemBaseTypes();
+        var systemBaseInstances = FindSystemBaseInstances(world, systemBaseTypes);
+
+        var managedSystemsDict = new Dictionary<SystemHandle, (Type, ComponentSystemBase)>();
+        foreach (var (systemGroupType, systemGroup) in systemGroupInstances)
+        {
+            // ComponentSystemGroup is a subclass of ComponentSystemBase, so add them first (more specific)
+            managedSystemsDict.TryAdd(systemGroup.SystemHandle, (systemGroupType, systemGroup));
         }
-        Log.LogInfo($"Found {systemGroupInstances.Count} system groups instances. The other {notFoundSystemGroupTypes.Count} are not being used by this world.");
-        LogSystemGroups(systemGroupInstances);
+        foreach (var (systemBaseType, systemBase) in systemBaseInstances)
+        {
+            // add all other instances of ComponentSystemBase whose intial types we're aware of
+            managedSystemsDict.TryAdd(systemBase.SystemHandle, (systemBaseType, systemBase));
+        }
+        foreach (var systemInstance in world.Systems)
+        {
+            // there shouldn't be any other managed systems, but you never know ¯\_(ツ)_/¯
+            managedSystemsDict.TryAdd(systemInstance.SystemHandle, (systemInstance.GetType(), systemInstance));
+        }
+
+        LogSystemGroups(world, systemGroupInstances, managedSystemsDict);
+
+        // var systemBaseTypes = FindComponentSystemBaseTypes();
 
 
         // todo: build a tree with groups and all the systems in them. ordered by update order if possible. note that groups can contain more groups.
@@ -67,13 +73,86 @@ public class Plugin : BasePlugin
         return true;
     }
 
-    private void LogSystemGroups(IList<(Type, ComponentSystemGroup)> systemGroupInstances)
+    private List<(Type, ComponentSystemGroup)> FindSystemGroupInstances(World world, IList<Type> systemGroupTypes)
     {
-        Log.LogInfo("[begin Listing system groups]================================================");
+        var instances = new List<(Type, ComponentSystemGroup)>();
+        var notFoundTypes = new List<Type>();
+        foreach (var systemGroupType in systemGroupTypes)
+        {
+            try
+            {
+                var systemInstance = world.GetExistingSystemManaged(Il2CppType.From(systemGroupType));
+                if (systemInstance is null)
+                {
+                    notFoundTypes.Add(systemGroupType);
+                    continue;
+                }
+                var systemGroupInstance = systemInstance.Cast<ComponentSystemGroup>();
+
+                // use a tuple to remember the original type
+                // todo: or somehow cast it in here. not sure how to do it with a dynamic type though.
+                instances.Add((systemGroupType, systemGroupInstance));
+            }
+            catch (Exception ex)
+            {
+                Log.LogWarning($"Failure finding instance of {systemGroupType}: {ex}");
+            }
+        }
+        Log.LogInfo($"Found {instances.Count} ComponentSystemGroup instances. The other {notFoundTypes.Count} are not being used by this world.");
+        return instances;
+    }
+
+    private List<(Type, ComponentSystemBase)> FindSystemBaseInstances(World world, IList<Type> systemBaseTypes)
+    {
+        var instances = new List<(Type, ComponentSystemBase)>();
+        var notFoundTypes = new List<Type>();
+        foreach (var systemBaseType in systemBaseTypes)
+        {
+            try
+            {
+                var systemInstance = world.GetExistingSystemManaged(Il2CppType.From(systemBaseType));
+                if (systemInstance is null)
+                {
+                    notFoundTypes.Add(systemBaseType);
+                    continue;
+                }
+                var systemBaseInstance = systemInstance.Cast<ComponentSystemBase>();
+
+                // use a tuple to remember the original type
+                // todo: or somehow cast it in here. not sure how to do it with a dynamic type though.
+                instances.Add((systemBaseType, systemBaseInstance));
+            }
+            catch (Exception ex)
+            {
+                Log.LogWarning($"Error finding instance of {systemBaseType}: {ex}");
+            }
+        }
+        Log.LogInfo($"Found {instances.Count} system base instances. The other {notFoundTypes.Count} are not being used by this world.");
+        return instances;
+    }
+
+    private void LogSystemGroups(World world, IList<(Type, ComponentSystemGroup)> systemGroupInstances, Dictionary<SystemHandle, (Type, ComponentSystemBase)> managedSystemsDict)
+    {
+        Log.LogInfo($"[begin Listing system groups in world {world.Name}]================================================");
         foreach (var (systemGroupType, systemGroup) in systemGroupInstances)
         {
-            var subsystems = systemGroup.GetAllSystems();
-            Log.LogInfo($"{systemGroupType} contains {subsystems.Length} other systems");
+            var orderedSubsystems = systemGroup.GetAllSystems();
+            Log.LogInfo($"{systemGroupType} contains {orderedSubsystems.Length} other systems");
+
+            foreach (var subsystemHandle in orderedSubsystems)
+            {
+                if (managedSystemsDict.ContainsKey(subsystemHandle))
+                {
+                    var (bestKnownType, subsystem) = managedSystemsDict[subsystemHandle];
+                    Log.LogInfo($"  {bestKnownType}");
+                }
+                else
+                {
+                    // todo: find some way to map unmanaged systems to their originally declared ISystem struct
+                    Log.LogInfo($"  unmanaged system");
+                }
+            }
+
             // todo: log more stuff
         }
         Log.LogInfo("[end Listing system groups]================================================");
@@ -106,13 +185,50 @@ public class Plugin : BasePlugin
 
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.LogWarning(ex);
             }
-            
-        }        
+
+        }
         return systemGroupTypes;
+    }
+
+    // todo: we should scan all assemblies once, but this is a proof-of-concept and i'm too lazy to refactor
+    private IList<Type> FindComponentSystemBaseTypes()
+    {
+        var systemBaseTypes = new List<Type>();
+        Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        var assemblyCount = assemblies.Length;
+        var counter = 0;
+        foreach (var assembly in assemblies)
+        {
+            Log.LogInfo($"scanning assembly {++counter} of {assemblyCount}");
+            try
+            {
+                foreach (var type in assembly.GetTypes())
+                {
+                    try
+                    {
+                        if (type.IsSubclassOf(typeof(Unity.Entities.ComponentSystemBase)))
+                        {
+                            systemBaseTypes.Add(type);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.LogWarning(ex);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogWarning(ex);
+            }
+
+        }
+        return systemBaseTypes;
     }
 
     private void TrySomething()
