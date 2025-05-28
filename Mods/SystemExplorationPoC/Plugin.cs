@@ -55,12 +55,18 @@ public class Plugin : BasePlugin
         foreach (var systemInstance in world.Systems)
         {
             // there shouldn't be any other managed systems, but you never know ¯\_(ツ)_/¯
-            managedSystemsDict.TryAdd(systemInstance.SystemHandle, (systemInstance.GetType(), systemInstance));
+            // managedSystemsDict.TryAdd(systemInstance.SystemHandle, (systemInstance.GetType(), systemInstance));
         }
 
-        LogSystemGroups(world, systemGroupInstances, managedSystemsDict);
+        var potentialUnmanagedSystemTypes = FindPotentialUnmanagedSystemTypes();
+        var unmanagedSystemHandles = FindUnmanagedSystemHandles(world, potentialUnmanagedSystemTypes);
+        var unmanagedSystemsDict = new Dictionary<SystemHandle, Type>();
+        foreach (var (unmanagedSystemType, systemHandle) in unmanagedSystemHandles)
+        {
+            unmanagedSystemsDict.TryAdd(systemHandle, unmanagedSystemType);
+        }
 
-        // var systemBaseTypes = FindComponentSystemBaseTypes();
+        LogSystemGroups(world, systemGroupInstances, managedSystemsDict, unmanagedSystemsDict);
 
 
         // todo: build a tree with groups and all the systems in them. ordered by update order if possible. note that groups can contain more groups.
@@ -131,7 +137,37 @@ public class Plugin : BasePlugin
         return instances;
     }
 
-    private void LogSystemGroups(World world, IList<(Type, ComponentSystemGroup)> systemGroupInstances, Dictionary<SystemHandle, (Type, ComponentSystemBase)> managedSystemsDict)
+    private List<(Type, SystemHandle)> FindUnmanagedSystemHandles(World world, IList<Type> systemTypes)
+    {
+        var instances = new List<(Type, SystemHandle)>();
+        var notFoundTypes = new List<Type>();
+        foreach (var systemType in systemTypes)
+        {
+            try
+            {
+                var systemHandle = world.GetExistingSystem(Il2CppType.From(systemType));
+                if (systemHandle.Equals(SystemHandle.Null))
+                {
+                    notFoundTypes.Add(systemType);
+                    continue;
+                }
+                instances.Add((systemType, systemHandle));
+            }
+            catch (Exception ex)
+            {
+                Log.LogWarning($"Error finding instance of {systemType}: {ex}");
+            }
+        }
+        Log.LogInfo($"Found {instances.Count} ISystem instances. The other {notFoundTypes.Count} are not being used by this world.");
+        return instances;
+    }
+
+    private void LogSystemGroups(
+        World world,
+        IList<(Type, ComponentSystemGroup)> systemGroupInstances,
+        Dictionary<SystemHandle, (Type, ComponentSystemBase)> managedSystemsDict,
+        Dictionary<SystemHandle, Type> unmanagedSystemsDict
+    )
     {
         Log.LogInfo($"[begin Listing system groups in world {world.Name}]================================================");
         foreach (var (systemGroupType, systemGroup) in systemGroupInstances)
@@ -146,10 +182,14 @@ public class Plugin : BasePlugin
                     var (bestKnownType, subsystem) = managedSystemsDict[subsystemHandle];
                     Log.LogInfo($"  {bestKnownType}");
                 }
+                else if (unmanagedSystemsDict.ContainsKey(subsystemHandle))
+                {
+                    var knownType = unmanagedSystemsDict[subsystemHandle];
+                    Log.LogInfo($"  {knownType} (unmanaged)");
+                }
                 else
                 {
-                    // todo: find some way to map unmanaged systems to their originally declared ISystem struct
-                    Log.LogInfo($"  unmanaged system");
+                    Log.LogInfo($"  unknown system");
                 }
             }
 
@@ -194,6 +234,8 @@ public class Plugin : BasePlugin
         return systemGroupTypes;
     }
 
+    
+
     // todo: we should scan all assemblies once, but this is a proof-of-concept and i'm too lazy to refactor
     private IList<Type> FindComponentSystemBaseTypes()
     {
@@ -229,6 +271,66 @@ public class Plugin : BasePlugin
 
         }
         return systemBaseTypes;
+    }
+
+    // todo: we should scan all assemblies once, but this is a proof-of-concept and i'm too lazy to refactor
+    private IList<Type> FindPotentialUnmanagedSystemTypes()
+    {
+        var iSystemTypes = new List<Type>();
+        Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        var assemblyCount = assemblies.Length;
+        var counter = 0;
+        foreach (var assembly in assemblies)
+        {
+            Log.LogInfo($"scanning assembly {++counter} of {assemblyCount}");
+            try
+            {
+                foreach (var type in assembly.GetTypes())
+                {
+                    try
+                    {
+                        // note: the generated interops don't mark structs with ISystem which is probably a bug in the Il2CppInterop library
+                        // (the metadata does contain that information during generation)
+                        /*
+                        if (type.IsAssignableFrom(typeof(Unity.Entities.ISystem)))
+                        {
+                            iSystemTypes.Add(type);
+                        }
+                        */
+
+                        if (!type.IsValueType)
+                        {
+                            continue;
+                        }
+                        if (type.GetMethod("OnCreate") is null)
+                        {
+                            continue;
+                        }
+                        if (type.GetMethod("OnDestroy") is null)
+                        {
+                            continue;
+                        }
+                        if (type.GetMethod("OnUpdate") is null)
+                        {
+                            continue;
+                        }
+                        iSystemTypes.Add(type);
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.LogWarning(ex);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogWarning(ex);
+            }
+
+        }
+        return iSystemTypes;
     }
 
     private void TrySomething()
