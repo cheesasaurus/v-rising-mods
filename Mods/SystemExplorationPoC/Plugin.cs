@@ -365,7 +365,7 @@ public class Plugin : BasePlugin
             {
                 Log.LogInfo($"FOUND ProjectM");
                 Log.LogInfo($"Location: {assembly.Location}");
-                // foreach (var typeInfo in assembly.DefinedTypes)
+                // foreach (var typeInfo in assembly.GetTypes())
                 // {
                 //     Log.LogInfo($"{typeInfo.FullName}");
                 // }
@@ -387,32 +387,64 @@ public class Plugin : BasePlugin
 
             }
 
+            Type[] types;
             try
+            {
+                types = assembly.GetTypes();
+                foreach (var type in assembly.GetTypes())
                 {
-                    foreach (var type in assembly.GetTypes())
+                    if (type.Name.Contains("DropInventoryItemSystem"))
                     {
-                        if (type.Name.Contains("DropInventoryItemSystem"))
+                        Log.LogMessage("HEY! we found DropInventoryItemSystem");
+                    }
+                    try
+                    {
+                        if (type.IsSubclassOf(typeof(Unity.Entities.ComponentSystemGroup)))
                         {
-                            Log.LogMessage("HEY! we found DropInventoryItemSystem");
+                            systemGroupTypes.Add(type);
                         }
-                        try
-                        {
-                            if (type.IsSubclassOf(typeof(Unity.Entities.ComponentSystemGroup)))
-                            {
-                                systemGroupTypes.Add(type);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.LogWarning(ex);
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.LogWarning(ex);
+                    }
 
+                }
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                Log.LogWarning(ex);
+                types = ex.Types;
+            }
+            catch (Exception ex)
+            {
+                Log.LogWarning(ex);
+                continue;
+            }
+            
+            foreach (var type in types)
+            {
+                if (type is null)
+                {
+                    // can happen if there was a ReflectionTypeLoadException
+                    continue;
+                }
+                if (type.Name.Contains("DropInventoryItemSystem"))
+                    {
+                        Log.LogMessage("HEY! we found DropInventoryItemSystem");
+                    }
+                try
+                {
+                    if (type.IsSubclassOf(typeof(Unity.Entities.ComponentSystemGroup)))
+                    {
+                        systemGroupTypes.Add(type);
                     }
                 }
                 catch (Exception ex)
                 {
                     Log.LogWarning(ex);
                 }
+            }
 
         }
         return systemGroupTypes;
