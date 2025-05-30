@@ -360,29 +360,59 @@ public class Plugin : BasePlugin
         var counter = 0;
         foreach (var assembly in assemblies)
         {
-            Log.LogInfo($"scanning assembly {++counter} of {assemblyCount}");
-            try
+            Log.LogInfo($"scanning assembly {++counter} of {assemblyCount}: {assembly.FullName}");
+            if (assembly.GetName().Name.Equals("ProjectM"))
             {
-                foreach (var type in assembly.GetTypes())
-                {
-                    try
-                    {
-                        if (type.IsSubclassOf(typeof(Unity.Entities.ComponentSystemGroup)))
-                        {
-                            systemGroupTypes.Add(type);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.LogWarning(ex);
-                    }
+                Log.LogInfo($"FOUND ProjectM");
+                Log.LogInfo($"Location: {assembly.Location}");
+                // foreach (var typeInfo in assembly.DefinedTypes)
+                // {
+                //     Log.LogInfo($"{typeInfo.FullName}");
+                // }
 
+                //foreach (var type in assembly.GetExportedTypes())
+                //{
+                //    Log.LogInfo($"{type.FullName}");
+                //}
+
+                // TODO: something is horribly wrong. Some error is preventing us from identifying types in the ProjectM assembly
+                //    [Info   :SystemExplorationPoC] FOUND ProjectM
+                //    [Info   :SystemExplorationPoC] F:\Games\SteamLibrary\steamapps\common\VRisingDedicatedServer\BepInEx\interop\ProjectM.dll
+                //    [Error  :Bloodpebble] Error loading [SystemExplorationPoC 1.0.0]: System.TypeLoadException: GenericArguments[1], 'TCompareComponent', on 'ProjectM.EntityAddRemoveUpdateEvents`2+EventData[TComponent,TCompareComponent]' violates the constraint of type parameter 'TCompareComponent'.
+                //    at System.Reflection.RuntimeAssembly.GetExportedTypes()
+                //    at SystemExplorationPoC.Plugin.FindSystemGroupTypes()
+                //    at SystemExplorationPoC.Plugin.Load()
+                //    at BepInEx.Unity.IL2CPP.IL2CPPChainloader.LoadPlugin(PluginInfo pluginInfo, Assembly pluginAssembly) in C:\Work\-\VRisingBepInExBuild\BepInEx\Runtimes\Unity\BepInEx.Unity.IL2CPP\IL2CPPChainloader.cs:line 136
+                //    at Bloodpebble.Reloading.ModifiedBepInExChainloader.LoadPlugins(IList`1 plugins)
+
+            }
+
+            try
+                {
+                    foreach (var type in assembly.GetTypes())
+                    {
+                        if (type.Name.Contains("DropInventoryItemSystem"))
+                        {
+                            Log.LogMessage("HEY! we found DropInventoryItemSystem");
+                        }
+                        try
+                        {
+                            if (type.IsSubclassOf(typeof(Unity.Entities.ComponentSystemGroup)))
+                            {
+                                systemGroupTypes.Add(type);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.LogWarning(ex);
+                        }
+
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.LogWarning(ex);
-            }
+                catch (Exception ex)
+                {
+                    Log.LogWarning(ex);
+                }
 
         }
         return systemGroupTypes;
