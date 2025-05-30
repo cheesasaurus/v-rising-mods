@@ -7,6 +7,7 @@ using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Il2CppInterop.Runtime;
+using ProjectM;
 using Unity.Collections;
 using Unity.Entities;
 using VampireCommandFramework;
@@ -35,7 +36,29 @@ public class Plugin : BasePlugin
 
         // explore the world's systems
         // TrySomething();
+        // DoTreeThing();
 
+        var world = WorldUtil.Game;
+
+        var systemGroupTypes = FindSystemGroupTypes();
+        Log.LogInfo($"has thing: {systemGroupTypes.Contains(typeof(DropInventoryItemSystem))}");
+
+        var system = world.GetExistingSystemManaged<DropInventoryItemSystem>();
+        Log.LogInfo($"found DropinventoryItemSystem: {system != null}");
+
+        // todo: why was DropInventoryItemSystem not discovered by FindSystemGroupTypes?
+        // whatever the cause, it's probably why there are so many uknown systems in our tree
+    }
+
+    public override bool Unload()
+    {
+        CommandRegistry.UnregisterAssembly();
+        _harmony?.UnpatchSelf();
+        return true;
+    }
+
+    public void DoTreeThing()
+    {
         var world = WorldUtil.Game;
 
         var systemGroupTypes = FindSystemGroupTypes();
@@ -89,14 +112,7 @@ public class Plugin : BasePlugin
         // todo: write to file
     }
 
-    public override bool Unload()
-    {
-        CommandRegistry.UnregisterAssembly();
-        _harmony?.UnpatchSelf();
-        return true;
-    }
-
-    private List<(Type, ComponentSystemGroup)> FindSystemGroupInstances(World world, IList<Type> systemGroupTypes)
+    private List<(Type, ComponentSystemGroup)> FindSystemGroupInstances(World world, ISet<Type> systemGroupTypes)
     {
         var instances = new List<(Type, ComponentSystemGroup)>();
         var notFoundTypes = new List<Type>();
@@ -336,9 +352,9 @@ public class Plugin : BasePlugin
         return ungroupedNodes.ToList();
     }
 
-    private IList<Type> FindSystemGroupTypes()
+    private ISet<Type> FindSystemGroupTypes()
     {
-        var systemGroupTypes = new List<Type>();
+        var systemGroupTypes = new HashSet<Type>();
         Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
         var assemblyCount = assemblies.Length;
         var counter = 0;
