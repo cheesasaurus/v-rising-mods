@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Unity.IL2CPP;
+using FrostDashFreezeFix.Patches;
 using HarmonyLib;
 using VampireCommandFramework;
 using VRisingMods.Core.Utilities;
@@ -29,6 +30,7 @@ public class Plugin : BasePlugin
     public override bool Unload()
     {
         CommandRegistry.UnregisterAssembly();
+        FreezeFixPatch3.BeforeUnPatch();
         _harmony?.UnpatchSelf();
         return true;
     }
