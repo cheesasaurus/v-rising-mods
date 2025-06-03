@@ -14,6 +14,7 @@ namespace SystemHooksPOC;
 public class Plugin : BasePlugin
 {
     Harmony _harmony;
+    HookRegistryContext _hookRegistryContext;
 
     public override void Load()
     {
@@ -31,12 +32,14 @@ public class Plugin : BasePlugin
         HookManager.Initialize();
 
         // register hooks
-        // HookManager.RegisterHook_System_OnUpdate_Prefix<DealDamageSystem>(MyHookWithSkip);
-        HookManager.RegisterHook_System_OnUpdate_Prefix<DealDamageSystem>(MyHook);
+        _hookRegistryContext = HookManager.NewRegistryContext();
+        //_hookRegistryContext.RegisterHook_System_OnUpdate_Prefix<DealDamageSystem>(MyHookWithSkip);
+        _hookRegistryContext.RegisterHook_System_OnUpdate_Prefix<DealDamageSystem>(MyHook);
     }
 
     public override bool Unload()
     {
+        _hookRegistryContext.UnregisterHooks();
         HookManager.UnInitialize();
         CommandRegistry.UnregisterAssembly();
         PerformanceRecorderSystemPatch.UnInitialize();

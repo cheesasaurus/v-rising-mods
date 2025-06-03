@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Il2CppInterop.Runtime;
-using ProjectM.Gameplay.Systems;
 using SystemHooksPOC.Hooks;
 using Unity.Entities;
 
@@ -12,6 +11,8 @@ public static class HookManager
     private static bool _initialized = false;
 
     private static HookRegistry _hookRegistry;
+
+    ////////////////////////////////////////////////////////////////////
 
     #region Setup / Teardown
 
@@ -37,6 +38,7 @@ public static class HookManager
 
     #endregion
 
+    ////////////////////////////////////////////////////////////////////
 
     #region Handlers
 
@@ -77,25 +79,12 @@ public static class HookManager
 
     #endregion
 
+    ////////////////////////////////////////////////////////////////////
 
-    #region Hook Registration: System_OnUpdate_Prefix
-
-    public static void RegisterHook_System_OnUpdate_Prefix<T>(Hook_System_OnUpdate_Prefix hook)
+    public static HookRegistryContext NewRegistryContext()
     {
-        RegisterHook_System_OnUpdate_Prefix(hook, Il2CppType.Of<T>());
+        return new HookRegistryContext(_hookRegistry);
     }
-
-    public static void RegisterHook_System_OnUpdate_Prefix(Hook_System_OnUpdate_Prefix hook, Type systemType)
-    {
-        RegisterHook_System_OnUpdate_Prefix(hook, Il2CppType.From(systemType));
-    }
-
-    public static void RegisterHook_System_OnUpdate_Prefix(Hook_System_OnUpdate_Prefix hook, Il2CppSystem.Type systemType)
-    {
-        _hookRegistry.RegisterHook_System_OnUpdate_Prefix(hook, systemType);
-    }
-
-    #endregion
-
+    
 }
 

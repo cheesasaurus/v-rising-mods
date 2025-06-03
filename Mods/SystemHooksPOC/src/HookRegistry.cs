@@ -17,9 +17,17 @@ public class HookRegistry
     private Dictionary<SystemTypeIndex, HooksFor_System_OnUpdate_Prefix> _hooksBySystemFor_System_OnUpdate_Prefix = new();
     private IEnumerable<Hook_System_OnUpdate_Prefix> _emptyEnumerableFor_System_OnUpdate_Prefix = Enumerable.Empty<Hook_System_OnUpdate_Prefix>();
 
-    public HookHandle RegisterHook_System_OnUpdate_Prefix(Hook_System_OnUpdate_Prefix hook, Type systemType)
+    public void UnregisterHook(HookHandle hookHandle)
     {
-        return RegisterHook_System_OnUpdate_Prefix(hook, Il2CppType.From(systemType));
+        switch (hookHandle.HookType)
+        {
+            case HookType.System_OnUpdate_Prefix:
+                _hooksBySystemFor_System_OnUpdate_Prefix[hookHandle.SystemTypeIndex].Remove(hookHandle);
+                break;
+            case HookType.System_OnUpdate_Postfix:
+                // todo. would need to add a way to register first
+                break;
+        }
     }
 
     public HookHandle RegisterHook_System_OnUpdate_Prefix(Hook_System_OnUpdate_Prefix hook, Il2CppSystem.Type systemType)
@@ -27,7 +35,7 @@ public class HookRegistry
         var systemTypeIndex = TypeManager.GetSystemTypeIndex(systemType);
         if (systemTypeIndex.Equals(SystemTypeIndex.Null))
         {
-            LogUtil.LogError($"null sytem type index for {systemType.FullName}");
+            throw new Exception($"null sytem type index for {systemType.FullName}");
         }
         else
         {
@@ -37,7 +45,8 @@ public class HookRegistry
         var handle = new HookHandle()
         {
             Value = ++_autoIncrement,
-            HookType = HookType.System_OnUpdate_Prefix
+            HookType = HookType.System_OnUpdate_Prefix,
+            SystemTypeIndex = systemTypeIndex,
         };
 
         // ensure we have a registry for that system
@@ -75,6 +84,7 @@ public class HookRegistry
     {
         public int Value;
         public HookType HookType;
+        public SystemTypeIndex SystemTypeIndex;
     }
 
     public enum HookType
