@@ -1,18 +1,18 @@
 using System;
 using Il2CppInterop.Runtime;
 using ProjectM.Gameplay.Systems;
+using SystemHooksPOC.Hooks;
 using Unity.Entities;
-using VRisingMods.Core.Utilities;
 
 namespace SystemHooksPOC;
 
 public static class HookManager
 {
-    static Type HookedSystemType = typeof(DealDamageSystem);
-    private static SystemTypeIndex _hookedSystemTypeIndex = SystemTypeIndex.Null;
-
-    private static int _autoIncrement = 0;
     private static bool _initialized = false;
+
+    private static HookRegistry _hookRegistry;
+
+    #region Setup / Teardown
 
     public static void Initialize()
     {
@@ -20,15 +20,7 @@ public static class HookManager
         {
             return;
         }
-        _hookedSystemTypeIndex = TypeManager.GetSystemTypeIndex(Il2CppType.From(HookedSystemType));
-        if (_hookedSystemTypeIndex.Equals(SystemTypeIndex.Null))
-        {
-            LogUtil.LogError($"null sytem type index for {HookedSystemType}");
-        }
-        else
-        {
-            LogUtil.LogInfo($"hooked system: {TypeManager.GetSystemType(_hookedSystemTypeIndex).FullName}");
-        }
+        _hookRegistry = new HookRegistry();
         _initialized = true;
     }
 
@@ -38,38 +30,52 @@ public static class HookManager
         {
             return;
         }
-        _hookedSystemTypeIndex = SystemTypeIndex.Null;
+        _hookRegistry = null;
         _initialized = false;
     }
 
+    #endregion
 
-    public delegate bool HookOnUpdatePrefix();
+
+    #region Handlers
 
     unsafe public static void HandleSystemUpdatePrefix(SystemState* systemState)
     {
-        if (systemState->m_SystemTypeIndex == _hookedSystemTypeIndex)
+        // todo: cabability to skip the update
+
+        var hooks = _hookRegistry.GetHooksInReverseOrderFor_System_OnUpdate_Prefix(systemState->m_SystemTypeIndex);
+        foreach (var hook in hooks)
         {
-            // LogUtil.LogInfo($"Updating {HookedSystemType}! (prefix)");
+            bool shouldSkip = hook();
         }
     }
 
     unsafe public static void HandleSystemUpdatePostfix(SystemState* systemState)
     {
-        if (systemState->m_SystemTypeIndex == _hookedSystemTypeIndex)
-        {
-            // LogUtil.LogInfo($"Updating {HookedSystemType}! (postfix)");
-        }
+        // LogUtil.LogInfo($"Updating! (postfix)");
     }
 
+    #endregion
 
 
+    #region Hook Registration: System_OnUpdate_Prefix
 
-
-
-
-
-    public struct HookIndex
+    public static void RegisterHook_System_OnUpdate_Prefix<T>(Hook_System_OnUpdate_Prefix hook)
     {
-        public int Value;
+        RegisterHook_System_OnUpdate_Prefix(hook, Il2CppType.Of<T>());
     }
+
+    public static void RegisterHook_System_OnUpdate_Prefix(Hook_System_OnUpdate_Prefix hook, Type systemType)
+    {
+        RegisterHook_System_OnUpdate_Prefix(hook, Il2CppType.From(systemType));
+    }
+
+    public static void RegisterHook_System_OnUpdate_Prefix(Hook_System_OnUpdate_Prefix hook, Il2CppSystem.Type systemType)
+    {
+        _hookRegistry.RegisterHook_System_OnUpdate_Prefix(hook, systemType);
+    }
+
+    #endregion
+
 }
+

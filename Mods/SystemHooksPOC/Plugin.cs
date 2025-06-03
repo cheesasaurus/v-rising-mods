@@ -1,6 +1,8 @@
-﻿using BepInEx;
+﻿using System;
+using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
+using ProjectM.Gameplay.Systems;
 using SystemHooksPOC.Patches;
 using VampireCommandFramework;
 using VRisingMods.Core.Utilities;
@@ -27,6 +29,9 @@ public class Plugin : BasePlugin
         CommandRegistry.RegisterAll();
 
         HookManager.Initialize();
+
+        // register hooks
+        HookManager.RegisterHook_System_OnUpdate_Prefix<DealDamageSystem>(MyHook);
     }
 
     public override bool Unload()
@@ -35,6 +40,21 @@ public class Plugin : BasePlugin
         CommandRegistry.UnregisterAssembly();
         PerformanceRecorderSystemPatch.UnInitialize();
         _harmony?.UnpatchSelf();
+        return true;
+    }
+
+
+    private TimeSpan fiveSeconds = new TimeSpan(hours: 0, minutes: 0, seconds: 5);
+    private DateTime nextTime = DateTime.MinValue;
+
+    private bool MyHook()
+    {
+        if (DateTime.Now < nextTime)
+        {
+            return true;
+        }
+        nextTime = DateTime.Now.Add(fiveSeconds);
+        LogUtil.LogInfo($"[{DateTime.Now}] MyHook executing. (debounce 5 seconds)");
         return true;
     }
 
