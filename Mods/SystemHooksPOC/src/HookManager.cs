@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Il2CppInterop.Runtime;
 using ProjectM.Gameplay.Systems;
 using SystemHooksPOC.Hooks;
@@ -39,20 +40,39 @@ public static class HookManager
 
     #region Handlers
 
+    private static Dictionary<SystemTypeIndex, bool> _restoreEnabledAfterPrefixSkip_System_OnUpdate = new();
+
     unsafe public static void HandleSystemUpdatePrefix(SystemState* systemState)
     {
-        // todo: cabability to skip the update
-
-        var hooks = _hookRegistry.GetHooksInReverseOrderFor_System_OnUpdate_Prefix(systemState->m_SystemTypeIndex);
+        var systemTypeIndex = systemState->m_SystemTypeIndex;
+        var hooks = _hookRegistry.GetHooksInReverseOrderFor_System_OnUpdate_Prefix(systemTypeIndex);
+        bool shouldStopExecutingPrefixesAndSkipTheOriginal = false;
         foreach (var hook in hooks)
         {
-            bool shouldSkip = hook();
+            if (false == hook())
+            {
+                shouldStopExecutingPrefixesAndSkipTheOriginal = true;
+                break;
+            }
+        }
+
+        if (shouldStopExecutingPrefixesAndSkipTheOriginal)
+        {
+            _restoreEnabledAfterPrefixSkip_System_OnUpdate[systemTypeIndex] = systemState->Enabled;
+            systemState->Enabled = false;
         }
     }
 
     unsafe public static void HandleSystemUpdatePostfix(SystemState* systemState)
     {
-        // LogUtil.LogInfo($"Updating! (postfix)");
+        var systemTypeIndex = systemState->m_SystemTypeIndex;
+        if (_restoreEnabledAfterPrefixSkip_System_OnUpdate.ContainsKey(systemTypeIndex))
+        {
+            systemState->Enabled = _restoreEnabledAfterPrefixSkip_System_OnUpdate[systemTypeIndex];
+            _restoreEnabledAfterPrefixSkip_System_OnUpdate.Remove(systemTypeIndex);
+        }
+
+        // todo: run postfix hooks
     }
 
     #endregion

@@ -31,6 +31,7 @@ public class Plugin : BasePlugin
         HookManager.Initialize();
 
         // register hooks
+        // HookManager.RegisterHook_System_OnUpdate_Prefix<DealDamageSystem>(MyHookWithSkip);
         HookManager.RegisterHook_System_OnUpdate_Prefix<DealDamageSystem>(MyHook);
     }
 
@@ -44,18 +45,30 @@ public class Plugin : BasePlugin
     }
 
 
-    private TimeSpan fiveSeconds = new TimeSpan(hours: 0, minutes: 0, seconds: 5);
-    private DateTime nextTime = DateTime.MinValue;
+    private TimeSpan twoSeconds = new TimeSpan(hours: 0, minutes: 0, seconds: 2);
 
+    private DateTime nextTime1 = DateTime.MinValue;
     private bool MyHook()
     {
-        if (DateTime.Now < nextTime)
+        if (DateTime.Now < nextTime1)
         {
             return true;
         }
-        nextTime = DateTime.Now.Add(fiveSeconds);
-        LogUtil.LogInfo($"[{DateTime.Now}] MyHook executing. (debounce 5 seconds)");
+        nextTime1 = DateTime.Now.Add(twoSeconds);
+        LogUtil.LogInfo($"[{DateTime.Now}] MyHook executing. (debounce 2 seconds)");
         return true;
+    }
+
+    private DateTime nextTime2 = DateTime.MinValue;
+    private bool MyHookWithSkip()
+    {
+        if (DateTime.Now < nextTime2)
+        {
+            return false;
+        }
+        nextTime2 = DateTime.Now.Add(twoSeconds);
+        LogUtil.LogInfo($"[{DateTime.Now}] MyHookWithSkip executing. (debounce 2 seconds)");
+        return false;
     }
 
     // // Uncomment for example commmand or delete
