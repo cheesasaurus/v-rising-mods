@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
+using SystemHooksPOC.Patches;
 using VampireCommandFramework;
 using VRisingMods.Core.Utilities;
 
@@ -24,11 +25,15 @@ public class Plugin : BasePlugin
 
         // Register all commands in the assembly with VCF
         CommandRegistry.RegisterAll();
+
+        HookManager.Initialize();
     }
 
     public override bool Unload()
     {
+        HookManager.UnInitialize();
         CommandRegistry.UnregisterAssembly();
+        PerformanceRecorderSystemPatch.UnInitialize();
         _harmony?.UnpatchSelf();
         return true;
     }
