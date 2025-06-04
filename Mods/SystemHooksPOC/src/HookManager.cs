@@ -9,7 +9,9 @@ namespace SystemHooksPOC;
 
 public static class HookManager
 {
+    public static Bus Bus = new();
     private static bool _initialized = false;
+    private static bool _isGameReadyForRegistration = false;
 
     private static HookRegistry _hookRegistry;
 
@@ -24,6 +26,7 @@ public static class HookManager
             return;
         }
         _hookRegistry = new HookRegistry();
+        Bus.GameReadyForRegistration += HandleGameReadyForRegistration;
         _initialized = true;
     }
 
@@ -33,7 +36,9 @@ public static class HookManager
         {
             return;
         }
+        Bus.GameReadyForRegistration -= HandleGameReadyForRegistration;
         _hookRegistry = null;
+        _isGameReadyForRegistration = false;
         _initialized = false;
     }
 
@@ -42,6 +47,11 @@ public static class HookManager
     ////////////////////////////////////////////////////////////////////
 
     #region Handlers
+
+    private static void HandleGameReadyForRegistration()
+    {
+        _isGameReadyForRegistration = true;
+    }
 
     private static Dictionary<SystemTypeIndex, bool> _restoreEnabledAfterPrefixSkip_System_OnUpdate = new();
     private static Dictionary<SystemTypeIndex, bool> _didPrefixExpectSystemToRun = new();
@@ -95,7 +105,7 @@ public static class HookManager
 
     public static HookRegistryContext NewRegistryContext()
     {
-        var staging = new HookRegistryStaging(_hookRegistry);
+        var staging = new HookRegistryStaging(_hookRegistry, Bus, _isGameReadyForRegistration);
         return new HookRegistryContext(staging);
     }
     
