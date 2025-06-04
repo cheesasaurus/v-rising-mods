@@ -2,28 +2,23 @@ using System;
 using System.Collections.Generic;
 using Il2CppInterop.Runtime;
 using SystemHooksPOC.Hooks;
-using static SystemHooksPOC.HookRegistry;
 
 
 namespace SystemHooksPOC;
 
 public class HookRegistryContext
 {
-    private HookRegistry _hookRegistry;
-    private IList<HookHandle> _registeredHookHandles = new List<HookHandle>();
+    private HookRegistryStaging _hookRegistryStaging;
 
-    public HookRegistryContext(HookRegistry hookRegistry)
+    public HookRegistryContext(HookRegistryStaging hookRegistryStaging)
     {
-        _hookRegistry = hookRegistry;
+        _hookRegistryStaging = hookRegistryStaging;
     }
 
     public void UnregisterHooks()
     {
-        foreach (var hookHandle in _registeredHookHandles)
-        {
-            _hookRegistry.UnregisterHook(hookHandle);
-        }
-        _registeredHookHandles.Clear();
+        _hookRegistryStaging.CancelPendingRegistrations();
+        _hookRegistryStaging.UnregisterRegisteredHooks();
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -60,8 +55,7 @@ public class HookRegistryContext
 
     public void RegisterHook_System_OnUpdate_Prefix(Hook_System_OnUpdate_Prefix hook, Il2CppSystem.Type systemType, HookOptions_System_OnUpdate_Prefix options)
     {
-        var handle = _hookRegistry.RegisterHook_System_OnUpdate_Prefix(hook, systemType, options);
-        _registeredHookHandles.Add(handle);
+        _hookRegistryStaging.RegisterHook_System_OnUpdate_Prefix(hook, systemType, options);
     }
 
     #endregion

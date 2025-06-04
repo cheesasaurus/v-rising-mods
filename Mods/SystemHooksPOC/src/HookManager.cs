@@ -95,7 +95,8 @@ public static class HookManager
 
     public static HookRegistryContext NewRegistryContext()
     {
-        return new HookRegistryContext(_hookRegistry);
+        var staging = new HookRegistryStaging(_hookRegistry);
+        return new HookRegistryContext(staging);
     }
     
 }
