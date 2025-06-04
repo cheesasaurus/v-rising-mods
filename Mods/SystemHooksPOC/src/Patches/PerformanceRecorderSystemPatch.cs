@@ -16,7 +16,8 @@ public unsafe class PerformanceRecorderSystemPatch
         {
             return;
         }
-        PerformanceRecorderSystem.StaticRecordingEnabled = _wasStaticRecordingEnabled;
+        // PerformanceRecorderSystem.StaticRecordingEnabled = _wasStaticRecordingEnabled; // todo: go back to this after fixing initial plugin setup to only happen after type manager indexes are ready
+        PerformanceRecorderSystem.StaticRecordingEnabled = false;
         _wasStaticRecordingEnabled = false;
         _initialized = false;
     }

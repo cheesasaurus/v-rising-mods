@@ -14,7 +14,7 @@ namespace SystemHooksPOC;
 public class Plugin : BasePlugin
 {
     Harmony _harmony;
-    HookRegistryContext _hookRegistryContext;
+    MainEntryPoint _systemHooksEntry;
 
     public override void Load()
     {
@@ -31,15 +31,27 @@ public class Plugin : BasePlugin
 
         HookManager.Initialize();
 
-        // register hooks
-        _hookRegistryContext = HookManager.NewRegistryContext();
-        //_hookRegistryContext.RegisterHook_System_OnUpdate_Prefix<DealDamageSystem>(MyHookWithSkip);
-        _hookRegistryContext.RegisterHook_System_OnUpdate_Prefix<DealDamageSystem>(MyHook);
+        #region a plugin would register hooks like this:
+
+        // register hooks (using attributes)
+        _systemHooksEntry = new MainEntryPoint(MyPluginInfo.PLUGIN_GUID);
+        _systemHooksEntry.RegisterHooks();
+        //_systemHooksEntry.RegisterHooks(System.Reflection.Assembly.GetExecutingAssembly());
+
+        // procedurally register some hooks too
+        var context = _systemHooksEntry.HookRegistryContext;
+        //context.RegisterHook_System_OnUpdate_Prefix<DealDamageSystem>(MyHookWithSkip);
+        context.RegisterHook_System_OnUpdate_Prefix<DealDamageSystem>(MyHook);
+
+        #endregion
     }
 
     public override bool Unload()
     {
-        _hookRegistryContext.UnregisterHooks();
+        // a plugin would unregister like this
+        _systemHooksEntry.UnregisterHooks();
+
+        // and everything after this, is part of this library
         HookManager.UnInitialize();
         CommandRegistry.UnregisterAssembly();
         PerformanceRecorderSystemPatch.UnInitialize();

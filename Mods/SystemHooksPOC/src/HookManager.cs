@@ -46,6 +46,8 @@ public static class HookManager
 
     unsafe public static void HandleSystemUpdatePrefix(SystemState* systemState)
     {
+        // todo: onlyWhenSystemRuns option
+
         var systemTypeIndex = systemState->m_SystemTypeIndex;
         var hooks = _hookRegistry.GetHooksInReverseOrderFor_System_OnUpdate_Prefix(systemTypeIndex);
         bool shouldStopExecutingPrefixesAndSkipTheOriginal = false;
@@ -67,6 +69,8 @@ public static class HookManager
 
     unsafe public static void HandleSystemUpdatePostfix(SystemState* systemState)
     {
+        // todo: onlyWhenSystemRuns option
+
         var systemTypeIndex = systemState->m_SystemTypeIndex;
         if (_restoreEnabledAfterPrefixSkip_System_OnUpdate.ContainsKey(systemTypeIndex))
         {
