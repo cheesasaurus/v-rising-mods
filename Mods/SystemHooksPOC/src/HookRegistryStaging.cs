@@ -8,6 +8,7 @@ namespace SystemHooksPOC;
 
 public class HookRegistryStaging
 {
+    private string _id;
     private HookRegistry _hookRegistry;
     private Bus _bus;
     private bool _canRegister = false;
@@ -15,8 +16,9 @@ public class HookRegistryStaging
     private List<HookRegistry.HookHandle> _registeredHookHandles = new();
     private Queue<RegistryEntry_System_OnUpdate_Prefix> _pendingRegistrations_System_OnUpdate_Prefix = new();
 
-    public HookRegistryStaging(HookRegistry hookRegistry, Bus bus, bool isGameReadyForRegistration)
+    public HookRegistryStaging(string id, HookRegistry hookRegistry, Bus bus, bool isGameReadyForRegistration)
     {
+        _id = id;
         _hookRegistry = hookRegistry;
         _canRegister = isGameReadyForRegistration;
         _bus = bus;
@@ -41,7 +43,7 @@ public class HookRegistryStaging
     private void HandleGameReadyForRegistration()
     {
         _canRegister = true;
-        LogUtil.LogDebug("processing pending registrations");
+        LogUtil.LogDebug($"processing pending hook registrations for {_id}");
         ProcessPendingRegistrations_System_OnUpdate_Prefix();
     }
 

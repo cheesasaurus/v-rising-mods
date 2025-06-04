@@ -9,9 +9,11 @@ namespace SystemHooksPOC;
 public class HookRegistryContext
 {
     private HookRegistryStaging _hookRegistryStaging;
+    private string _id;
 
-    public HookRegistryContext(HookRegistryStaging hookRegistryStaging)
+    public HookRegistryContext(string id, HookRegistryStaging hookRegistryStaging)
     {
+        _id = id;
         _hookRegistryStaging = hookRegistryStaging;
     }
 

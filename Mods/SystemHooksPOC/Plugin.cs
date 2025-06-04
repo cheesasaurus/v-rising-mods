@@ -31,7 +31,6 @@ public class Plugin : BasePlugin
 
         // set up HookManager
         HookManager.Initialize();
-        //HookManager.Bus.TriggerGameReadyForRegistration(); // todo: trigger this when the game is actually ready
 
         #region a plugin would register hooks like this:
 
@@ -44,8 +43,6 @@ public class Plugin : BasePlugin
         var context = _systemHooksEntry.HookRegistryContext;
         //context.RegisterHook_System_OnUpdate_Prefix<DealDamageSystem>(MyHookWithSkip);
         context.RegisterHook_System_OnUpdate_Prefix<DealDamageSystem>(MyHook);
-
-        HookManager.Bus.TriggerGameReadyForRegistration(); // todo: trigger this when the game is actually ready
 
         #endregion
     }

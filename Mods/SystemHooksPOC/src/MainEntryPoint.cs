@@ -20,7 +20,7 @@ public class MainEntryPoint
             throw new ArgumentException("id cannot be null or empty");
         }
         Id = id;
-        HookRegistryContext = HookManager.NewRegistryContext();
+        HookRegistryContext = HookManager.NewRegistryContext(id);
     }
 
     public void RegisterHooks()
