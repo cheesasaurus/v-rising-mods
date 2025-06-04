@@ -30,19 +30,37 @@ public class HookRegistryContext
 
     #region Hook Registration: System_OnUpdate_Prefix
 
-    public void RegisterHook_System_OnUpdate_Prefix<T>(Hook_System_OnUpdate_Prefix hook)
+    public void RegisterHook_System_OnUpdate_Prefix<TSystemType>(Hook_System_OnUpdate_Prefix hook)
     {
-        RegisterHook_System_OnUpdate_Prefix(hook, Il2CppType.Of<T>());
+        var options = HookOptions_System_OnUpdate_Prefix.Default;
+        RegisterHook_System_OnUpdate_Prefix<TSystemType>(hook, options);
+    }
+
+    public void RegisterHook_System_OnUpdate_Prefix<TSystemType>(Hook_System_OnUpdate_Prefix hook, HookOptions_System_OnUpdate_Prefix options)
+    {
+        RegisterHook_System_OnUpdate_Prefix(hook, Il2CppType.Of<TSystemType>(), options);
     }
 
     public void RegisterHook_System_OnUpdate_Prefix(Hook_System_OnUpdate_Prefix hook, Type systemType)
     {
-        RegisterHook_System_OnUpdate_Prefix(hook, Il2CppType.From(systemType));
+        var options = HookOptions_System_OnUpdate_Prefix.Default;
+        RegisterHook_System_OnUpdate_Prefix(hook, systemType, options);
+    }
+
+    public void RegisterHook_System_OnUpdate_Prefix(Hook_System_OnUpdate_Prefix hook, Type systemType, HookOptions_System_OnUpdate_Prefix options)
+    {
+        RegisterHook_System_OnUpdate_Prefix(hook, Il2CppType.From(systemType), options);
     }
 
     public void RegisterHook_System_OnUpdate_Prefix(Hook_System_OnUpdate_Prefix hook, Il2CppSystem.Type systemType)
     {
-        var handle = _hookRegistry.RegisterHook_System_OnUpdate_Prefix(hook, systemType);
+        var options = HookOptions_System_OnUpdate_Prefix.Default;
+        RegisterHook_System_OnUpdate_Prefix(hook, systemType, options);
+    }
+
+    public void RegisterHook_System_OnUpdate_Prefix(Hook_System_OnUpdate_Prefix hook, Il2CppSystem.Type systemType, HookOptions_System_OnUpdate_Prefix options)
+    {
+        var handle = _hookRegistry.RegisterHook_System_OnUpdate_Prefix(hook, systemType, options);
         _registeredHookHandles.Add(handle);
     }
 

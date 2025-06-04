@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Il2CppInterop.Runtime;
 using SystemHooksPOC.Hooks;
 using Unity.Entities;
@@ -43,17 +44,23 @@ public static class HookManager
     #region Handlers
 
     private static Dictionary<SystemTypeIndex, bool> _restoreEnabledAfterPrefixSkip_System_OnUpdate = new();
+    private static Dictionary<SystemTypeIndex, bool> _didPrefixExpectSystemToRun = new();
 
     unsafe public static void HandleSystemUpdatePrefix(SystemState* systemState)
     {
-        // todo: onlyWhenSystemRuns option
-
         var systemTypeIndex = systemState->m_SystemTypeIndex;
-        var hooks = _hookRegistry.GetHooksInReverseOrderFor_System_OnUpdate_Prefix(systemTypeIndex);
+        var hookWrappers = _hookRegistry.GetHooksInReverseOrderFor_System_OnUpdate_Prefix(systemTypeIndex);
+        bool wouldRunSystem = systemState->Enabled && systemState->ShouldRunSystem();
+
         bool shouldStopExecutingPrefixesAndSkipTheOriginal = false;
-        foreach (var hook in hooks)
+        foreach (var hookWrapper in hookWrappers)
         {
-            if (false == hook())
+            if (!wouldRunSystem && hookWrapper.Options.OnlyWhenSystemRuns)
+            {
+                continue;
+            }
+
+            if (false == hookWrapper.Hook())
             {
                 shouldStopExecutingPrefixesAndSkipTheOriginal = true;
                 break;
@@ -65,6 +72,7 @@ public static class HookManager
             _restoreEnabledAfterPrefixSkip_System_OnUpdate[systemTypeIndex] = systemState->Enabled;
             systemState->Enabled = false;
         }
+        _didPrefixExpectSystemToRun[systemTypeIndex] = wouldRunSystem && !shouldStopExecutingPrefixesAndSkipTheOriginal;
     }
 
     unsafe public static void HandleSystemUpdatePostfix(SystemState* systemState)

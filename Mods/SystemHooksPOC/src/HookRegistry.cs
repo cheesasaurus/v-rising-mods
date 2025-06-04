@@ -1,21 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Il2CppInterop.Runtime;
 using SystemHooksPOC.Hooks;
 using Unity.Entities;
 using VRisingMods.Core.Utilities;
 
 namespace SystemHooksPOC;
 
-using HooksFor_System_OnUpdate_Prefix = Dictionary<HookRegistry.HookHandle, Hook_System_OnUpdate_Prefix>;
+using HooksFor_System_OnUpdate_Prefix = Dictionary<HookRegistry.HookHandle, HookRegistry.HookWrapper_System_OnUpdate_Prefix>;
 
 public class HookRegistry
 {
     private int _autoIncrement = 0;
 
     private Dictionary<SystemTypeIndex, HooksFor_System_OnUpdate_Prefix> _hooksBySystemFor_System_OnUpdate_Prefix = new();
-    private IEnumerable<Hook_System_OnUpdate_Prefix> _emptyEnumerableFor_System_OnUpdate_Prefix = Enumerable.Empty<Hook_System_OnUpdate_Prefix>();
+    private ICollection<HookWrapper_System_OnUpdate_Prefix> _emptyCollectionFor_System_OnUpdate_Prefix = Array.Empty<HookWrapper_System_OnUpdate_Prefix>();
 
     public void UnregisterHook(HookHandle hookHandle)
     {
@@ -30,7 +28,7 @@ public class HookRegistry
         }
     }
 
-    public HookHandle RegisterHook_System_OnUpdate_Prefix(Hook_System_OnUpdate_Prefix hook, Il2CppSystem.Type systemType)
+    public HookHandle RegisterHook_System_OnUpdate_Prefix(Hook_System_OnUpdate_Prefix hook, Il2CppSystem.Type systemType, HookOptions_System_OnUpdate_Prefix options)
     {
         var systemTypeIndex = TypeManager.GetSystemTypeIndex(systemType);
         if (systemTypeIndex.Equals(SystemTypeIndex.Null))
@@ -39,7 +37,7 @@ public class HookRegistry
         }
         else
         {
-            LogUtil.LogInfo($"hooked system: {TypeManager.GetSystemType(systemTypeIndex).FullName}");
+            LogUtil.LogDebug($"registered OnUpdate prefix hook for: {TypeManager.GetSystemType(systemTypeIndex).FullName}");
         }
 
         var handle = new HookHandle()
@@ -62,22 +60,27 @@ public class HookRegistry
             _hooksBySystemFor_System_OnUpdate_Prefix.Add(systemTypeIndex, hooksForSystem);
         }
 
-        // actually register the hook
-        hooksForSystem.Add(handle, hook);
+        // register the hook
+        hooksForSystem.Add(handle, new HookWrapper_System_OnUpdate_Prefix()
+        {
+            Hook = hook,
+            Options = options
+        });
 
         return handle;
     }
 
     // todo: more performant way of dealing with this in the actual implementation (not the POC)
-    public IEnumerable<Hook_System_OnUpdate_Prefix> GetHooksInReverseOrderFor_System_OnUpdate_Prefix(SystemTypeIndex systemTypeIndex)
+    public ICollection<HookWrapper_System_OnUpdate_Prefix> GetHooksInReverseOrderFor_System_OnUpdate_Prefix(SystemTypeIndex systemTypeIndex)
     {
         var lookup = _hooksBySystemFor_System_OnUpdate_Prefix;
         if (!lookup.ContainsKey(systemTypeIndex))
         {
-            return _emptyEnumerableFor_System_OnUpdate_Prefix;
+            return _emptyCollectionFor_System_OnUpdate_Prefix;
         }
         // todo: OrderedDictionary kind of thing. Problem is that it's not generic, so just using a regular Dictionary for now
-        return lookup[systemTypeIndex].Values.Reverse();
+        //return lookup[systemTypeIndex].Values.Reverse();
+        return lookup[systemTypeIndex].Values; // todo: actually reverse it, and also optimize things
     }
 
     public struct HookHandle
@@ -92,4 +95,17 @@ public class HookRegistry
         System_OnUpdate_Prefix,
         System_OnUpdate_Postfix
     }
+
+    public class HookWrapper_System_OnUpdate_Prefix
+    {
+        public Hook_System_OnUpdate_Prefix Hook;
+        public HookOptions_System_OnUpdate_Prefix Options;
+    }
+
+    public class HookWrapper_System_OnUpdate_Postfix
+    {
+        public Hook_System_OnUpdate_Postfix Hook;
+        public HookOptions_System_OnUpdate_Postfix Options;
+    }
+
 }

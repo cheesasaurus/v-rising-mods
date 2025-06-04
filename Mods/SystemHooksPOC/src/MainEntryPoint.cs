@@ -66,9 +66,10 @@ public class MainEntryPoint
             return false;
         }
         var hook = methodInfo.CreateDelegate<Hook_System_OnUpdate_Prefix>();
-        HookRegistryContext.RegisterHook_System_OnUpdate_Prefix(hook, attribute.SystemType);
+        var options = new HookOptions_System_OnUpdate_Prefix(onlyWhenSystemRuns: attribute.OnlyWhenSystemRuns);
+        HookRegistryContext.RegisterHook_System_OnUpdate_Prefix(hook, attribute.SystemType, options);
         var declaringType = methodInfo.DeclaringType;
-        LogUtil.LogDebug($"registered EcsSystemUpdatePrefix hook: {declaringType.FullName}.{methodInfo.Name}");
+        // LogUtil.LogDebug($"registered EcsSystemUpdatePrefix hook: {declaringType.FullName}.{methodInfo.Name}");
         return true;
     }
 
