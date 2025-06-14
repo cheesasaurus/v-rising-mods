@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>ScarletRCON_SoftDep_AsyncPOC</AssemblyName>
+    <Description>Description of your mod</Description>
+    <Version>1.0.0</Version>
+    <WebsiteURL>https://github.com/cheesasaurus/v-rising-mods/tree/master/Mods/$(AssemblyName)</WebsiteURL>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>ScarletRCON_SoftDep_AsyncPOC</RootNamespace>
+    <BepInExVersion>6.0.0-be.733</BepInExVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="$(BepInExVersion)" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.Core" Version="$(BepInExVersion)" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+    <PackageReference Include="VRising.Unhollowed.Client" Version="1.1.8.*" />
+    <PackageReference Include="ScarletRCON.SourceSupport" Version="1.*" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Target Name="PrepareLibsForDist" AfterTargets="Publish">
+    <PropertyGroup>
+      <PublishPath>$(OutputPath)/publish</PublishPath>
+      <DistAdditionalLibs></DistAdditionalLibs>
+    </PropertyGroup>
+  </Target>
+
+  <Import Project="..\..\Core\Core.projitems" Label="Shared" />
+  <Import Project="..\..\ModTasks.props"/>
+
+</Project>
