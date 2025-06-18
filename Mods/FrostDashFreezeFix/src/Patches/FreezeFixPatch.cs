@@ -22,19 +22,19 @@ internal static class FreezeFixPatch
     static PrefabGUID Frost_Vampire_Buff_Chill = new PrefabGUID(27300215);
     static PrefabGUID NullPrefabGUID = new PrefabGUID(0);
 
-    static ulong debugId = 0;
-    static ISet<Entity> FrostDashAttackersFromPreviousUpdate = new HashSet<Entity>();
 
     // during StatChangeMutationSystem prefix: attacker has the AB_Vampire_VeilOfFrost_Buff
     // I suspect DealDamageSystem is the ideal target, but it's unmanaged so can't hook
     // prefixing StatChangeSystem: frost weapon damage appears a frame after the auto attack appears
     // postfixing CreateGameplayEventsOnDamageTakenSystem: frost weapon damage appears a frame after the auto attack appears
     // actually, it's all in the same frame, but each system runs multiple times inside the RecursiveGroup until there's nothing left to "chain"
-    [EcsSystemUpdatePrefix(typeof(StatChangeMutationSystem))]
-    public static void OnUpdatePrefix()
+    // the damage taken event first appears after StatChangeSystem
+    // note: disabling Apply_BuffModificationsSystem_Server blocks freezes from happening in general.
+    [EcsSystemUpdatePostfix(typeof(StatChangeSystem))]
+    public static void OnUpdate()
     {
         FreezeFixUtil.CurrentTick_CallCount++;
-        debugId++;
+
         var entityManager = WorldUtil.Server.EntityManager;
         var query = entityManager.CreateEntityQuery(new EntityQueryDesc()
         {
@@ -43,18 +43,15 @@ internal static class FreezeFixPatch
             },
         });
 
-        var frostDashAttackersFromCurrentUpdate = new HashSet<Entity>();
-
         var damageTakenEvents = query.ToEntityArray(Allocator.Temp);
         foreach (var eventEntity in damageTakenEvents)
         {
-            DebugDamageTakenEvent(eventEntity);
-            //DoFix(entityManager, eventEntity, frostDashAttackersFromCurrentUpdate);
+            //DebugDamageTakenEvent(eventEntity);
+            //DoFix(entityManager, eventEntity);
         }
-        FrostDashAttackersFromPreviousUpdate = frostDashAttackersFromCurrentUpdate;
     }
 
-    static void DoFix(EntityManager entityManager, Entity eventEntity, ISet<Entity> frostDashAttackersFromCurrentUpdate)
+    static void DoFix(EntityManager entityManager, Entity eventEntity)
     {
         var damageTaken = entityManager.GetComponentData<DamageTakenEvent>(eventEntity);
         var attackerEntity = entityManager.GetComponentData<EntityOwner>(damageTaken.Source);
@@ -69,7 +66,7 @@ internal static class FreezeFixPatch
         {
             if (buff.PrefabGuid.Equals(AB_Vampire_VeilOfFrost_Buff))
             {
-                frostDashAttackersFromCurrentUpdate.Add(attackerEntity);
+                FreezeFixUtil.FrostDashAttackersThisTick.Add(attackerEntity);
             }
         }
 
@@ -77,10 +74,11 @@ internal static class FreezeFixPatch
         var sourcePrefabGuid = entityManager.GetComponentData<PrefabGUID>(damageTaken.Source);
         if (sourcePrefabGuid.Equals(AB_Frost_Shared_SpellMod_FrostWeapon_Buff))
         {
-            // todo: only if they frost dash attacked in the prev frame
+            // todo: only if they frost dash attacked in this tick
 
             if (entityManager.HasBuffer<ApplyBuffOnGameplayEvent>(damageTaken.Source))
             {
+                LogUtil.LogError("will be clearing buffs");
                 var buffsToApply = entityManager.GetBuffer<ApplyBuffOnGameplayEvent>(damageTaken.Source);
 
                 for (var i = 0; i < buffsToApply.Length; i++)
@@ -104,6 +102,8 @@ internal static class FreezeFixPatch
                     }
                     buffsToApply[i] = buff;
                 }
+
+                DebugDamageTakenEvent(eventEntity);
             }
         }
 
