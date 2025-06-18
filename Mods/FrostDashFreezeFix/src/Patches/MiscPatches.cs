@@ -20,11 +20,12 @@ public unsafe class MiscPatches
 
     }
 
-    //[EcsSystemUpdatePrefix(typeof(RecursiveGroup))]
-    //public static void InitInflictionMarkers
-    //{
-    //    
-    //}
+    [HarmonyPatch(typeof(RecursiveGroup), nameof(RecursiveGroup.DoRecursiveUpdate))]
+    [HarmonyPrefix]
+    public static void TrackRecursiveUpdates(RecursiveGroup __instance)
+    {
+        FreezeFixUtil.RecursiveUpdateStarting();
+    }
 
     // [EcsSystemUpdatePrefix(typeof(Spawn_TravelBuffSystem))]
     public static bool Something()

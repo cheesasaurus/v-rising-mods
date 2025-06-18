@@ -7,16 +7,16 @@ using ProjectM.Network;
 using Stunlock.Core;
 using System.Linq;
 using VRisingMods.Core.Utilities;
+using ProjectM.Gameplay;
 
 namespace FrostDashFreezeFix.Patches;
 
 
-//[HarmonyPatch(typeof(Apply_BuffModificationsSystem_Server), nameof(Apply_BuffModificationsSystem_Server.OnUpdate))]
-public static class ApplyBuffModsPatch
+// [HarmonyPatch(typeof(Spawn_DashSystem), nameof(Spawn_DashSystem.OnUpdate))]
+public static class AsdfPatch
 {
-    public static void Prefix(Apply_BuffModificationsSystem_Server __instance)
+    public static void Postfix(Spawn_DashSystem __instance)
     {
-        // todo: pick this beast apart; its got 8 queries and a bunch of jobs
         var i = 0;
         foreach (var query in __instance.EntityQueries)
         {

@@ -1,0 +1,49 @@
+ProjectM.Attach
+ProjectM.EntityOwner
+ProjectM.EntityCreator
+ProjectM.AbilityOwner
+ProjectM.Buff
+ProjectM.GetTranslationOnSpawn
+ProjectM.AbsorbBuff
+ProjectM.MultiplyAbsorbCapBySpellPower
+ProjectM.DestroyBuffOnDamageTaken
+ProjectM.DestroyData
+ProjectM.DestroyState
+ProjectM.Age
+ProjectM.BuffCategory
+ProjectM.DiminishingReturn
+ProjectM.LifeTime
+ProjectM.ManualFirstFrameLastTranslation
+ProjectM.BuffModificationFlagData
+ProjectM.Network.Networked
+ProjectM.Network.UpToDateUserBitMask
+ProjectM.Network.FrameChanged
+ProjectM.Network.NetworkSnapshot
+ProjectM.Shared.SpellModSetComponent
+Unity.Transforms.Rotation
+Unity.Transforms.Translation
+ProjectM.Gameplay.Scripting.Script_BranchOnRandomGameplayEventData
+ProjectM.Gameplay.Scripting.Script_IncreaseLifeTimeCondition_Data
+Unity.Transforms.LocalToWorld
+Unity.Transforms.LocalTransform
+ProjectM.Network.NetworkId
+Stunlock.Core.PrefabGUID
+ProjectM.CreateGameplayEventsOnDestroy [Buffer]
+ProjectM.CreateGameplayEventsOnSpawn [Buffer]
+ProjectM.ApplyBuffOnGameplayEvent [Buffer]
+ProjectM.GameplayEventIdMapping [Buffer]
+ProjectM.PlaySequenceOnGameplayEvent [Buffer]
+ProjectM.RemoveBuffOnGameplayEvent [Buffer]
+ProjectM.RemoveBuffOnGameplayEventEntry [Buffer]
+ProjectM.RunScriptOnGameplayEvent [Buffer]
+ProjectM.SpawnPrefabOnGameplayEvent [Buffer]
+ProjectM.DiminishingReturnElement [Buffer]
+ProjectM.GameplayEventListeners [Buffer]
+ProjectM.Network.NetSnapshot [Buffer]
+ProjectM.Network.SnapshotFrameChangedBuffer [Buffer]
+ProjectM.FreezeHybridAnimationData
+ProjectM.Scripting.ScriptSpawn
+Unity.Entities.SpawnTag
+Unity.Entities.Simulate
+Unity.Entities.BlobAssetOwner
+ProjectM.Network.NetworkSnapshotType
