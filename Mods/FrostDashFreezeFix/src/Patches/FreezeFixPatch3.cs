@@ -43,8 +43,8 @@ public unsafe class FreezeFixPatch3
         }
     }
 
-    [HarmonyPatch(typeof(PerformanceRecorderSystem), nameof(PerformanceRecorderSystem.OnUpdate))]
-    [HarmonyPrefix]
+    //[HarmonyPatch(typeof(PerformanceRecorderSystem), nameof(PerformanceRecorderSystem.OnUpdate))]
+    //[HarmonyPrefix]
     static bool PerformanceRecorderSystem_OnUpdate_Prefix(PerformanceRecorderSystem __instance)
     {
         if (_initialized) {

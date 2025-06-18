@@ -9,9 +9,11 @@ namespace FrostDashFreezeFix;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency("gg.deca.VampireCommandFramework")]
+[BepInDependency("HookDOTS.API")]
 public class Plugin : BasePlugin
 {
     Harmony _harmony;
+    HookDOTS.API.HookDOTS _hookDOTS;
 
     public override void Load()
     {
@@ -23,6 +25,9 @@ public class Plugin : BasePlugin
         _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
         _harmony.PatchAll(System.Reflection.Assembly.GetExecutingAssembly());
 
+        _hookDOTS = new HookDOTS.API.HookDOTS(MyPluginInfo.PLUGIN_GUID, Log);
+        _hookDOTS.RegisterAnnotatedHooks();
+
         // Register all commands in the assembly with VCF
         CommandRegistry.RegisterAll();
     }
@@ -32,6 +37,7 @@ public class Plugin : BasePlugin
         CommandRegistry.UnregisterAssembly();
         FreezeFixPatch3.BeforeUnPatch();
         _harmony?.UnpatchSelf();
+        _hookDOTS.Dispose();
         return true;
     }
 

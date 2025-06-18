@@ -18,6 +18,7 @@
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
     <PackageReference Include="VRising.Unhollowed.Client" Version="1.1.8.*" />
     <PackageReference Include="VRising.VampireCommandFramework" Version="0.10.*" />
+    <PackageReference Include="HookDOTS.API" Version="1.*" />
   </ItemGroup>
 
   <Target Name="PrepareLibsForDist" AfterTargets="Publish">

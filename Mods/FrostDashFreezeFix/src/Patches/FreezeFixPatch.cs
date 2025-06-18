@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using HarmonyLib;
+using HookDOTS.API.Attributes;
 using ProjectM;
 using ProjectM.Gameplay.Systems;
 using ProjectM.Scripting;
@@ -28,10 +29,11 @@ internal static class FreezeFixPatch
     // I suspect DealDamageSystem is the ideal target, but it's unmanaged so can't hook
     // prefixing StatChangeSystem: frost weapon damage appears a frame after the auto attack appears
     // postfixing CreateGameplayEventsOnDamageTakenSystem: frost weapon damage appears a frame after the auto attack appears
-    [HarmonyPatch(typeof(StatChangeMutationSystem), nameof(StatChangeMutationSystem.OnUpdate))]
-    [HarmonyPrefix]
-    static void OnUpdatePrefix(StatChangeMutationSystem __instance)
+    // actually, it's all in the same frame, but each system runs multiple times inside the RecursiveGroup until there's nothing left to "chain"
+    [EcsSystemUpdatePrefix(typeof(StatChangeMutationSystem))]
+    public static void OnUpdatePrefix()
     {
+        FreezeFixUtil.CurrentTick_CallCount++;
         debugId++;
         var entityManager = WorldUtil.Server.EntityManager;
         var query = entityManager.CreateEntityQuery(new EntityQueryDesc()
@@ -46,7 +48,7 @@ internal static class FreezeFixPatch
         var damageTakenEvents = query.ToEntityArray(Allocator.Temp);
         foreach (var eventEntity in damageTakenEvents)
         {
-            //DebugDamageTakenEvent(eventEntity);
+            DebugDamageTakenEvent(eventEntity);
             //DoFix(entityManager, eventEntity, frostDashAttackersFromCurrentUpdate);
         }
         FrostDashAttackersFromPreviousUpdate = frostDashAttackersFromCurrentUpdate;
@@ -125,7 +127,7 @@ internal static class FreezeFixPatch
         }
         //DebugUtil.LogComponentTypes(attackerEntity);
 
-        LogUtil.LogInfo($"DamageTakenEvent from inspection#{debugId} ---------------------------------------");
+        LogUtil.LogInfo($"DamageTakenEvent from inspection#{FreezeFixUtil.TickCount}-{FreezeFixUtil.CurrentTick_CallCount} ---------------------------------------");
 
         var sourcePrefabGuid = entityManager.GetComponentData<PrefabGUID>(damageTaken.Source);
         LogUtil.LogInfo($"damage taken from source with prefab guid: {LookupPrefabName(sourcePrefabGuid)}");
