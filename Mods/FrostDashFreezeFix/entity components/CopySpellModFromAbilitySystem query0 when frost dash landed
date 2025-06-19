@@ -1,0 +1,89 @@
+-------------------------------------------
+ProjectM.Attach
+ProjectM.EntityOwner
+ProjectM.EntityCreator
+ProjectM.AbilityOwner
+ProjectM.Buff
+ProjectM.SpellTarget
+ProjectM.CopySpellModSetFromAbilitySlot
+ProjectM.DestroyData
+ProjectM.DestroyState
+ProjectM.Age
+ProjectM.BuffCategory
+ProjectM.LifeTime
+ProjectM.Network.Networked
+ProjectM.Network.UpToDateUserBitMask
+ProjectM.Network.FrameChanged
+ProjectM.Network.NetworkSnapshot
+ProjectM.Shared.SpellModSetComponent
+ProjectM.Gameplay.Scripting.ScaleWithBloodEfficiency
+ProjectM.Gameplay.Scripting.Script_ModifyAbilityCooldownOnGameplayEvent_DataServer
+ProjectM.Network.NetworkId
+Stunlock.Core.PrefabGUID
+ProjectM.CreateGameplayEventsOnSpawn [Buffer]
+ProjectM.ApplyBuffOnGameplayEvent [Buffer]
+ProjectM.HealOnGameplayEvent [Buffer]
+ProjectM.GameplayEventIdMapping [Buffer]
+ProjectM.PlaySequenceOnGameplayEvent [Buffer]
+ProjectM.RunScriptOnGameplayEvent [Buffer]
+ProjectM.SpawnPrefabOnGameplayEvent [Buffer]
+ProjectM.Shared.BranchThroughGameplayEvent [Buffer]
+ProjectM.DealDamageOnGameplayEvent [Buffer]
+ProjectM.GameplayEventListeners [Buffer]
+ProjectM.Network.NetSnapshot [Buffer]
+ProjectM.Network.SnapshotFrameChangedBuffer [Buffer]
+ProjectM.Shared.SpellModArithmetic [Buffer]
+ProjectM.Gameplay.Scripting.ScaleDealDamageOnGameplayEventWithBloodEfficiency_Data [Buffer]
+Unity.Entities.SpawnTag
+Unity.Entities.Simulate
+Unity.Entities.BlobAssetOwner
+ProjectM.Network.NetworkSnapshotType
+-------------------------------------------
+ main prefabGUID: AB_Vampire_VeilOfFrost_TriggerBonusEffects PrefabGuid(-1688602321)
+  spell mods:
+    count:1
+    0:SpellMod_Shared_Frost_ConsumeChillIntoFreeze_OnAttack PrefabGuid(-292495274)
+    1:GUID Not Found 0
+    2:GUID Not Found 0
+    3:GUID Not Found 0
+    4:GUID Not Found 0
+    5:GUID Not Found 0
+    6:GUID Not Found 0
+    7:GUID Not Found 0
+     ----
+  Buffs to apply on gameplay events:
+    stacks:1
+    0:Frost_Vampire_Buff_Chill PrefabGuid(27300215)
+    1:GUID Not Found 0
+    2:GUID Not Found 0
+    3:GUID Not Found 0
+    spellModSource:PrefabGuid(0)
+     ----
+    stacks:1
+    0:Frost_Vampire_Buff_NoFreeze_Shared_DamageTrigger PrefabGuid(312176353)
+    1:GUID Not Found 0
+    2:GUID Not Found 0
+    3:GUID Not Found 0
+    spellModSource:PrefabGuid(0)
+     ----
+    stacks:1
+    0:AB_Vampire_VeilOfFrost_Shield PrefabGuid(1539416513)
+    1:GUID Not Found 0
+    2:GUID Not Found 0
+    3:GUID Not Found 0
+    spellModSource:PrefabGuid(0)
+     ----
+    stacks:1
+    0:Frost_Vampire_Buff_Freeze PrefabGuid(612319955)
+    1:GUID Not Found 0
+    2:GUID Not Found 0
+    3:GUID Not Found 0
+    spellModSource:PrefabGuid(0)
+     ----
+    stacks:1
+    0:Frost_Vampire_Buff_Freeze PrefabGuid(612319955)
+    1:GUID Not Found 0
+    2:GUID Not Found 0
+    3:GUID Not Found 0
+    spellModSource:PrefabGuid(0)
+     ----

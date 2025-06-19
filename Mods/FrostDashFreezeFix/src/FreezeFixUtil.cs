@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ProjectM;
-using ProjectM.Scripting;
 using ProjectM.Shared;
 using Stunlock.Core;
 using Unity.Entities;
@@ -37,6 +36,7 @@ public static class FreezeFixUtil
     ];
 
     // AB_Vampire_VeilOfFrost_TriggerBonusEffects PrefabGuid(-1688602321)
+    // Frost_Vampire_Buff_NoFreeze_Shared_DamageTrigger PrefabGuid(312176353)
 
 
     public static void NewTickStarted()
@@ -53,7 +53,8 @@ public static class FreezeFixUtil
         CurrentTick_CallCount++;
     }
 
-    public static string RecursiveTickStamp {
+    public static string RecursiveTickStamp
+    {
         get => $"{TickCount}-{CurrentTick_CallCount}";
     }
 
@@ -87,28 +88,18 @@ public static class FreezeFixUtil
             LogUtil.LogWarning($"{RecursiveTickStamp} Going to spawn freeze buff for something");
             DebugUtil.LogComponentTypes(entity);
 
-            if (EntityManager.HasBuffer<SpellModSetComponent>(entity))
-            {
-                LogUtil.LogInfo($"  spell mods:");
-                var smsc = EntityManager.GetComponentData<SpellModSetComponent>(entity);
-                var sm = smsc.SpellMods;
-                LogUtil.LogInfo($"    count:{sm.Count}");
-                LogUtil.LogInfo($"    0:{LookupPrefabName(sm.Mod0.Id)}");
-                LogUtil.LogInfo($"    1:{LookupPrefabName(sm.Mod1.Id)}");
-                LogUtil.LogInfo($"    2:{LookupPrefabName(sm.Mod2.Id)}");
-                LogUtil.LogInfo($"    3:{LookupPrefabName(sm.Mod3.Id)}");
-                LogUtil.LogInfo($"    4:{LookupPrefabName(sm.Mod4.Id)}");
-                LogUtil.LogInfo($"    5:{LookupPrefabName(sm.Mod5.Id)}");
-                LogUtil.LogInfo($"    6:{LookupPrefabName(sm.Mod6.Id)}");
-                LogUtil.LogInfo($"    7:{LookupPrefabName(sm.Mod7.Id)}");
-                LogUtil.LogInfo("     ----");
-            }
+
 
             if (HasSpellModToConsumeChillIntoFreeze(entity))
             {
                 LogUtil.LogError("Found a sus freeze buff");
                 ConsumeChillToFreezeThisTick.Add(entityToBuff, entity);
             }
+
+            LogBuffThings(entity);
+            
+
+            // todo: do something with ApplyBuffOnGameplayEvent
         }
 
     }
@@ -182,7 +173,8 @@ public static class FreezeFixUtil
 
     public static bool HasSpellModToConsumeChillIntoFreeze(Entity entity)
     {
-        if (!EntityManager.HasBuffer<SpellModSetComponent>(entity)) {
+        if (!EntityManager.HasBuffer<SpellModSetComponent>(entity))
+        {
             return false;
         }
         var smsc = EntityManager.GetComponentData<SpellModSetComponent>(entity);
@@ -190,11 +182,68 @@ public static class FreezeFixUtil
         SpellMod[] spellMods = { sm.Mod0, sm.Mod1, sm.Mod2, sm.Mod3, sm.Mod4, sm.Mod5, sm.Mod6, sm.Mod7 };
         foreach (var mod in spellMods)
         {
-            if (PrefabsThatConsumeToFreeze.Contains(mod.Id)) {
+            if (PrefabsThatConsumeToFreeze.Contains(mod.Id))
+            {
                 return true;
             }
         }
         return false;
     }
+
+    public static void LogBuffThings(Entity entity)
+    {
+        if (EntityManager.HasComponent<PrefabGUID>(entity))
+        {
+            var prefabGUID = EntityManager.GetComponentData<PrefabGUID>(entity);
+            LogUtil.LogInfo($" main prefabGUID: {LookupPrefabName(prefabGUID)}");
+        }
+        
+
+        if (EntityManager.HasBuffer<SpellModSetComponent>(entity))
+        {
+            LogUtil.LogInfo($"  spell mods:");
+            var smsc = EntityManager.GetComponentData<SpellModSetComponent>(entity);
+            var sm = smsc.SpellMods;
+            LogUtil.LogInfo($"    count:{sm.Count}");
+            LogUtil.LogInfo($"    0:{LookupPrefabName(sm.Mod0.Id)}");
+            LogUtil.LogInfo($"    1:{LookupPrefabName(sm.Mod1.Id)}");
+            LogUtil.LogInfo($"    2:{LookupPrefabName(sm.Mod2.Id)}");
+            LogUtil.LogInfo($"    3:{LookupPrefabName(sm.Mod3.Id)}");
+            LogUtil.LogInfo($"    4:{LookupPrefabName(sm.Mod4.Id)}");
+            LogUtil.LogInfo($"    5:{LookupPrefabName(sm.Mod5.Id)}");
+            LogUtil.LogInfo($"    6:{LookupPrefabName(sm.Mod6.Id)}");
+            LogUtil.LogInfo($"    7:{LookupPrefabName(sm.Mod7.Id)}");
+            LogUtil.LogInfo("     ----");
+        }
+
+        if (EntityManager.HasBuffer<ApplyBuffOnGameplayEvent>(entity))
+        {
+            LogUtil.LogInfo($"  Buffs to apply on gameplay events:");
+            var applyBuffs = EntityManager.GetBuffer<ApplyBuffOnGameplayEvent>(entity);
+            foreach (var buff in applyBuffs)
+            {
+                LogUtil.LogInfo($"    stacks:{buff.Stacks}");
+                LogUtil.LogInfo($"    0:{LookupPrefabName(buff.Buff0)}");
+                LogUtil.LogInfo($"    1:{LookupPrefabName(buff.Buff1)}");
+                LogUtil.LogInfo($"    2:{LookupPrefabName(buff.Buff2)}");
+                LogUtil.LogInfo($"    3:{LookupPrefabName(buff.Buff3)}");
+                LogUtil.LogInfo($"    spellModSource:{buff.CustomAbilitySpellModsSource}");
+                LogUtil.LogInfo("     ----");
+            }
+        }
+
+        if (EntityManager.HasBuffer<CreateGameplayEventsOnHit>(entity))
+        {
+            LogUtil.LogInfo($"  gameplay events to create on hit:");
+            var gameplayEvents = EntityManager.GetBuffer<CreateGameplayEventsOnHit>(entity);
+            foreach (var ge in gameplayEvents)
+            {
+                LogUtil.LogInfo($"    EventId:{ge.EventId.EventId}, {ge.EventId.GameplayEventType}");
+            }
+        }
+
+    }
+    
+
 
 }

@@ -10,7 +10,7 @@ using System.Linq;
 namespace FrostDashFreezeFix.Patches;
 
 
-[HarmonyPatch(typeof(BuffSystem_Spawn_Server), nameof(BuffSystem_Spawn_Server.OnUpdate))]
+//[HarmonyPatch(typeof(BuffSystem_Spawn_Server), nameof(BuffSystem_Spawn_Server.OnUpdate))]
 public static class BuffSpawnPatch
 {
     public static void Prefix(BuffSystem_Spawn_Server __instance)

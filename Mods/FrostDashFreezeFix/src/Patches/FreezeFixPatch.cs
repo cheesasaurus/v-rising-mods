@@ -29,7 +29,6 @@ internal static class FreezeFixPatch
     // postfixing CreateGameplayEventsOnDamageTakenSystem: frost weapon damage appears a frame after the auto attack appears
     // actually, it's all in the same frame, but each system runs multiple times inside the RecursiveGroup until there's nothing left to "chain"
     // the damage taken event first appears after StatChangeSystem
-    // note: disabling Apply_BuffModificationsSystem_Server blocks freezes from happening in general.
     [EcsSystemUpdatePostfix(typeof(StatChangeSystem))]
     public static void OnUpdate()
     {

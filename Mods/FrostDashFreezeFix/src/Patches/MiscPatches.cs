@@ -1,6 +1,7 @@
 using HarmonyLib;
 using HookDOTS.API.Attributes;
 using ProjectM;
+using ProjectM.Gameplay;
 using ProjectM.Gameplay.Systems;
 using ProjectM.UI;
 using ProjectM.WeaponCoating;
@@ -27,7 +28,7 @@ public unsafe class MiscPatches
         FreezeFixUtil.RecursiveUpdateStarting();
     }
 
-    // [EcsSystemUpdatePrefix(typeof(Spawn_TravelBuffSystem))]
+    [EcsSystemUpdatePrefix(typeof(ApplyBuffOnSpawnSystem))]
     public static bool Something()
     {
         LogUtil.LogError("skipping something");

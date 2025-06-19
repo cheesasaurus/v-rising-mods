@@ -12,11 +12,12 @@ using ProjectM.Gameplay;
 namespace FrostDashFreezeFix.Patches;
 
 
-// [HarmonyPatch(typeof(Spawn_DashSystem), nameof(Spawn_DashSystem.OnUpdate))]
+//[HarmonyPatch(typeof(Apply_BuffModificationsSystem_Server), nameof(Apply_BuffModificationsSystem_Server.OnUpdate))]
 public static class AsdfPatch
 {
-    public static void Postfix(Spawn_DashSystem __instance)
+    public static bool Prefix(Apply_BuffModificationsSystem_Server __instance)
     {
+        return false;
         var i = 0;
         foreach (var query in __instance.EntityQueries)
         {
@@ -25,7 +26,8 @@ public static class AsdfPatch
             foreach (var entity in events)
             {
                 DebugUtil.LogComponentTypes(entity);
-                FreezeFixUtil.BuffWillBeSpawned(entity);
+                //FreezeFixUtil.BuffWillBeSpawned(entity);
+                FreezeFixUtil.LogBuffThings(entity);
                 //break;
             }
             i++;
