@@ -5,6 +5,7 @@ using ProjectM;
 using ProjectM.Shared;
 using Stunlock.Core;
 using Unity.Entities;
+using Unity.Entities.UniversalDelegates;
 using VRisingMods.Core.Utilities;
 
 namespace FrostDashFreezeFix;
@@ -16,10 +17,12 @@ public static class FreezeFixUtil
     public static ISet<Entity> FrostDashAttackersThisTick = new HashSet<Entity>();
     public static HashSet<Entity> ChilledThisTick = new();
     public static Dictionary<Entity, Entity> ConsumeChillToFreezeThisTick = new(); // todo: could be multiple events per victim 
+    public static Dictionary<Entity, Entity> FrostDashProcThisTick = new(); // todo: could be multiple events per victim 
 
 
     private static EntityManager EntityManager = WorldUtil.Game.EntityManager;
 
+    static PrefabGUID NullPrefabGUID = new PrefabGUID(0);
     static PrefabGUID Frost_Vampire_Buff_Chill = new PrefabGUID(27300215);
     static PrefabGUID Frost_Vampire_Buff_Freeze = new PrefabGUID(612319955);
     static PrefabGUID SpellMod_Shared_Frost_ConsumeChillIntoFreeze = new PrefabGUID(1152422729);
@@ -35,6 +38,8 @@ public static class FreezeFixUtil
         SpellMod_Shared_Frost_ConsumeChillIntoFreeze_Recast
     ];
 
+    static PrefabGUID AB_Vampire_VeilOfFrost_TriggerBonusEffects = new PrefabGUID(-1688602321);
+
     // AB_Vampire_VeilOfFrost_TriggerBonusEffects PrefabGuid(-1688602321)
     // Frost_Vampire_Buff_NoFreeze_Shared_DamageTrigger PrefabGuid(312176353)
 
@@ -46,6 +51,7 @@ public static class FreezeFixUtil
         FrostDashAttackersThisTick.Clear();
         ChilledThisTick.Clear();
         ConsumeChillToFreezeThisTick.Clear();
+        FrostDashProcThisTick.Clear();
     }
 
     public static void RecursiveUpdateStarting()
@@ -86,7 +92,7 @@ public static class FreezeFixUtil
         if (IsDirectFreezeBuff(entity))
         {
             LogUtil.LogWarning($"{RecursiveTickStamp} Going to spawn freeze buff for something");
-            DebugUtil.LogComponentTypes(entity);
+            //DebugUtil.LogComponentTypes(entity);
 
 
 
@@ -96,10 +102,19 @@ public static class FreezeFixUtil
                 ConsumeChillToFreezeThisTick.Add(entityToBuff, entity);
             }
 
-            LogBuffThings(entity);
-            
+            //LogBuffThings(entity);
+
 
             // todo: do something with ApplyBuffOnGameplayEvent
+        }
+
+        if (IsFrostDashTriggerBuff(entity))
+        {
+
+            LogUtil.LogError($"{RecursiveTickStamp} Found a frost dash trigger buff");
+            DebugUtil.LogComponentTypes(entity);
+            LogBuffThings(entity);
+            FrostDashProcThisTick.Add(entityToBuff, entity);
         }
 
     }
@@ -133,6 +148,16 @@ public static class FreezeFixUtil
         return false;
     }
 
+    public static bool IsFrostDashTriggerBuff(Entity entity)
+    {
+        if (!EntityManager.HasComponent<PrefabGUID>(entity))
+        {
+            return false;
+        }
+        var prefabGUID = EntityManager.GetComponentData<PrefabGUID>(entity);
+        return prefabGUID.Equals(AB_Vampire_VeilOfFrost_TriggerBonusEffects);
+    }
+
     public static bool IsDirectFreezeBuff(Entity entity)
     {
         if (!EntityManager.HasComponent<PrefabGUID>(entity))
@@ -158,6 +183,70 @@ public static class FreezeFixUtil
             var ev = ConsumeChillToFreezeThisTick[victim];
             SystemPatchUtil.CancelJob(ev);
         }
+    }
+
+    public static IEnumerable<Entity> VictimsOfFrostDash()
+    {
+        var maybeFreezeThisTick = FrostDashProcThisTick.Keys.ToHashSet();
+        return ChilledThisTick.Intersect(maybeFreezeThisTick);
+    }
+
+    public static void ModifyBadFrostDashes()
+    {
+        var victims = VictimsOfFrostDash();
+        LogUtil.LogError($"{RecursiveTickStamp} Modifying {victims.Count()} bad frost dashes");
+        foreach (var victim in victims)
+        {
+            var ev = FrostDashProcThisTick[victim];
+            RemoveFrostDashFreezeMods(ev);
+        }
+    }
+
+    public static void RemoveFrostDashFreezeMods(Entity entity)
+    {
+        // todo
+        if (!EntityManager.HasBuffer<SpellModSetComponent>(entity))
+        {
+            return;
+        }
+        var smsc = EntityManager.GetComponentData<SpellModSetComponent>(entity);
+        var sm = smsc.SpellMods;
+
+        if (sm.Mod0.Id.Equals(SpellMod_Shared_Frost_ConsumeChillIntoFreeze_OnAttack))
+        {
+            sm.Mod0.Id = NullPrefabGUID;
+        }
+        if (sm.Mod1.Id.Equals(SpellMod_Shared_Frost_ConsumeChillIntoFreeze_OnAttack))
+        {
+            sm.Mod1.Id = NullPrefabGUID;
+        }
+        if (sm.Mod2.Id.Equals(SpellMod_Shared_Frost_ConsumeChillIntoFreeze_OnAttack))
+        {
+            sm.Mod2.Id = NullPrefabGUID;
+        }
+        if (sm.Mod3.Id.Equals(SpellMod_Shared_Frost_ConsumeChillIntoFreeze_OnAttack))
+        {
+            sm.Mod3.Id = NullPrefabGUID;
+        }
+        if (sm.Mod4.Id.Equals(SpellMod_Shared_Frost_ConsumeChillIntoFreeze_OnAttack))
+        {
+            sm.Mod4.Id = NullPrefabGUID;
+        }
+        if (sm.Mod5.Id.Equals(SpellMod_Shared_Frost_ConsumeChillIntoFreeze_OnAttack))
+        {
+            sm.Mod5.Id = NullPrefabGUID;
+        }
+        if (sm.Mod6.Id.Equals(SpellMod_Shared_Frost_ConsumeChillIntoFreeze_OnAttack))
+        {
+            sm.Mod6.Id = NullPrefabGUID;
+        }
+        if (sm.Mod7.Id.Equals(SpellMod_Shared_Frost_ConsumeChillIntoFreeze_OnAttack))
+        {
+            sm.Mod7.Id = NullPrefabGUID;
+        }
+        smsc.SpellMods = sm;
+        EntityManager.SetComponentData(entity, smsc);
+        LogSpellMods(entity);
     }
 
     public static string LookupPrefabName(PrefabGUID prefabGuid)
@@ -197,24 +286,9 @@ public static class FreezeFixUtil
             var prefabGUID = EntityManager.GetComponentData<PrefabGUID>(entity);
             LogUtil.LogInfo($" main prefabGUID: {LookupPrefabName(prefabGUID)}");
         }
-        
 
-        if (EntityManager.HasBuffer<SpellModSetComponent>(entity))
-        {
-            LogUtil.LogInfo($"  spell mods:");
-            var smsc = EntityManager.GetComponentData<SpellModSetComponent>(entity);
-            var sm = smsc.SpellMods;
-            LogUtil.LogInfo($"    count:{sm.Count}");
-            LogUtil.LogInfo($"    0:{LookupPrefabName(sm.Mod0.Id)}");
-            LogUtil.LogInfo($"    1:{LookupPrefabName(sm.Mod1.Id)}");
-            LogUtil.LogInfo($"    2:{LookupPrefabName(sm.Mod2.Id)}");
-            LogUtil.LogInfo($"    3:{LookupPrefabName(sm.Mod3.Id)}");
-            LogUtil.LogInfo($"    4:{LookupPrefabName(sm.Mod4.Id)}");
-            LogUtil.LogInfo($"    5:{LookupPrefabName(sm.Mod5.Id)}");
-            LogUtil.LogInfo($"    6:{LookupPrefabName(sm.Mod6.Id)}");
-            LogUtil.LogInfo($"    7:{LookupPrefabName(sm.Mod7.Id)}");
-            LogUtil.LogInfo("     ----");
-        }
+
+        LogSpellMods(entity);
 
         if (EntityManager.HasBuffer<ApplyBuffOnGameplayEvent>(entity))
         {
@@ -243,7 +317,25 @@ public static class FreezeFixUtil
         }
 
     }
-    
 
+    public static void LogSpellMods(Entity entity)
+    {
+        if (EntityManager.HasBuffer<SpellModSetComponent>(entity))
+        {
+            LogUtil.LogInfo($"  spell mods:");
+            var smsc = EntityManager.GetComponentData<SpellModSetComponent>(entity);
+            var sm = smsc.SpellMods;
+            LogUtil.LogInfo($"    count:{sm.Count}");
+            LogUtil.LogInfo($"    0:{LookupPrefabName(sm.Mod0.Id)}");
+            LogUtil.LogInfo($"    1:{LookupPrefabName(sm.Mod1.Id)}");
+            LogUtil.LogInfo($"    2:{LookupPrefabName(sm.Mod2.Id)}");
+            LogUtil.LogInfo($"    3:{LookupPrefabName(sm.Mod3.Id)}");
+            LogUtil.LogInfo($"    4:{LookupPrefabName(sm.Mod4.Id)}");
+            LogUtil.LogInfo($"    5:{LookupPrefabName(sm.Mod5.Id)}");
+            LogUtil.LogInfo($"    6:{LookupPrefabName(sm.Mod6.Id)}");
+            LogUtil.LogInfo($"    7:{LookupPrefabName(sm.Mod7.Id)}");
+            LogUtil.LogInfo("     ----");
+        }
+    }
 
 }
