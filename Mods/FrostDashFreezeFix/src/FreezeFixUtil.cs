@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using ProjectM;
 using ProjectM.Shared;
@@ -16,6 +17,7 @@ public static class FreezeFixUtil
     public static int CurrentTick_CallCount = 0;
     public static ISet<Entity> FrostDashAttackersThisTick = new HashSet<Entity>();
     public static HashSet<Entity> ChilledThisTick = new();
+    public static HashSet<Entity> HitWhileNotChilledThisTick = new();
     public static Dictionary<Entity, Entity> ConsumeChillToFreezeThisTick = new(); // todo: could be multiple events per victim 
     public static Dictionary<Entity, Entity> FrostDashProcThisTick = new(); // todo: could be multiple events per victim 
 
@@ -52,11 +54,21 @@ public static class FreezeFixUtil
         ChilledThisTick.Clear();
         ConsumeChillToFreezeThisTick.Clear();
         FrostDashProcThisTick.Clear();
+        HitWhileNotChilledThisTick.Clear();
     }
 
     public static void RecursiveUpdateStarting()
     {
         CurrentTick_CallCount++;
+    }
+
+    public static void EntityGotHitWithDamage(Entity entity)
+    {
+        if (!IsEntityChilled(entity))
+        {
+            LogUtil.LogInfo($"{RecursiveTickStamp} got hit with chill while not chilled");
+            HitWhileNotChilledThisTick.Add(entity);
+        }
     }
 
     public static string RecursiveTickStamp
@@ -67,7 +79,19 @@ public static class FreezeFixUtil
     public static void BuffWillBeSpawned(Entity entity)
     {
         var entityOwner = EntityManager.GetComponentData<EntityOwner>(entity);
-        var entityToBuff = entityOwner.Owner;
+        if (!TryGetBuffTarget(entity, out var entityToBuff))
+        {
+            return;
+        }
+
+        //if (!EntityManager.HasComponent<Attach>(entity))
+        //{
+        //    return;
+        //}
+        //var attach = EntityManager.GetComponentData<Attach>(entity);
+
+        //var entityToBuff = entityOwner.Owner;
+        //var entityToBuff = abilityOwner.Owner;
         /* todo: maybe only do this to players, for performance?
         if (!EntityManager.HasComponent<PlayerCharacter>(buffedCharacter))
         {
@@ -78,9 +102,16 @@ public static class FreezeFixUtil
 
         if (IsChillBuff(entity))
         {
-            ChilledThisTick.Add(entityToBuff);
             LogUtil.LogWarning($"{RecursiveTickStamp} Going to spawn chill buff for something");
-            //SystemPatchUtil.CancelJob(entity);
+            //DebugUtil.LogComponentTypes(entityToBuff);
+            //DebugUtil.LogComponentTypes(entity);
+            LogTargetsBuffs(entityToBuff);
+
+            if (!IsEntityChilled(entityToBuff))
+            {
+                LogUtil.LogWarning("An entity is becoming newly chilled this tick");
+                //ChilledThisTick.Add(entityToBuff);
+            }
         }
 
         if (IsConsumeChillToFreezeBuff(entity))
@@ -92,6 +123,7 @@ public static class FreezeFixUtil
         if (IsDirectFreezeBuff(entity))
         {
             LogUtil.LogWarning($"{RecursiveTickStamp} Going to spawn freeze buff for something");
+            //LogTargetsBuffs(entityToBuff);
             //DebugUtil.LogComponentTypes(entity);
 
 
@@ -112,8 +144,8 @@ public static class FreezeFixUtil
         {
 
             LogUtil.LogError($"{RecursiveTickStamp} Found a frost dash trigger buff");
-            DebugUtil.LogComponentTypes(entity);
-            LogBuffThings(entity);
+            //DebugUtil.LogComponentTypes(entity);
+            //LogBuffThings(entity);
             FrostDashProcThisTick.Add(entityToBuff, entity);
         }
 
@@ -188,17 +220,19 @@ public static class FreezeFixUtil
     public static IEnumerable<Entity> VictimsOfFrostDash()
     {
         var maybeFreezeThisTick = FrostDashProcThisTick.Keys.ToHashSet();
-        return ChilledThisTick.Intersect(maybeFreezeThisTick);
+        return HitWhileNotChilledThisTick.Intersect(maybeFreezeThisTick);
     }
 
     public static void ModifyBadFrostDashes()
     {
-        var victims = VictimsOfFrostDash();
-        LogUtil.LogError($"{RecursiveTickStamp} Modifying {victims.Count()} bad frost dashes");
-        foreach (var victim in victims)
+        //var victims = VictimsOfFrostDash();
+        //LogUtil.LogError($"{RecursiveTickStamp} Modifying {victims.Count()} bad frost dashes");
+        foreach (var (victim, ev) in FrostDashProcThisTick)
         {
-            var ev = FrostDashProcThisTick[victim];
-            RemoveFrostDashFreezeMods(ev);
+            if (HitWhileNotChilledThisTick.Contains(victim)) {
+                LogUtil.LogError($"{RecursiveTickStamp} Modifying a bad frost dash");
+                RemoveFrostDashFreezeMods(ev);
+            }
         }
     }
 
@@ -247,6 +281,18 @@ public static class FreezeFixUtil
         smsc.SpellMods = sm;
         EntityManager.SetComponentData(entity, smsc);
         LogSpellMods(entity);
+    }
+
+    public static bool TryGetBuffTarget(Entity entity, out Entity targetEntity)
+    {
+        targetEntity = Entity.Null;
+        if (!EntityManager.HasComponent<Buff>(entity))
+        {
+            return false;
+        }
+        var buff = EntityManager.GetComponentData<Buff>(entity);
+        targetEntity = buff.Target;
+        return true;
     }
 
     public static string LookupPrefabName(PrefabGUID prefabGuid)
@@ -336,6 +382,35 @@ public static class FreezeFixUtil
             LogUtil.LogInfo($"    7:{LookupPrefabName(sm.Mod7.Id)}");
             LogUtil.LogInfo("     ----");
         }
+    }
+
+    public static void LogTargetsBuffs(Entity entityToBuff)
+    {
+        if (EntityManager.HasBuffer<BuffBuffer>(entityToBuff))
+        {
+            LogUtil.LogInfo($"  target's buffs:");
+            var targetsBuffs = EntityManager.GetBuffer<BuffBuffer>(entityToBuff);
+            foreach (var buff in targetsBuffs)
+            {
+                LogUtil.LogInfo($"    {LookupPrefabName(buff.PrefabGuid)}");
+            }
+        }
+    }
+
+    public static bool IsEntityChilled(Entity entity)
+    {
+        if (EntityManager.HasBuffer<BuffBuffer>(entity))
+        {
+            var targetsBuffs = EntityManager.GetBuffer<BuffBuffer>(entity);
+            foreach (var buff in targetsBuffs)
+            {
+                if (buff.PrefabGuid.Equals(Frost_Vampire_Buff_Chill))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

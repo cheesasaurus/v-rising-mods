@@ -29,7 +29,7 @@ internal static class FreezeFixPatch
     // postfixing CreateGameplayEventsOnDamageTakenSystem: frost weapon damage appears a frame after the auto attack appears
     // actually, it's all in the same frame, but each system runs multiple times inside the RecursiveGroup until there's nothing left to "chain"
     // the damage taken event first appears after StatChangeSystem
-    [EcsSystemUpdatePostfix(typeof(StatChangeSystem))]
+    //[EcsSystemUpdatePostfix(typeof(StatChangeSystem))]
     public static void OnUpdate()
     {
         FreezeFixUtil.CurrentTick_CallCount++;
@@ -45,7 +45,7 @@ internal static class FreezeFixPatch
         var damageTakenEvents = query.ToEntityArray(Allocator.Temp);
         foreach (var eventEntity in damageTakenEvents)
         {
-            //DebugDamageTakenEvent(eventEntity);
+            DebugDamageTakenEvent(eventEntity);
             //DoFix(entityManager, eventEntity);
         }
     }
@@ -126,7 +126,14 @@ internal static class FreezeFixPatch
         }
         //DebugUtil.LogComponentTypes(attackerEntity);
 
-        LogUtil.LogInfo($"DamageTakenEvent from inspection#{FreezeFixUtil.TickCount}-{FreezeFixUtil.CurrentTick_CallCount} ---------------------------------------");
+
+
+        //DebugUtil.LogComponentTypes(damageTaken.Entity);
+        //FreezeFixUtil.LogTargetsBuffs(damageTaken.Entity);
+
+
+
+        LogUtil.LogInfo($"{FreezeFixUtil.RecursiveTickStamp} DamageTakenEvent ---------------------------------------");
 
         var sourcePrefabGuid = entityManager.GetComponentData<PrefabGUID>(damageTaken.Source);
         LogUtil.LogInfo($"damage taken from source with prefab guid: {LookupPrefabName(sourcePrefabGuid)}");

@@ -8,16 +8,18 @@ using Stunlock.Core;
 using System.Linq;
 using VRisingMods.Core.Utilities;
 using ProjectM.Gameplay;
+using ProjectM.Gameplay.Systems;
 
 namespace FrostDashFreezeFix.Patches;
 
 
-//[HarmonyPatch(typeof(Apply_BuffModificationsSystem_Server), nameof(Apply_BuffModificationsSystem_Server.OnUpdate))]
+//[HarmonyPatch(typeof(AbilitySpawnSystem), nameof(AbilitySpawnSystem.OnUpdate))]
 public static class AsdfPatch
 {
-    public static bool Prefix(Apply_BuffModificationsSystem_Server __instance)
+    public static void Prefix(AbilitySpawnSystem __instance)
     {
-        return false;
+        LogUtil.LogInfo($"{FreezeFixUtil.RecursiveTickStamp} ASDF patch");
+
         var i = 0;
         foreach (var query in __instance.EntityQueries)
         {
