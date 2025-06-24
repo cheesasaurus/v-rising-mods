@@ -4,13 +4,10 @@
 
 Enables server operators to schedule recurring Events.
 
-This is a server-side mod.
 
 ## Installation
 
-This mod comes with 2 DLLs which both need to be placed in `BepinEx/plugins`.
-- EventScheduler.dll
-- LiteDB.dll
+Extract `EventScheduler.dll` into `(VRising folder)/BepInEx/plugins`.
 
 
 ## Scheduling an event
@@ -64,3 +61,9 @@ e.g.
 ```
 
 Note that a server restart is required after changing configuration.
+
+## What happens if an event is missed
+
+In case an event is missed (e.g. the server is down, or an error happens when attempting to run the event):
+- The event will be skipped and won't be ran again until its next scheduled time on the imaginary calendar.
+

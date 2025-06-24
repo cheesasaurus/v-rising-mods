@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using cheesasaurus.VRisingMods.EventScheduler.Config;
 using cheesasaurus.VRisingMods.EventScheduler.Models;
 using cheesasaurus.VRisingMods.EventScheduler.Repositories;
@@ -12,18 +13,35 @@ namespace cheesasaurus.VRisingMods.EventScheduler;
 public class EventRunner {
     private IEventHistoryRepository EventHistory;
     private EventsConfig EventsConfig;
-    public EventRunner(EventsConfig eventsConfig, IEventHistoryRepository eventHistory) {
+
+    private Dictionary<string, DateTime> _nextRunTimes = new();
+
+    public EventRunner(EventsConfig eventsConfig, IEventHistoryRepository eventHistory)
+    {
         EventsConfig = eventsConfig;
         EventHistory = eventHistory;
+
+        foreach (var scheduledEvent in EventsConfig.ScheduledEvents)
+        {
+            _nextRunTimes[scheduledEvent.EventId] = DetermineNextRun(scheduledEvent);
+        }
     }
 
     public void Tick() {
         foreach (var scheduledEvent in EventsConfig.ScheduledEvents) {
-            var nextRun = NextRun(scheduledEvent);
+            var nextRun = GetOrDetermineNextRun(scheduledEvent);
             if (nextRun <= DateTime.Now) {
                 LogUtil.LogMessage($"{DateTime.Now}: Running the event {scheduledEvent.EventId}");
                 EventHistory.SetLastRun(scheduledEvent.EventId, nextRun);
-                RunChatCommands(scheduledEvent);
+                try
+                {
+                    RunChatCommands(scheduledEvent);
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.LogError(ex);
+                }
+                _nextRunTimes[scheduledEvent.EventId] = DetermineNextRun(scheduledEvent);
             }
         }
     }
@@ -39,24 +57,39 @@ public class EventRunner {
         }
     }
 
-    private DateTime NextRun(ScheduledEvent scheduledEvent) {
+    private DateTime GetOrDetermineNextRun(ScheduledEvent scheduledEvent)
+    {
+        if (_nextRunTimes.TryGetValue(scheduledEvent.EventId, out var nextRun))
+        {
+            return nextRun;
+        }
+        return DetermineNextRun(scheduledEvent);
+    }
+
+    private DateTime DetermineNextRun(ScheduledEvent scheduledEvent)
+    {
         var now = DateTime.Now;
         var firstRun = scheduledEvent.Schedule.FirstRun;
         var ran = EventHistory.TryGetLastRun(scheduledEvent.EventId, out var lastRun);
-        if (!ran || firstRun > now) {
+        // todo: not sure the !ran handling is sensible
+        if (!ran || firstRun > now)
+        {
             return firstRun;
         }
 
         // keep in mind that the schedule might be edited after already running
-        if (lastRun < firstRun) {
+        if (lastRun < firstRun)
+        {
             return firstRun;
         }
 
         // move the cursor forwards at least once, and continue skipping extraneous runs if we're overdue
         var nextRun = lastRun;
-        while (true) {
+        while (true)
+        {
             var nextDueRunPending = AddTime(nextRun, scheduledEvent.Schedule.Frequency);
-            if (nextDueRunPending > now && nextRun != lastRun) {
+            if (nextDueRunPending > now && nextRun != lastRun)
+            {
                 break;
             }
             nextRun = nextDueRunPending;
@@ -64,8 +97,11 @@ public class EventRunner {
         return nextRun;
     }
 
-    private static DateTime AddTime(DateTime dt, Frequency frequency) {
-        switch (frequency.Unit) {
+    // todo: use TimeSpan?
+    private static DateTime AddTime(DateTime dt, Frequency frequency)
+    {
+        switch (frequency.Unit)
+        {
             case FrequencyUnit.Year:
                 return dt.AddYears(frequency.Value);
             case FrequencyUnit.Month:

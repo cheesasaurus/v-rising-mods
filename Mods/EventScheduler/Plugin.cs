@@ -20,6 +20,7 @@ public class Plugin : BasePlugin
     {
         LogUtil.Init(Log);
 
+        // todo: reload when config changed.
         var eventsConfig = EventsConfig.Init(MyPluginInfo.PLUGIN_GUID, "events.jsonc");
         EventHistory = new EventHistoryRepository_JSON(MyPluginInfo.PLUGIN_GUID, "EventHistory.json");
         EventHistory.TryLoad();
@@ -51,6 +52,8 @@ public class Plugin : BasePlugin
 
     public void Tick()
     {
+        // todo: error running event when plugin loaded during server startup
+        // [Error  :EventScheduler] Could not run event Ten seconds lumber gift: there is no user with steamId 123456
         eventRunner.Tick();
     }
 
