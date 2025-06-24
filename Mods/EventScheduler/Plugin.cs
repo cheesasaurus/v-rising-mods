@@ -3,6 +3,7 @@ using BepInEx.Unity.IL2CPP;
 using cheesasaurus.VRisingMods.EventScheduler.Config;
 using cheesasaurus.VRisingMods.EventScheduler.Repositories;
 using HarmonyLib;
+using ProjectM;
 using VRisingMods.Core.Utilities;
 
 namespace cheesasaurus.VRisingMods.EventScheduler;
@@ -13,6 +14,8 @@ public class Plugin : BasePlugin
 {
     Harmony _harmony;
     HookDOTS.API.HookDOTS _hookDOTS;
+
+    EventsConfig EventsConfig;
     IEventHistoryRepository EventHistory;
     EventRunner eventRunner;
 
@@ -20,41 +23,51 @@ public class Plugin : BasePlugin
     {
         LogUtil.Init(Log);
 
-        // todo: reload when config changed.
-        var eventsConfig = EventsConfig.Init(MyPluginInfo.PLUGIN_GUID, "events.jsonc");
-        EventHistory = new EventHistoryRepository_JSON(MyPluginInfo.PLUGIN_GUID, "EventHistory.json");
-        EventHistory.TryLoad();
-        eventRunner = new EventRunner(eventsConfig, EventHistory);
-
         _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
         _harmony.PatchAll(System.Reflection.Assembly.GetExecutingAssembly());
 
         _hookDOTS = new HookDOTS.API.HookDOTS(MyPluginInfo.PLUGIN_GUID, Log);
         _hookDOTS.RegisterAnnotatedHooks();
 
-        Hooks.BeforeChatMessageSystemUpdates += Tick;
-        Hooks.BeforeWorldSave += Save;
+        // todo: reload when config changed.
+        EventsConfig = EventsConfig.Init(MyPluginInfo.PLUGIN_GUID, "events.jsonc");
+        EventRunnerSetUp();
 
         Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
     }
 
     public override bool Unload()
     {
-        Save();
-
-        Hooks.BeforeChatMessageSystemUpdates -= Tick;
-        Hooks.BeforeWorldSave -= Save;
-        
+        EventRunnerTearDown();
         _hookDOTS?.Dispose();
         _harmony?.UnpatchSelf();
         return true;
     }
 
+    private void EventRunnerSetUp()
+    {
+        LogUtil.LogWarning("Server Is Ready!");
+        EventHistory = new EventHistoryRepository_JSON(MyPluginInfo.PLUGIN_GUID, "EventHistory.json");
+        EventHistory.TryLoad();
+        eventRunner = new EventRunner(EventsConfig, EventHistory);
+        Hooks.BeforeChatMessageSystemUpdates += Tick;
+        Hooks.BeforeWorldSave += Save;
+    }
+
+    private void EventRunnerTearDown()
+    {
+        Save();
+        Hooks.BeforeChatMessageSystemUpdates -= Tick;
+        Hooks.BeforeWorldSave -= Save;
+    }
+
     public void Tick()
     {
-        // todo: error running event when plugin loaded during server startup
-        // [Error  :EventScheduler] Could not run event Ten seconds lumber gift: there is no user with steamId 123456
-        eventRunner.Tick();
+        if (!WorldUtil.IsServerInitialized)
+        {
+            return;
+        }
+        eventRunner?.Tick();
     }
 
     public void Save()

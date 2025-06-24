@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using cheesasaurus.VRisingMods.EventScheduler.Config;
 using cheesasaurus.VRisingMods.EventScheduler.Models;
 using cheesasaurus.VRisingMods.EventScheduler.Repositories;
@@ -41,7 +42,9 @@ public class EventRunner {
                 {
                     LogUtil.LogError(ex);
                 }
-                _nextRunTimes[scheduledEvent.EventId] = DetermineNextRun(scheduledEvent);
+                nextRun = DetermineNextRun(scheduledEvent);
+                LogUtil.LogDebug($"Setting next run: {nextRun}");
+                _nextRunTimes[scheduledEvent.EventId] = nextRun;
             }
         }
     }

@@ -1,3 +1,4 @@
+using ProjectM;
 using Unity.Entities;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ public static class WorldUtil
 {
     private static World _clientWorld;
     private static World _serverWorld;
+    private static ServerBootstrapSystem _serverBootstrapSystem;
 
     /// <summary>
     /// Return the Unity ECS World instance used on the server build of VRising.
@@ -68,14 +70,17 @@ public static class WorldUtil
 
     public static bool IsGameWorldCreated()
     {
-        if (_clientWorld != null) {
+        if (_clientWorld != null)
+        {
             return _clientWorld.IsCreated;
         }
-        if (_serverWorld != null) {
+        if (_serverWorld != null)
+        {
             return _serverWorld.IsCreated;
         }
 
-        if (IsClient) {
+        if (IsClient)
+        {
             return GetWorld("Client_0") is not null;
         }
         if (IsServer)
@@ -98,6 +103,22 @@ public static class WorldUtil
         }
 
         return null;
+    }
+
+    public static bool IsServerInitialized
+    {
+        // GameBootstrap.Start
+        // LoadPersistenceSystemV2.SetLoadState
+        //   ServerStartupState.State loadState
+        // ServerRuntimeSettings.StartupState
+        get
+        {
+            if (_serverBootstrapSystem is null)
+            {
+                _serverBootstrapSystem = Server?.GetExistingSystemManaged<ServerBootstrapSystem>();
+            }
+            return _serverBootstrapSystem?.ServerIsInitialized ?? false;
+        }
     }
 
 }
