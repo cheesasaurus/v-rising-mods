@@ -17,7 +17,6 @@
     <PackageReference Include="BepInEx.Core" Version="$(BepInExVersion)" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
     <PackageReference Include="HookDOTS.API" Version="1.*" />
-    <PackageReference Include="LiteDB" Version="5.0.21" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -35,7 +34,7 @@
   <Target Name="PrepareLibsForDist" AfterTargets="Publish">
     <PropertyGroup>
       <PublishPath>$(OutputPath)/publish</PublishPath>
-      <DistAdditionalLibs>$(PublishPath)/LiteDB.dll;</DistAdditionalLibs>
+      <DistAdditionalLibs></DistAdditionalLibs>
     </PropertyGroup>
   </Target>
 

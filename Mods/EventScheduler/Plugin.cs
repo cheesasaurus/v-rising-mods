@@ -21,7 +21,6 @@ public class Plugin : BasePlugin
         LogUtil.Init(Log);
 
         var eventsConfig = EventsConfig.Init(MyPluginInfo.PLUGIN_GUID, "events.jsonc");
-        //EventHistory = new EventHistoryRepository_LiteDB(MyPluginInfo.PLUGIN_GUID, "EventHistory.db");
         EventHistory = new EventHistoryRepository_JSON(MyPluginInfo.PLUGIN_GUID, "EventHistory.json");
         EventHistory.TryLoad();
         eventRunner = new EventRunner(eventsConfig, EventHistory);
