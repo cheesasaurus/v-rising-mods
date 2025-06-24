@@ -8,7 +8,7 @@
     <WebsiteURL>https://github.com/cheesasaurus/v-rising-mods</WebsiteURL>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
-    <RootNamespace>EventScheduler</RootNamespace>
+    <RootNamespace>cheesasaurus.VRisingMods.EventScheduler</RootNamespace>
     <BepInExVersion>6.0.0-be.733</BepInExVersion>
   </PropertyGroup>
 
@@ -16,9 +16,8 @@
     <PackageReference Include="BepInEx.Unity.IL2CPP" Version="$(BepInExVersion)" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.Core" Version="$(BepInExVersion)" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
-    <PackageReference Include="VRising.VampireCommandFramework" Version="0.10.2" />
-    <PackageReference Include="VRising.Bloodstone" Version="0.1.*" />
-    <PackageReference Include="LiteDB" Version="5.0.17" />
+    <PackageReference Include="HookDOTS.API" Version="1.*" />
+    <PackageReference Include="LiteDB" Version="5.0.21" />
   </ItemGroup>
 
   <PropertyGroup>

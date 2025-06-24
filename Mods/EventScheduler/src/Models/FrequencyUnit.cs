@@ -1,4 +1,4 @@
-namespace EventScheduler.Models;
+namespace cheesasaurus.VRisingMods.EventScheduler.Models;
 
 public enum FrequencyUnit {
     Year,

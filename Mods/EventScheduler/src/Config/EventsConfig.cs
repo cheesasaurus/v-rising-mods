@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
-using EventScheduler.Models;
+using cheesasaurus.VRisingMods.EventScheduler.Models;
 using VRisingMods.Core.Config;
 
-namespace EventScheduler.Config;
+namespace cheesasaurus.VRisingMods.EventScheduler.Config;
 
 
 public class EventsConfig : AbstractJsonConfig {

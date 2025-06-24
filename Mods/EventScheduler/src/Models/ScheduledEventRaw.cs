@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace EventScheduler.Models;
+namespace cheesasaurus.VRisingMods.EventScheduler.Models;
 
 public class ScheduledEventRaw {
     public string eventId { get; set; }

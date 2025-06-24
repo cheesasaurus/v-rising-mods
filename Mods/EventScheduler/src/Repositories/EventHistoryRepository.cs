@@ -3,7 +3,7 @@ using System.IO;
 using BepInEx;
 using LiteDB;
 
-namespace EventScheduler.Repositories;
+namespace cheesasaurus.VRisingMods.EventScheduler.Repositories;
 
 public class EventHistoryRepository {
     private string DbPath;

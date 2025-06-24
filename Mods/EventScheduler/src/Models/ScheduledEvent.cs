@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace EventScheduler.Models;
+namespace cheesasaurus.VRisingMods.EventScheduler.Models;
 
 
 public class ScheduledEvent {

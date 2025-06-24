@@ -1,12 +1,12 @@
 using System;
-using EventScheduler.Config;
-using EventScheduler.Models;
-using EventScheduler.Repositories;
+using cheesasaurus.VRisingMods.EventScheduler.Config;
+using cheesasaurus.VRisingMods.EventScheduler.Models;
+using cheesasaurus.VRisingMods.EventScheduler.Repositories;
 using VRisingMods.Core.Chat;
 using VRisingMods.Core.Player;
 using VRisingMods.Core.Utilities;
 
-namespace EventScheduler;
+namespace cheesasaurus.VRisingMods.EventScheduler;
 
 
 public class EventRunner {
