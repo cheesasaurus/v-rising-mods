@@ -7,12 +7,12 @@ Write-Output "Preparing to create new mod '$modname'"
 
 # install latest version of mod template
 Set-Location "./templates"
-dotnet new install VRisingMods.ModTemplate --force
+dotnet new install VRisingMods.ModTemplate3 --force
 Set-Location "../"
 
 # create mod
 Set-Location "./Mods"
-dotnet new vrisingmod2 -n "$modname" --description="Description of your mod" --use-vcf
+dotnet new vrisingmod3 -n "$modname" --description="Description of your mod" --use-vcf
 Write-Output "Created new mod at ./Mods/$modname/"
 Set-Location "../"
 

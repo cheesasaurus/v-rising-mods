@@ -5,7 +5,7 @@
     <AssemblyName>ScarletRCON_SoftDep_AsyncPOC</AssemblyName>
     <Description>Description of your mod</Description>
     <Version>1.0.0</Version>
-    <WebsiteURL>https://github.com/cheesasaurus/v-rising-mods/tree/master/Mods/$(AssemblyName)</WebsiteURL>
+    <WebsiteURL>https://github.com/cheesasaurus/v-rising-mods/</WebsiteURL>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RootNamespace>ScarletRCON_SoftDep_AsyncPOC</RootNamespace>
@@ -16,8 +16,15 @@
     <PackageReference Include="BepInEx.Unity.IL2CPP" Version="$(BepInExVersion)" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.Core" Version="$(BepInExVersion)" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
-    <PackageReference Include="VRising.Unhollowed.Client" Version="1.1.8.*" />
     <PackageReference Include="ScarletRCON.SourceSupport" Version="1.*" PrivateAssets="all" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <VendorPathBepInEx>../../vendor/VRisingGameFiles/BepInEx</VendorPathBepInEx>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="$(VendorPathBepInEx)/core/*.dll" />
+    <Reference Include="$(VendorPathBepInEx)/interop/*.dll" />
   </ItemGroup>
 
   <Target Name="PrepareLibsForDist" AfterTargets="Publish">

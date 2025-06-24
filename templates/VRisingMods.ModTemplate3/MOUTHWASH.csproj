@@ -5,10 +5,12 @@
     <AssemblyName>MOUTHWASH</AssemblyName>
     <Description>My first plugin</Description>
     <Version>1.0.0</Version>
-    <WebsiteURL>https://github.com/cheesasaurus/v-rising-mods/tree/master/Mods/$(AssemblyName)</WebsiteURL>
+    <Authors>Nicholas Toby</Authors>
+    <Copyright>Copyright (c) Nicholas Toby 2025</Copyright>
+    <WebsiteURL>https://github.com/cheesasaurus/v-rising-mods</WebsiteURL>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
-    <RootNamespace>MOUTHWASH</RootNamespace>
+    <RootNamespace>cheesasaurus.VRisingMods.MOUTHWASH</RootNamespace>
     <BepInExVersion>6.0.0-be.733</BepInExVersion>
   </PropertyGroup>
 
@@ -16,9 +18,16 @@
     <PackageReference Include="BepInEx.Unity.IL2CPP" Version="$(BepInExVersion)" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.Core" Version="$(BepInExVersion)" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
-    <PackageReference Include="VRising.Unhollowed.Client" Version="1.1.8.*" />
+    <PackageReference Include="HookDOTS.API" Version="1.*" />
     <PackageReference Condition="'$(UseVCF)' == 'true'" Include="VRising.VampireCommandFramework" Version="0.10.*" />
-    <PackageReference Condition="'$(UseBloodstone)' == 'true'" Include="VRising.Bloodstone" Version="0.1.*" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <VendorPathBepInEx>../../vendor/VRisingGameFiles/BepInEx</VendorPathBepInEx>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="$(VendorPathBepInEx)/core/*.dll" />
+    <Reference Include="$(VendorPathBepInEx)/interop/*.dll" />
   </ItemGroup>
 
   <Target Name="PrepareLibsForDist" AfterTargets="Publish">
@@ -28,7 +37,11 @@
     </PropertyGroup>
   </Target>
 
-  <Import Project="..\..\Core\Core.projitems" Label="Shared" />
   <Import Project="..\..\ModTasks.props"/>
+  <Import Project="..\..\Core\Core.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <AssemblyMetadata Include="Reloadable" Value="True" />
+  </ItemGroup>
 
 </Project>

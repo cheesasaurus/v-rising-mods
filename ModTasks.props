@@ -1,6 +1,7 @@
 <Project>
 
   <PropertyGroup>
+    <!-- todo: not every project is going to have the same dependencies -->
     <ThunderstoreManifestContent>
       <![CDATA[
 {
@@ -10,23 +11,27 @@
   "description": "$(Description)",
   "dependencies": [
       "BepInEx-BepInExPack_V_Rising-1.733.2",
+      "cheesasaurus-HookDOTS_API-1.0.0",
       "deca-VampireCommandFramework-0.10.2"
   ]
 }
     ]]>
     </ThunderstoreManifestContent>
   </PropertyGroup>
-  
 
   <Target Name="ThunderstoreDist" AfterTargets="PrepareLibsForDist">
-    <WriteLinesToFile Lines="$(ThunderstoreManifestContent)" File="dist/thunderstore/temp/manifest.json" WriteOnlyWhenDifferent="true" Overwrite="true" />
-    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="dist/thunderstore/temp" />
-    <Copy SourceFiles="images/icon.png" DestinationFolder="dist/thunderstore/temp"/>
-    <Copy SourceFiles="README.md" DestinationFolder="dist/thunderstore/temp"/>
-    <Copy SourceFiles="CHANGELOG.md" DestinationFolder="dist/thunderstore/temp"/>
-    <Copy SourceFiles="$(DistAdditionalLibs)" DestinationFolder="dist/thunderstore/temp"/>
-    <ZipDirectory SourceDirectory="dist/thunderstore/temp" DestinationFile="dist/thunderstore/$(AssemblyName).zip" Overwrite="true"></ZipDirectory>
-    <RemoveDir Directories="dist/thunderstore/temp"/>
+    <PropertyGroup>
+      <ThunderstoreName>$(Assemblyname)</ThunderstoreName>
+      <ThunderstoreZipFileName>thunderstore.$(ThunderstoreName).$(Version).zip</ThunderstoreZipFileName>
+      <ThunderstoreZipFile>dist/$(ThunderstoreZipFileName)</ThunderstoreZipFile>
+    </PropertyGroup>
+    <WriteLinesToFile Lines="$(ThunderstoreManifestContent)" File="dist/temp/thunderstore/manifest.json" WriteOnlyWhenDifferent="true" Overwrite="true" />
+    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="dist/temp/thunderstore" />
+    <Copy SourceFiles="images/icon.png" DestinationFolder="dist/temp/thunderstore"/>
+    <Copy SourceFiles="README.md" DestinationFiles="dist/temp/thunderstore/README.md"/>
+    <Copy SourceFiles="CHANGELOG.md" DestinationFolder="dist/temp/thunderstore"/>
+    <ZipDirectory SourceDirectory="dist/temp/thunderstore" DestinationFile="$(ThunderstoreZipFile)" Overwrite="true"></ZipDirectory>
+    <RemoveDir Directories="dist/temp/thunderstore"/>
   </Target>
 
   <Target Name="ModpackDist" AfterTargets="PrepareLibsForDist">

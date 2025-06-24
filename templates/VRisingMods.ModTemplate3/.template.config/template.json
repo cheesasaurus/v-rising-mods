@@ -6,9 +6,9 @@
     "Plugin"
   ],
   "generatorVersions": "[1.0.0.0-*)",
-  "identity": "VRisingMods.ModTemplate",
+  "identity": "VRisingMods.ModTemplate3",
   "name": "Starter project for V Rising mods",
-  "shortName": "vrisingmod2",
+  "shortName": "vrisingmod3",
   "tags": {
     "language": "C#",
     "type": "project"
@@ -34,15 +34,7 @@
       "isRequired": false,
       "description": "Description of ",
       "replaces": "My first plugin",
-      "defaultValue": "Created with VRising.ModTemplate, you should edit this."
-    },
-    "UseBloodstone": {
-      "type": "parameter",
-      "datatype": "bool",
-      "isRequired": false,
-      "description": "To automatically setup and use Bloodstone.",
-      "defaultValue": "false",
-      "displayName": "Use Bloodstone"
+      "defaultValue": "Created with VRisingMods.ModTemplate3, you should edit this."
     },
     "UseVCF": {
       "type": "parameter",

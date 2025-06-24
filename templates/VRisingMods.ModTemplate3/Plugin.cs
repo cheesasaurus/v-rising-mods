@@ -1,24 +1,23 @@
 ﻿using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
+using HookDOTS;
+using VRisingMods.Core.Utilities;
 #if(UseVCF)
 using VampireCommandFramework;
-using VRisingMods.Core.Utilities;
 #endif
 
-namespace MOUTHWASH;
+namespace cheesasaurus.VRisingMods.MOUTHWASH;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+[BepInDependency("HookDOTS.API")]
 #if(UseVCF)
 [BepInDependency("gg.deca.VampireCommandFramework")]
-#endif
-#if(UseBloodstone)
-[BepInDependency("gg.deca.Bloodstone")]
-[Bloodstone.API.Reloadable]
 #endif
 public class Plugin : BasePlugin
 {
     Harmony _harmony;
+    HookDOTS.API.HookDOTS _hookDOTS;
 
     public override void Load()
     {
@@ -29,6 +28,9 @@ public class Plugin : BasePlugin
         // Harmony patching
         _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
         _harmony.PatchAll(System.Reflection.Assembly.GetExecutingAssembly());
+
+        _hookDOTS = new HookDOTS.API.HookDOTS(MyPluginInfo.PLUGIN_GUID, Log);
+        _hookDOTS.RegisterAnnotatedHooks();
 
 #if (UseVCF)
         // Register all commands in the assembly with VCF
@@ -41,6 +43,7 @@ public class Plugin : BasePlugin
         #if(UseVCF)
         CommandRegistry.UnregisterAssembly();
         #endif
+        _hookDOTS.Dispose();
         _harmony?.UnpatchSelf();
         return true;
     }

@@ -8,13 +8,9 @@
     "UseVCF": {
       "longName": "use-vcf",
       "shortName": "vcf"
-    },
-    "UseBloodstone": {
-        "longName": "use-bloodstone",
-        "shortName": "bloodstone"
     }
   },
   "usageExamples": [
-    "dotnet new vrisingmod2 -n GasMod -vcf -bloodstone"
+    "dotnet new vrisingmod3 -n GasMod -vcf"
   ]
 }
