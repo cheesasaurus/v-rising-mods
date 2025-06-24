@@ -29,7 +29,7 @@ public class EventsConfig : AbstractJsonConfig {
 
     protected override void InitDefaults() {
         var assembly = Assembly.GetExecutingAssembly();
-        var resourceName = "EventScheduler.resources.example-events.jsonc";
+        var resourceName = "cheesasaurus.VRisingMods.EventScheduler.resources.example-events.jsonc";
 
         using (Stream stream = assembly.GetManifestResourceStream(resourceName))
         using (StreamReader reader = new StreamReader(stream)) {

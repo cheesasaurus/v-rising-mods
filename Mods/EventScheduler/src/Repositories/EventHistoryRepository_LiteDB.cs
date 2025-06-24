@@ -5,25 +5,31 @@ using LiteDB;
 
 namespace cheesasaurus.VRisingMods.EventScheduler.Repositories;
 
-public class EventHistoryRepository {
+public class EventHistoryRepository_LiteDB : IEventHistoryRepository
+{
     private string DbPath;
 
-    public EventHistoryRepository(string pluginGUID, string filename) {
+    public EventHistoryRepository_LiteDB(string pluginGUID, string filename)
+    {
         var bepinexPath = Path.GetFullPath(Path.Combine(Paths.ConfigPath, @"..\"));
         var dir = Path.Combine(bepinexPath, @"PluginSaveData", pluginGUID);
         Directory.CreateDirectory(dir);
         DbPath = Path.Combine(dir, filename);
 
-        using (var db = new LiteDatabase(DbPath)) {
+        using (var db = new LiteDatabase(DbPath))
+        {
             var collection = db.GetCollection<EventEntry>("events");
         }
     }
 
-    public bool TryGetLastRun(string eventId, out DateTime lastRun) {
-        using (var db = new LiteDatabase(DbPath)) {
+    public bool TryGetLastRun(string eventId, out DateTime lastRun)
+    {
+        using (var db = new LiteDatabase(DbPath))
+        {
             var collection = db.GetCollection<EventEntry>("events");
             var entry = collection.FindById(eventId);
-            if (entry is not null) {
+            if (entry is not null)
+            {
                 lastRun = entry.LastRun;
                 return true;
             }
@@ -32,17 +38,33 @@ public class EventHistoryRepository {
         return false;
     }
 
-    public void SetLastRun(string eventId, DateTime lastRun) {
-        using (var db = new LiteDatabase(DbPath)) {
+    public void SetLastRun(string eventId, DateTime lastRun)
+    {
+        using (var db = new LiteDatabase(DbPath))
+        {
             var collection = db.GetCollection<EventEntry>("events");
-            collection.Upsert(new EventEntry() {
+            collection.Upsert(new EventEntry()
+            {
                 _id = eventId,
                 LastRun = lastRun
             });
         }
     }
 
-    private class EventEntry {
+    public bool TryLoad()
+    {
+        // nothing to do, reads from disk if necessary
+        return true;
+    }
+
+    public bool TrySave()
+    {
+        // nothing to do, already persisted
+        return true;
+    }
+
+    private class EventEntry
+    {
         public string _id { get; set; }
         public DateTime LastRun { get; set; }
     }

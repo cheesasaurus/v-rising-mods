@@ -10,9 +10,9 @@ namespace cheesasaurus.VRisingMods.EventScheduler;
 
 
 public class EventRunner {
-    private EventHistoryRepository EventHistory;
+    private IEventHistoryRepository EventHistory;
     private EventsConfig EventsConfig;
-    public EventRunner(EventsConfig eventsConfig, EventHistoryRepository eventHistory) {
+    public EventRunner(EventsConfig eventsConfig, IEventHistoryRepository eventHistory) {
         EventsConfig = eventsConfig;
         EventHistory = eventHistory;
     }

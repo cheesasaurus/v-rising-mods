@@ -12,7 +12,7 @@ public abstract class AbstractJsonConfig {
 
     public abstract string ToJson();
 
-    protected abstract void InitDefaults();
+    protected abstract void InitDefaults(); 
 
     protected abstract void InitFromJson(string json);
 

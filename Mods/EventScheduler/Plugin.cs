@@ -13,17 +13,17 @@ public class Plugin : BasePlugin
 {
     Harmony _harmony;
     HookDOTS.API.HookDOTS _hookDOTS;
+    IEventHistoryRepository EventHistory;
     EventRunner eventRunner;
 
     public override void Load()
     {
-        // Plugin startup logic
         LogUtil.Init(Log);
-        Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
 
         var eventsConfig = EventsConfig.Init(MyPluginInfo.PLUGIN_GUID, "events.jsonc");
-        var eventHistory = new EventHistoryRepository(MyPluginInfo.PLUGIN_GUID, "EventHistory.db");
-        eventRunner = new EventRunner(eventsConfig, eventHistory);
+        EventHistory = new EventHistoryRepository_LiteDB(MyPluginInfo.PLUGIN_GUID, "EventHistory.db");
+        EventHistory.TryLoad();
+        eventRunner = new EventRunner(eventsConfig, EventHistory);
 
         _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
         _harmony.PatchAll(System.Reflection.Assembly.GetExecutingAssembly());
@@ -31,12 +31,17 @@ public class Plugin : BasePlugin
         _hookDOTS = new HookDOTS.API.HookDOTS(MyPluginInfo.PLUGIN_GUID, Log);
         _hookDOTS.RegisterAnnotatedHooks();
 
-        Patches.BeforeChatMessageSystemUpdates += Tick;
+        Hooks.BeforeChatMessageSystemUpdates += Tick;
+        Hooks.BeforeWorldSave += Save;
+
+        Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
     }
 
     public override bool Unload()
     {
-        Patches.BeforeChatMessageSystemUpdates -= Tick;
+        Hooks.BeforeChatMessageSystemUpdates -= Tick;
+        Hooks.BeforeWorldSave -= Save;
+        
         _hookDOTS?.Dispose();
         _harmony?.UnpatchSelf();
         return true;
@@ -45,6 +50,12 @@ public class Plugin : BasePlugin
     public void Tick()
     {
         eventRunner.Tick();
+    }
+
+    public void Save()
+    {
+        LogUtil.LogDebug("Saving EventHistory");
+        EventHistory.TrySave();
     }
     
 }
