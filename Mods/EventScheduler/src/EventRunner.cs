@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using cheesasaurus.VRisingMods.EventScheduler.Config;
 using cheesasaurus.VRisingMods.EventScheduler.Models;
 using cheesasaurus.VRisingMods.EventScheduler.Repositories;
@@ -17,34 +16,41 @@ public class EventRunner {
 
     private Dictionary<string, DateTime> _nextRunTimes = new();
 
+    // todo: configurable overdueTolerance. should probably let this vary per-event.
+    // a weekly event could make sense to start an hour late. But not e.g. something running every 15 minutes.
+    private TimeSpan OverdueTolerance = TimeSpan.FromMilliseconds(2000);
+
     public EventRunner(EventsConfig eventsConfig, IEventHistoryRepository eventHistory)
     {
         EventsConfig = eventsConfig;
         EventHistory = eventHistory;
-
-        foreach (var scheduledEvent in EventsConfig.ScheduledEvents)
-        {
-            _nextRunTimes[scheduledEvent.EventId] = DetermineNextRun(scheduledEvent);
-        }
     }
 
     public void Tick() {
         foreach (var scheduledEvent in EventsConfig.ScheduledEvents) {
             var nextRun = GetOrDetermineNextRun(scheduledEvent);
             if (nextRun <= DateTime.Now) {
-                LogUtil.LogMessage($"{DateTime.Now}: Running the event {scheduledEvent.EventId}");
-                EventHistory.SetLastRun(scheduledEvent.EventId, nextRun);
-                try
+                var overdueCutoff = nextRun + OverdueTolerance;
+                if (overdueCutoff < DateTime.Now)
                 {
-                    RunChatCommands(scheduledEvent);
+                    LogUtil.LogWarning($"{DateTime.Now}: Skipping overdue event {scheduledEvent.EventId}\n  scheduled time : {nextRun}\n  overdue cutoff:{overdueCutoff}");
                 }
-                catch (Exception ex)
+                else
                 {
-                    LogUtil.LogError(ex);
-                }
-                nextRun = DetermineNextRun(scheduledEvent);
-                LogUtil.LogDebug($"Setting next run: {nextRun}");
-                _nextRunTimes[scheduledEvent.EventId] = nextRun;
+                    LogUtil.LogMessage($"{DateTime.Now}: Running the event {scheduledEvent.EventId}");
+                    EventHistory.SetLastRun(scheduledEvent.EventId, nextRun);
+                    try
+                    {
+                        RunChatCommands(scheduledEvent);
+                    }
+                    catch (Exception ex)
+                    {
+                        LogUtil.LogError(ex);
+                    }
+                }                
+                var nextRunAfterThis = DetermineNextRun(scheduledEvent);
+                LogUtil.LogDebug($"Setting next run: {nextRunAfterThis}");
+                _nextRunTimes[scheduledEvent.EventId] = nextRunAfterThis;
             }
         }
     }
@@ -62,40 +68,37 @@ public class EventRunner {
 
     private DateTime GetOrDetermineNextRun(ScheduledEvent scheduledEvent)
     {
-        if (_nextRunTimes.TryGetValue(scheduledEvent.EventId, out var nextRun))
+        DateTime nextRun;
+        if (_nextRunTimes.TryGetValue(scheduledEvent.EventId, out nextRun))
         {
             return nextRun;
         }
-        return DetermineNextRun(scheduledEvent);
+        nextRun = DetermineNextRun(scheduledEvent);
+        _nextRunTimes[scheduledEvent.EventId] = nextRun;
+        return nextRun;
     }
+
 
     private DateTime DetermineNextRun(ScheduledEvent scheduledEvent)
     {
         var now = DateTime.Now;
         var firstRun = scheduledEvent.Schedule.FirstRun;
         var ran = EventHistory.TryGetLastRun(scheduledEvent.EventId, out var lastRun);
-        // todo: not sure the !ran handling is sensible
-        if (!ran || firstRun > now)
+
+        var nextRun = firstRun;
+
+        // Keep in mind that the schedule might be edited after already running.
+        // This is why we check that lastRun >= nextRun
+        if (ran && lastRun >= nextRun)
         {
-            return firstRun;
+            nextRun = AddTime(lastRun, scheduledEvent.Schedule.Frequency);
         }
 
-        // keep in mind that the schedule might be edited after already running
-        if (lastRun < firstRun)
+        var cursor = nextRun + OverdueTolerance;
+        while (cursor < now)
         {
-            return firstRun;
-        }
-
-        // move the cursor forwards at least once, and continue skipping extraneous runs if we're overdue
-        var nextRun = lastRun;
-        while (true)
-        {
-            var nextDueRunPending = AddTime(nextRun, scheduledEvent.Schedule.Frequency);
-            if (nextDueRunPending > now && nextRun != lastRun)
-            {
-                break;
-            }
-            nextRun = nextDueRunPending;
+            nextRun = AddTime(nextRun, scheduledEvent.Schedule.Frequency);
+            cursor = nextRun + OverdueTolerance;
         }
         return nextRun;
     }

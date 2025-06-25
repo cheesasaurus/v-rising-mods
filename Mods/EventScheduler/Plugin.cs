@@ -46,7 +46,6 @@ public class Plugin : BasePlugin
 
     private void EventRunnerSetUp()
     {
-        LogUtil.LogWarning("Server Is Ready!");
         EventHistory = new EventHistoryRepository_JSON(MyPluginInfo.PLUGIN_GUID, "EventHistory.json");
         EventHistory.TryLoad();
         eventRunner = new EventRunner(EventsConfig, EventHistory);
