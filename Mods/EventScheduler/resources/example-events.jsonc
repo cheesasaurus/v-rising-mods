@@ -16,7 +16,12 @@
                 "firstRun": "2069-12-15 20:00:00",
 
                 // how frequently the event should run
-                "frequency": "2 weeks"
+                "frequency": "2 weeks",
+
+                // In case the event is overdue: allow running it late, but not too late.
+                // This could happen if the server was down/restarting when the event was supposed to run.
+                // If it's too late, the event be skipped until the next valid time slot.
+                "overdueTolerance": "5 minutes",
             },
             "chatCommands": [
                 // a series of chat commands to be executed each time the event runs
@@ -31,7 +36,8 @@
             "eventId": "Hourly lumber gift",
             "schedule": {
                 "firstRun": "2069-12-15 20:00:00",
-                "frequency": "1 hour"
+                "frequency": "1 hour",
+                "overdueTolerance": "1 minute",
             },
             "chatCommands": [
                 ".give all 9 wood"

@@ -8,9 +8,11 @@ public class ScheduledEventRaw {
     public List<string> chatCommands { get; set; }
 
 
-    public class Schedule {
+    public class Schedule
+    {
         public string frequency { get; set; }
         public string firstRun { get; set; }
+        public string overdueTolerance { get; set; }
     }
 
 }

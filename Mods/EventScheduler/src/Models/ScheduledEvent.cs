@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using VRisingMods.Core.Utilities;
 
 namespace cheesasaurus.VRisingMods.EventScheduler.Models;
 
@@ -14,47 +15,48 @@ public class ScheduledEvent {
         _raw = raw;
         EventId = raw.eventId;
         ChatCommands = raw.chatCommands;
-        Schedule = new Schedule() {
+        Schedule = new Schedule()
+        {
             Frequency = new Frequency(raw.schedule.frequency),
             FirstRun = DateTime.Parse(raw.schedule.firstRun),
+            OverdueTolerance = Frequency.AsTimeSpan(raw.schedule.overdueTolerance),
         };
     }
 
 }
 
-public class Schedule {
+public class Schedule
+{
     public Frequency Frequency;
     public DateTime FirstRun;
+    public TimeSpan OverdueTolerance;
 }
 
-public class Frequency {
+public class Frequency
+{
     public readonly int Value;
     public readonly FrequencyUnit Unit;
 
-    public Frequency(string str) {
+    public Frequency(string str)
+    {
         string[] parts = str.Split(" ");
-        if (parts.Length != 2) {
+        if (parts.Length != 2)
+        {
             throw new FormatException($"could not parse frequency \"{str}\"");
         }
         Value = int.Parse(parts[0]);
         Unit = UnitFromString(parts[1]);
     }
 
-    public static FrequencyUnit UnitFromString(string str) {
-        switch (str.ToLower()) {
-            case "year":
-            case "years":
-                return FrequencyUnit.Year;
-
-            case "month":
-            case "months":
-                return FrequencyUnit.Month;
-
+    public static FrequencyUnit UnitFromString(string str)
+    {
+        switch (str.ToLower())
+        {
             case "w":
             case "week":
             case "weeks":
                 return FrequencyUnit.Week;
-            
+
             case "d":
             case "day":
             case "days":
@@ -79,6 +81,32 @@ public class Frequency {
                 throw new FormatException($"could not parse frequency unit \"{str}\"");
         }
     }
+
+    public TimeSpan ToTimeSpan()
+    {
+        switch (Unit)
+        {
+            case FrequencyUnit.Week:
+                return TimeSpan.FromDays(Value * 7);
+            case FrequencyUnit.Day:
+                return TimeSpan.FromDays(Value);
+            case FrequencyUnit.Hour:
+                return TimeSpan.FromHours(Value);
+            case FrequencyUnit.Minute:
+                return TimeSpan.FromMinutes(Value);
+            case FrequencyUnit.Second:
+                return TimeSpan.FromSeconds(Value);
+            default:
+                return TimeSpan.Zero;
+        }
+    }
+
+    public static TimeSpan AsTimeSpan(string str)
+    {
+        var frequency = new Frequency(str);
+        return frequency.ToTimeSpan();
+    }
+
 }
 
 

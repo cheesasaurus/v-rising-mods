@@ -16,10 +16,6 @@ public class EventRunner {
 
     private Dictionary<string, DateTime> _nextRunTimes = new();
 
-    // todo: configurable overdueTolerance. should probably let this vary per-event.
-    // a weekly event could make sense to start an hour late. But not e.g. something running every 15 minutes.
-    private TimeSpan OverdueTolerance = TimeSpan.FromMilliseconds(2000);
-
     public EventRunner(EventsConfig eventsConfig, IEventHistoryRepository eventHistory)
     {
         EventsConfig = eventsConfig;
@@ -30,7 +26,7 @@ public class EventRunner {
         foreach (var scheduledEvent in EventsConfig.ScheduledEvents) {
             var nextRun = GetOrDetermineNextRun(scheduledEvent);
             if (nextRun <= DateTime.Now) {
-                var overdueCutoff = nextRun + OverdueTolerance;
+                var overdueCutoff = nextRun + scheduledEvent.Schedule.OverdueTolerance;
                 if (overdueCutoff < DateTime.Now)
                 {
                     LogUtil.LogWarning($"{DateTime.Now}: Skipping overdue event {scheduledEvent.EventId}\n  scheduled time : {nextRun}\n  overdue cutoff:{overdueCutoff}");
@@ -82,36 +78,30 @@ public class EventRunner {
     private DateTime DetermineNextRun(ScheduledEvent scheduledEvent)
     {
         var now = DateTime.Now;
-        var firstRun = scheduledEvent.Schedule.FirstRun;
-        var ran = EventHistory.TryGetLastRun(scheduledEvent.EventId, out var lastRun);
-
-        var nextRun = firstRun;
+        var schedule = scheduledEvent.Schedule;
+        var nextRun = schedule.FirstRun;
 
         // Keep in mind that the schedule might be edited after already running.
         // This is why we check that lastRun >= nextRun
+        var ran = EventHistory.TryGetLastRun(scheduledEvent.EventId, out var lastRun);
         if (ran && lastRun >= nextRun)
         {
-            nextRun = AddTime(lastRun, scheduledEvent.Schedule.Frequency);
+            nextRun = AddTime(lastRun, schedule.Frequency);
         }
 
-        var cursor = nextRun + OverdueTolerance;
+        var cursor = nextRun + scheduledEvent.Schedule.OverdueTolerance;
         while (cursor < now)
         {
             nextRun = AddTime(nextRun, scheduledEvent.Schedule.Frequency);
-            cursor = nextRun + OverdueTolerance;
+            cursor = nextRun + scheduledEvent.Schedule.OverdueTolerance;
         }
         return nextRun;
     }
 
-    // todo: use TimeSpan?
     private static DateTime AddTime(DateTime dt, Frequency frequency)
     {
         switch (frequency.Unit)
         {
-            case FrequencyUnit.Year:
-                return dt.AddYears(frequency.Value);
-            case FrequencyUnit.Month:
-                return dt.AddMonths(frequency.Value);
             case FrequencyUnit.Week:
                 return dt.AddDays(7 * frequency.Value);
             case FrequencyUnit.Day:
