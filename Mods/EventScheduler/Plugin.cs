@@ -29,7 +29,7 @@ public class Plugin : BasePlugin
         _hookDOTS.RegisterAnnotatedHooks();
 
         // todo: reload when config changed.
-        EventsConfig = EventsConfig.Init(MyPluginInfo.PLUGIN_GUID, "events.jsonc");
+        InitConfig();
         EventRunnerSetUp();
 
         Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
@@ -41,6 +41,13 @@ public class Plugin : BasePlugin
         _hookDOTS?.Dispose();
         _harmony?.UnpatchSelf();
         return true;
+    }
+
+    private void InitConfig()
+    {
+        var filename = "events.jsonc";
+        EventsConfig.CopyExampleIfNotExists(MyPluginInfo.PLUGIN_GUID, filename, "cheesasaurus.VRisingMods.EventScheduler.resources.example-events.jsonc");
+        EventsConfig = EventsConfig.Init(MyPluginInfo.PLUGIN_GUID, filename);
     }
 
     private void EventRunnerSetUp()
