@@ -8,23 +8,35 @@ using VRisingMods.Core.Config;
 namespace cheesasaurus.VRisingMods.EventScheduler.Config;
 
 
-public class EventsConfig : AbstractJsonConfig {
-
-    public List<ScheduledEvent> ScheduledEvents;
+public class EventsConfig : AbstractJsonConfig
+{
+    public ulong ExecuterSteamId;
+    public List<ScheduledEvent> ScheduledEvents = new();
 
     public EventsConfig(string filepath) : base(filepath) {
 
     }
 
-    public override string ToJson() {
+    public override string ToJson()
+    {
         var options = new JsonSerializerOptions {
             WriteIndented = true,
         };
+
         var eventsRaw = new List<ScheduledEventRaw>();
         foreach (var scheduledEvent in ScheduledEvents) {
             eventsRaw.Add(scheduledEvent._raw);
         }
-        return JsonSerializer.Serialize(eventsRaw, options);
+
+        var configDTO = new EventsConfigRaw
+        {
+            executingAdmin = new EventsConfigRaw.CommandExecuter
+            {
+                steamId = ExecuterSteamId,
+            },
+            events = eventsRaw,
+        };
+        return JsonSerializer.Serialize(configDTO, options);
     }
 
     protected override void InitDefaults() {
@@ -38,15 +50,20 @@ public class EventsConfig : AbstractJsonConfig {
         }
     }
 
-    protected override void InitFromJson(string json) {
+    protected override void InitFromJson(string json)
+    {
         var options = new JsonSerializerOptions {
             ReadCommentHandling = JsonCommentHandling.Skip,
             AllowTrailingCommas = true,
         };
-        ScheduledEvents = new();
-        var eventsRaw = JsonSerializer.Deserialize<List<ScheduledEventRaw>>(json, options);
-        foreach (var raw in eventsRaw) {
-            ScheduledEvents.Add(new ScheduledEvent(raw));
+
+        var configRaw = JsonSerializer.Deserialize<EventsConfigRaw>(json, options);
+        ExecuterSteamId = configRaw.executingAdmin.steamId;
+
+        ScheduledEvents.Clear();
+        foreach (var eventRaw in configRaw.events)
+        {
+            ScheduledEvents.Add(new ScheduledEvent(eventRaw));
         }
     }
 

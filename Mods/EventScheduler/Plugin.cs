@@ -3,7 +3,6 @@ using BepInEx.Unity.IL2CPP;
 using cheesasaurus.VRisingMods.EventScheduler.Config;
 using cheesasaurus.VRisingMods.EventScheduler.Repositories;
 using HarmonyLib;
-using ProjectM;
 using VRisingMods.Core.Utilities;
 
 namespace cheesasaurus.VRisingMods.EventScheduler;

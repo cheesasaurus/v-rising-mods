@@ -7,14 +7,12 @@ namespace cheesasaurus.VRisingMods.EventScheduler.Models;
 public class ScheduledEvent {
     public readonly ScheduledEventRaw _raw;
     public readonly string EventId;
-    public readonly ulong ExecuterSteamId;
     public readonly List<string> ChatCommands;
     public readonly Schedule Schedule;
 
     public ScheduledEvent(ScheduledEventRaw raw) {
         _raw = raw;
         EventId = raw.eventId;
-        ExecuterSteamId = raw.executingAdmin.steamId;
         ChatCommands = raw.chatCommands;
         Schedule = new Schedule() {
             Frequency = new Frequency(raw.schedule.frequency),

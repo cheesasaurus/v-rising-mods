@@ -56,9 +56,9 @@ public class EventRunner {
     }
 
     private void RunChatCommands(ScheduledEvent scheduledEvent) {
-        var userExists = UserUtil.TryFindUserByPlatformId(scheduledEvent.ExecuterSteamId, out var executingUser);
+        var userExists = UserUtil.TryFindUserByPlatformId(EventsConfig.ExecuterSteamId, out var executingUser);
         if (!userExists) {
-            LogUtil.LogError($"Could not run event {scheduledEvent.EventId}: there is no user with steamId {scheduledEvent.ExecuterSteamId}");
+            LogUtil.LogError($"Could not run event {scheduledEvent.EventId}: there is no user with steamId {EventsConfig.ExecuterSteamId}");
             return;
         }
         foreach (var message in scheduledEvent.ChatCommands) {
