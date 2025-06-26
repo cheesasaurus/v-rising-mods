@@ -68,4 +68,14 @@ Example:
 }
 ```
 
-Note that a server restart is required after changing configuration.
+Configuration changes are automatically applied; no need to restart the server every time.
+
+Note that all chat commands shown above are only examples. The actual commands available depend on which mods you have installed.
+
+
+
+## Support
+
+Join the [modding community](https://vrisingmods.com/discord).
+
+Post an issue on the [GitHub repository](https://github.com/cheesasaurus/V-rising-mods). 

@@ -52,6 +52,7 @@ public class EventRunner {
     }
 
     private void RunChatCommands(ScheduledEvent scheduledEvent) {
+        // todo: cache user
         var userExists = UserUtil.TryFindUserByPlatformId(EventsConfig.ExecuterSteamId, out var executingUser);
         if (!userExists) {
             LogUtil.LogError($"Could not run event {scheduledEvent.EventId}: there is no user with steamId {EventsConfig.ExecuterSteamId}");
