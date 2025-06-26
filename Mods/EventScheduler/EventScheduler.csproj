@@ -46,7 +46,6 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <!-- todo: actual dependencies -->
     <ThunderstoreManifestContent>
       <![CDATA[
 {
@@ -56,8 +55,7 @@
   "description": "$(Description)",
   "dependencies": [
       "BepInEx-BepInExPack_V_Rising-1.733.2",
-      "cheesasaurus-HookDOTS_API-1.0.0",
-      "deca-VampireCommandFramework-0.10.2"
+      "cheesasaurus-HookDOTS_API-1.0.0"
   ]
 }
     ]]>

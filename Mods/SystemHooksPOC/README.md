@@ -1,3 +1,3 @@
 # SystemHooksPOC
 
-⚠️WIP⚠️
+proof of concept. precursor to [HookDOTS](https://github.com/cheesasaurus/HookDOTS).

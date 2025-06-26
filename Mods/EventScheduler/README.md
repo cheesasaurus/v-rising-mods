@@ -1,13 +1,13 @@
 # EventScheduler
 
-⚠️WIP⚠️
-
 Enables server operators to schedule recurring Events.
 
 
 ## Installation
 
-Extract `EventScheduler.dll` into `(VRising folder)/BepInEx/plugins`.
+- Install [BepInEx](https://v-rising.thunderstore.io/package/BepInEx/BepInExPack_V_Rising/).
+- Install [HookDOTS](https://thunderstore.io/c/v-rising/p/cheesasaurus/HookDOTS_API/).
+- Extract `EventScheduler.dll` into `(VRising folder)/BepInEx/plugins`.
 
 
 ## Scheduling an event
@@ -71,6 +71,25 @@ Example:
 Configuration changes are automatically applied; no need to restart the server every time.
 
 Note that all chat commands shown above are only examples. The actual commands available depend on which mods you have installed.
+
+
+### Frequency and overdueTolerance
+The expected format is `{integer} {unit}`
+
+Valid units are: `weeks`, `days`, `hours`, `minutes`, `seconds`
+
+examples:
+- `2 weeks`
+- `1 week`
+- `30 days`
+- `1 day`
+- `5 hours`
+- `1 hour`
+- `90 minutes`
+- `1 minute`
+- `30 seconds`
+- `1 second`
+
 
 
 
