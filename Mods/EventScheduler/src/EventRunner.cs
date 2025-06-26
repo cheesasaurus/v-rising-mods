@@ -52,15 +52,32 @@ public class EventRunner {
     }
 
     private void RunChatCommands(ScheduledEvent scheduledEvent) {
-        // todo: cache user
-        var userExists = UserUtil.TryFindUserByPlatformId(EventsConfig.ExecuterSteamId, out var executingUser);
-        if (!userExists) {
+        if (!TryGetOrFindExecutingUser(out UserModel executingUser))
+        {
             LogUtil.LogError($"Could not run event {scheduledEvent.EventId}: there is no user with steamId {EventsConfig.ExecuterSteamId}");
             return;
         }
-        foreach (var message in scheduledEvent.ChatCommands) {
+        foreach (var message in scheduledEvent.ChatCommands)
+        {
             ChatUtil.ForgeMessage(executingUser, message);
         }
+    }
+
+    private UserModel _executingUser;
+    private bool TryGetOrFindExecutingUser(out UserModel userModel)
+    {
+        if (_executingUser is not null)
+        {
+            userModel = _executingUser;
+            return true;
+        }
+        
+        if (UserUtil.TryFindUserByPlatformId(EventsConfig.ExecuterSteamId, out userModel))
+        {
+            _executingUser = userModel;
+            return true;
+        }
+        return false;
     }
 
     private DateTime GetOrDetermineNextRun(ScheduledEvent scheduledEvent)
