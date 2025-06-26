@@ -8,6 +8,11 @@ No chat commands, no patches altering behavior, etc.
 - templates: templates for `dotnet new`
 
 
+## Main setup
+
+1. Setup links to the bepinex libraries and game interops. See the [vendor readme](vendor/README.md) for more information.
+2. Restore with `dotnet restore`
+
 ## Setting up a new mod
 
 There's a powershell script to easily do this.\
@@ -21,7 +26,7 @@ Preparation (only required once):
 
 After preparation
 1. cd to `Mods`
-2. use the template. e.g. `dotnet new vrisingmod2 -n NameOfYourMod --description="Description of your mod" --use-vcf`
+2. use the template. e.g. `dotnet new vrisingmod3 -n NameOfYourMod --description="Description of your mod" --use-vcf`
 3. add the mod's project file to the solution. e.g. `dotnet sln add "./Mods/NameOfYourMod/NameOfYourMod.csproj"`
 
 
@@ -54,6 +59,6 @@ This only really needs to be done after you've added a new dependency, and requi
 
 
 ## Distribution
-Building creates a thunderstore package for each mod at `Mods/$(ModName)/dist/thunderstore/$(Modname).zip`
+Building creates a thunderstore package for each mod at `Mods/$(ModName)/dist/thunderstore.$(ModName).$(Version).zip`
 
 Additionally, the assemblies from all mods are copied to `dist/modpack/` for convenience.
