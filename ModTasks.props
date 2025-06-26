@@ -1,24 +1,5 @@
 <Project>
 
-  <PropertyGroup>
-    <!-- todo: not every project is going to have the same dependencies -->
-    <ThunderstoreManifestContent>
-      <![CDATA[
-{
-  "name": "$(AssemblyName)",
-  "version_number": "$(Version)",
-  "website_url": "$(WebsiteURL)",
-  "description": "$(Description)",
-  "dependencies": [
-      "BepInEx-BepInExPack_V_Rising-1.733.2",
-      "cheesasaurus-HookDOTS_API-1.0.0",
-      "deca-VampireCommandFramework-0.10.2"
-  ]
-}
-    ]]>
-    </ThunderstoreManifestContent>
-  </PropertyGroup>
-
   <Target Name="ThunderstoreDist" AfterTargets="PrepareLibsForDist">
     <PropertyGroup>
       <ThunderstoreName>$(Assemblyname)</ThunderstoreName>

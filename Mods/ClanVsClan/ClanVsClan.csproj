@@ -36,5 +36,23 @@
 
   <Import Project="..\..\Core\Core.projitems" Label="Shared" />
   <Import Project="..\..\ModTasks.props"/>
+
+  <PropertyGroup>
+    <ThunderstoreManifestContent>
+      <![CDATA[
+{
+  "name": "$(AssemblyName)",
+  "version_number": "$(Version)",
+  "website_url": "$(WebsiteURL)",
+  "description": "$(Description)",
+  "dependencies": [
+      "BepInEx-BepInExPack_V_Rising-1.733.2",
+      "cheesasaurus-HookDOTS_API-1.0.0",
+      "deca-VampireCommandFramework-0.10.2"
+  ]
+}
+    ]]>
+    </ThunderstoreManifestContent>
+  </PropertyGroup>
   
 </Project>
