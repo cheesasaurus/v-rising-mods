@@ -1,0 +1,65 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>CreatePlayerPOC</AssemblyName>
+    <Description>Description of your mod</Description>
+    <Version>1.0.0</Version>
+    <Authors>Nicholas Toby</Authors>
+    <Copyright>Copyright (c) Nicholas Toby 2025</Copyright>
+    <WebsiteURL>https://github.com/cheesasaurus/v-rising-mods</WebsiteURL>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>cheesasaurus.VRisingMods.CreatePlayerPOC</RootNamespace>
+    <BepInExVersion>6.0.0-be.733</BepInExVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="$(BepInExVersion)" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.Core" Version="$(BepInExVersion)" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+    <PackageReference Include="HookDOTS.API" Version="1.*" />
+    <PackageReference Include="VRising.VampireCommandFramework" Version="0.10.*" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <VendorPathBepInEx>../../vendor/VRisingGameFiles/BepInEx</VendorPathBepInEx>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="$(VendorPathBepInEx)/core/*.dll" />
+    <Reference Include="$(VendorPathBepInEx)/interop/*.dll" />
+  </ItemGroup>
+
+  <Target Name="PrepareLibsForDist" AfterTargets="Publish">
+    <PropertyGroup>
+      <PublishPath>$(OutputPath)/publish</PublishPath>
+      <DistAdditionalLibs></DistAdditionalLibs>
+    </PropertyGroup>
+  </Target>
+
+  <Import Project="..\..\ModTasks.props"/>
+  <Import Project="..\..\Core\Core.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <AssemblyMetadata Include="Reloadable" Value="True" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <ThunderstoreManifestContent>
+      <![CDATA[
+{
+  "name": "$(AssemblyName)",
+  "version_number": "$(Version)",
+  "website_url": "$(WebsiteURL)",
+  "description": "$(Description)",
+  "dependencies": [
+      "BepInEx-BepInExPack_V_Rising-1.733.2",
+      "cheesasaurus-HookDOTS_API-1.0.0",
+      "deca-VampireCommandFramework-0.10.2"
+  ]
+}
+    ]]>
+    </ThunderstoreManifestContent>
+  </PropertyGroup>
+
+</Project>
