@@ -4,6 +4,7 @@ using HarmonyLib;
 using HookDOTS;
 using VRisingMods.Core.Utilities;
 using VampireCommandFramework;
+using VRisingMods.Core.Player;
 
 namespace cheesasaurus.VRisingMods.CreatePlayerPOC;
 
@@ -53,9 +54,22 @@ public class Plugin : BasePlugin
     // /// .createplayerpoc-example boop 21232
     // /// .createplayerpoc-example boop-boop
     // ///</remarks>
-    // [Command("createplayerpoc-example", description: "Example command from createplayerpoc", adminOnly: true)]
-    // public void ExampleCommand(ICommandContext ctx, string someString, int num = 5, float num2 = 1.5f)
-    // { 
-    //     ctx.Reply($"You passed in {someString} and {num} and {num2}");
-    // }
+    [Command("debug", description: "Example command from createplayerpoc", adminOnly: true)]
+    public void ExampleCommand(ICommandContext ctx)
+    {
+        var users = UserUtil.FindAllUsers();
+
+        foreach (var userModel in users)
+        {
+            var userEntity = userModel.Entity;
+            var playerCharacterEntity = userModel.User.LocalCharacter._Entity;
+
+            //DebugUtil.LogComponentTypes(userEntity);
+            LogUtil.LogInfo("==========================================");
+            DebugUtil.LogPrefabGuid(userEntity);
+            //DebugUtil.LogPlayerCharacter(playerCharacterEntity);
+            //DebugUtil.LogVampireSpecificAttributes(playerCharacterEntity);
+        }
+
+    }
 }
