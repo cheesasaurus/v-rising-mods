@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>EventScheduler</AssemblyName>
     <Description>Enables server operators to schedule recurring Events.</Description>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <WebsiteURL>https://github.com/cheesasaurus/v-rising-mods</WebsiteURL>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
@@ -17,6 +17,7 @@
     <PackageReference Include="BepInEx.Core" Version="$(BepInExVersion)" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
     <PackageReference Include="HookDOTS.API" Version="1.*" />
+    <PackageReference Include="VRising.VampireCommandFramework" Version="0.10.*" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -55,7 +56,8 @@
   "description": "$(Description)",
   "dependencies": [
       "BepInEx-BepInExPack_V_Rising-1.733.2",
-      "cheesasaurus-HookDOTS_API-1.0.0"
+      "cheesasaurus-HookDOTS_API-1.0.0",
+      "deca-VampireCommandFramework-0.10.4"
   ]
 }
     ]]>

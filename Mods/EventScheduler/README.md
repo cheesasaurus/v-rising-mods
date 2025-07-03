@@ -91,6 +91,16 @@ examples:
 - `1 second`
 
 
+## Known Issues
+
+### ExecutingAdmin might need to be AdminAuth'd if not using VCF
+
+Given a chat command which meets these 2 conditions:
+  1. It comes from a mod that does **not** use VampireCommandFramework.
+  2. The command requires the user to be an admin.
+
+The command will fail to execute if the executingAdmin is not logged in and AdminAuth'd.\
+(Note that this should not be an issue if the mod uses VCF)
 
 
 ## Support

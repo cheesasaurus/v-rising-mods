@@ -5,12 +5,14 @@ using BepInEx.Unity.IL2CPP;
 using cheesasaurus.VRisingMods.EventScheduler.Config;
 using cheesasaurus.VRisingMods.EventScheduler.Repositories;
 using HarmonyLib;
+using VampireCommandFramework;
 using VRisingMods.Core.Utilities;
 
 namespace cheesasaurus.VRisingMods.EventScheduler;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency("HookDOTS.API")]
+[BepInDependency("gg.deca.VampireCommandFramework")]
 public class Plugin : BasePlugin
 {
     Harmony _harmony;
@@ -20,6 +22,7 @@ public class Plugin : BasePlugin
     FileSystemWatcher EventsConfigWatcher;
     IEventHistoryRepository EventHistory;
     EventRunner eventRunner;
+    CommandMiddleware vcfMiddleware;
 
     public override void Load()
     {
@@ -91,12 +94,13 @@ public class Plugin : BasePlugin
             LogUtil.LogError($"Error parsing events.jsonc: {ex}");
             return;
         }
-        
+
         EventHistory = new EventHistoryRepository_JSON(MyPluginInfo.PLUGIN_GUID, "EventHistory.json");
         EventHistory.TryLoad();
         eventRunner = new EventRunner(EventsConfig, EventHistory);
         Hooks.BeforeChatMessageSystemUpdates += Tick;
         Hooks.BeforeWorldSave += Save;
+        RegisterVcfMiddleware(eventRunner);        
     }
 
     private void EventRunnerTearDown()
@@ -109,8 +113,27 @@ public class Plugin : BasePlugin
         {
             Log.LogError($"Error saving. {ex}");
         }
+
         Hooks.BeforeChatMessageSystemUpdates -= Tick;
         Hooks.BeforeWorldSave -= Save;
+        UnregisterVcfMiddleware();
+    }
+
+    private void RegisterVcfMiddleware(EventRunner eventRunner)
+    {
+        vcfMiddleware = new EventRunnerVcfMiddleware(eventRunner);
+        // vcf middlewares get skipped if an earlier-ran one decided the user can't execute.
+        // So we try to make ours first.
+        // (usually, you should use Middlewares.Add, but this is a special case)
+        CommandRegistry.Middlewares.Insert(0, vcfMiddleware);
+    }
+
+    private void UnregisterVcfMiddleware()
+    {
+        if (vcfMiddleware is not null)
+        {
+            CommandRegistry.Middlewares.Remove(vcfMiddleware);
+        }
     }
 
     public void Tick()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using cheesasaurus.VRisingMods.EventScheduler.Config;
 using cheesasaurus.VRisingMods.EventScheduler.Models;
 using cheesasaurus.VRisingMods.EventScheduler.Repositories;
+using ProjectM.Network;
 using VRisingMods.Core.Chat;
 using VRisingMods.Core.Player;
 using VRisingMods.Core.Utilities;
@@ -10,7 +11,10 @@ using VRisingMods.Core.Utilities;
 namespace cheesasaurus.VRisingMods.EventScheduler;
 
 
-public class EventRunner {
+public class EventRunner
+{
+    public bool SpawnedChatCommandsThisTick { get; private set; }
+
     private IEventHistoryRepository EventHistory;
     private EventsConfig EventsConfig;
 
@@ -22,10 +26,14 @@ public class EventRunner {
         EventHistory = eventHistory;
     }
 
-    public void Tick() {
-        foreach (var scheduledEvent in EventsConfig.ScheduledEvents) {
+    public void Tick()
+    {
+        SpawnedChatCommandsThisTick = false;
+        foreach (var scheduledEvent in EventsConfig.ScheduledEvents)
+        {
             var nextRun = GetOrDetermineNextRun(scheduledEvent);
-            if (nextRun <= DateTime.Now) {
+            if (nextRun <= DateTime.Now)
+            {
                 var overdueCutoff = nextRun + scheduledEvent.Schedule.OverdueTolerance;
                 if (overdueCutoff < DateTime.Now)
                 {
@@ -43,7 +51,7 @@ public class EventRunner {
                     {
                         LogUtil.LogError(ex);
                     }
-                }                
+                }
                 var nextRunAfterThis = DetermineNextRun(scheduledEvent);
                 LogUtil.LogDebug($"Setting next run: {nextRunAfterThis}");
                 _nextRunTimes[scheduledEvent.EventId] = nextRunAfterThis;
@@ -51,7 +59,8 @@ public class EventRunner {
         }
     }
 
-    private void RunChatCommands(ScheduledEvent scheduledEvent) {
+    private void RunChatCommands(ScheduledEvent scheduledEvent)
+    {
         if (!TryGetOrFindExecutingUser(out UserModel executingUser))
         {
             LogUtil.LogError($"Could not run event {scheduledEvent.EventId}: there is no user with steamId {EventsConfig.ExecuterSteamId}");
@@ -61,6 +70,7 @@ public class EventRunner {
         {
             ChatUtil.ForgeMessage(executingUser, message);
         }
+        SpawnedChatCommandsThisTick = true;
     }
 
     private UserModel _executingUser;
@@ -71,7 +81,7 @@ public class EventRunner {
             userModel = _executingUser;
             return true;
         }
-        
+
         if (UserUtil.TryFindUserByPlatformId(EventsConfig.ExecuterSteamId, out userModel))
         {
             _executingUser = userModel;
@@ -133,6 +143,11 @@ public class EventRunner {
             default:
                 throw new Exception($"The frequency unit {frequency.Unit} isn't handled");
         }
+    }
+
+    public bool IsCommandExecutor(User user)
+    {
+        return user.PlatformId.Equals(EventsConfig.ExecuterSteamId);
     }
 
 }
