@@ -95,7 +95,8 @@ public class Plugin : BasePlugin
         EventHistory = new EventHistoryRepository_JSON(MyPluginInfo.PLUGIN_GUID, "EventHistory.json");
         EventHistory.TryLoad();
         eventRunner = new EventRunner(EventsConfig, EventHistory);
-        Hooks.BeforeChatMessageSystemUpdates += Tick;
+        Hooks.BeforeChatMessageSystemUpdates += RunBeforeChatMessageSystemUpdates;
+        Hooks.AfterChatMessageSystemUpdates += RunAfterChatMessageSystemUpdates;
         Hooks.BeforeWorldSave += Save;
     }
 
@@ -109,17 +110,27 @@ public class Plugin : BasePlugin
         {
             Log.LogError($"Error saving. {ex}");
         }
-        Hooks.BeforeChatMessageSystemUpdates -= Tick;
+        Hooks.BeforeChatMessageSystemUpdates -= RunBeforeChatMessageSystemUpdates;
+        Hooks.AfterChatMessageSystemUpdates -= RunAfterChatMessageSystemUpdates;
         Hooks.BeforeWorldSave -= Save;
     }
 
-    public void Tick()
+    public void RunBeforeChatMessageSystemUpdates()
     {
         if (!WorldUtil.IsServerInitialized)
         {
             return;
         }
-        eventRunner?.Tick();
+        eventRunner?.OnBeforeChatMessageSystemUpdates();
+    }
+
+    public void RunAfterChatMessageSystemUpdates()
+    {
+        if (!WorldUtil.IsServerInitialized)
+        {
+            return;
+        }
+        eventRunner?.OnAfterChatMessageSystemUpdates();
     }
 
     public void Save()

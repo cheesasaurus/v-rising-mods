@@ -22,7 +22,8 @@ public class EventRunner {
         EventHistory = eventHistory;
     }
 
-    public void Tick() {
+    public void OnBeforeChatMessageSystemUpdates()
+    {
         foreach (var scheduledEvent in EventsConfig.ScheduledEvents) {
             var nextRun = GetOrDetermineNextRun(scheduledEvent);
             if (nextRun <= DateTime.Now) {
@@ -37,13 +38,13 @@ public class EventRunner {
                     EventHistory.SetLastRun(scheduledEvent.EventId, nextRun);
                     try
                     {
-                        RunChatCommands(scheduledEvent);
+                        SpawnChatCommands(scheduledEvent);
                     }
                     catch (Exception ex)
                     {
                         LogUtil.LogError(ex);
                     }
-                }                
+                }
                 var nextRunAfterThis = DetermineNextRun(scheduledEvent);
                 LogUtil.LogDebug($"Setting next run: {nextRunAfterThis}");
                 _nextRunTimes[scheduledEvent.EventId] = nextRunAfterThis;
@@ -51,12 +52,19 @@ public class EventRunner {
         }
     }
 
-    private void RunChatCommands(ScheduledEvent scheduledEvent) {
+    public void OnAfterChatMessageSystemUpdates()
+    {
+        TryRestoreExecutingUserPrivileges();
+    }
+
+    private void SpawnChatCommands(ScheduledEvent scheduledEvent)
+    {
         if (!TryGetOrFindExecutingUser(out UserModel executingUser))
         {
             LogUtil.LogError($"Could not run event {scheduledEvent.EventId}: there is no user with steamId {EventsConfig.ExecuterSteamId}");
             return;
         }
+        TryElevateExecutingUserPrivileges();
         foreach (var message in scheduledEvent.ChatCommands)
         {
             ChatUtil.ForgeMessage(executingUser, message);
@@ -78,6 +86,41 @@ public class EventRunner {
             return true;
         }
         return false;
+    }
+
+    private bool _wereUserPrivsModified = false;
+    private bool _wasUserAdmin = false;
+
+    private bool TryElevateExecutingUserPrivileges()
+    {
+        if (_wereUserPrivsModified)
+        {
+            // already elevated
+            return false;
+        }
+        if (!TryGetOrFindExecutingUser(out var userModel))
+        {
+            return false;
+        }
+        _wasUserAdmin = UserUtil.IsAdminForPluginChatCommands(userModel.Entity);
+        _wereUserPrivsModified = true;
+        UserUtil.HaxSetIsAdminForPluginChatCommands(userModel.Entity, true);
+        return true;
+    }
+
+    private bool TryRestoreExecutingUserPrivileges()
+    {
+        if (!_wereUserPrivsModified)
+        {
+            return false;
+        }
+        if (!TryGetOrFindExecutingUser(out var userModel))
+        {
+            return false;
+        }
+        _wereUserPrivsModified = false;
+        UserUtil.HaxSetIsAdminForPluginChatCommands(userModel.Entity, _wasUserAdmin);
+        return true;
     }
 
     private DateTime GetOrDetermineNextRun(ScheduledEvent scheduledEvent)

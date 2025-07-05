@@ -9,12 +9,19 @@ namespace cheesasaurus.VRisingMods.EventScheduler;
 public static class Hooks
 {
     public static event Action BeforeChatMessageSystemUpdates;
+    public static event Action AfterChatMessageSystemUpdates;
     public static event Action BeforeWorldSave;
 
-    [EcsSystemUpdatePrefix(typeof(RecursiveGroup), onlyWhenSystemRuns: false)]
+    [EcsSystemUpdatePrefix(typeof(ChatMessageSystem), onlyWhenSystemRuns: false)]
     public static void ChatMessageSystem_Prefix()
     {
         BeforeChatMessageSystemUpdates?.Invoke();
+    }
+
+    [EcsSystemUpdatePostfix(typeof(ChatMessageSystem), onlyWhenSystemRuns: false)]
+    public static void ChatMessageSystem_Postfix()
+    {
+        AfterChatMessageSystemUpdates?.Invoke();
     }
 
     [HarmonyPatch(typeof(TriggerPersistenceSaveSystem), nameof(TriggerPersistenceSaveSystem.TriggerSave))]
