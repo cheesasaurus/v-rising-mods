@@ -14,10 +14,10 @@ public enum EcsSystemCategory
     Unknown, // we don't know the type of system
 }
 
-public class EcsSystemTreeNode(EcsSystemCategory category, SystemHandle systemHandle, Type type = null, ComponentSystemBase instance = null)
+public class EcsSystemTreeNode(EcsSystemCategory category, SystemHandle systemHandle, Il2CppSystem.Type type = null, ComponentSystemBase instance = null)
 {
     public EcsSystemCategory Category = category;
-    public Type Type = type;
+    public Il2CppSystem.Type Type = type;
     public SystemHandle SystemHandle = systemHandle;
     public ComponentSystemBase Instance = instance;
     public IList<EcsSystemTreeNode> ChildrenOrderedForUpdate = new List<EcsSystemTreeNode>();
@@ -58,13 +58,14 @@ public class EcsSystemHierarchy
 public class EcsSystemCounts
 {
     public int Group = 0;
-    public int Base = 0;
+    public int Managed = 0;
     public int Unmanaged = 0;
     public int Unknown = 0;
+    public int NotUsed = 0;
 
-    public int Sum()
+    public int SumUsed()
     {
-        return Group + Base + Unmanaged + Unknown;
+        return Group + Managed + Unmanaged + Unknown;
     }
 }
 

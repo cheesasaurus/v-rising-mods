@@ -21,26 +21,36 @@ public class EcsSystemHierarchyService
 
     public EcsSystemHierarchy BuildSystemHiearchyForWorld(World world)
     {
-        var counts = new EcsSystemCounts()
-        {
-            Group = 0,
-            Base = 0,
-            Unmanaged = 0,
-            Unknown = 0,
-        };
-
-
         LogUtil.LogInfo($"building hierarchy for world: {world.Name}");
+        var counts = new EcsSystemCounts();
+
         var systemTypeIndices = TypeManager.GetSystemTypeIndices();
         foreach (var systemTypeIndex in systemTypeIndices)
         {
             var systemHandle = world.GetExistingSystem(systemTypeIndex);
             if (!world.Unmanaged.IsSystemValid(systemHandle))
             {
+                counts.NotUsed++;
                 continue;
             }
+            
             var systemType = world.Unmanaged.GetTypeOfSystem(systemHandle);
-            var category = systemTypeIndex.IsGroup ? "Group" : systemTypeIndex.IsManaged ? "ComponentSystemBase" : "ISystem";
+
+            var category = systemTypeIndex.IsGroup ? EcsSystemCategory.Group : systemTypeIndex.IsManaged ? EcsSystemCategory.Managed : EcsSystemCategory.Unmanaged;
+            switch (category)
+            {
+                case EcsSystemCategory.Group:
+                    counts.Group++;
+                    break;
+                case EcsSystemCategory.Managed:
+                    counts.Managed++;
+                    break;
+                case EcsSystemCategory.Unmanaged:
+                    counts.Unmanaged++;
+                    break;
+            }
+
+
             Log.LogInfo($"  {systemType.FullName} ({category})");
 
             //LogUtil.LogInfo(TypeManager.GetSystemName(systemTypeIndex));

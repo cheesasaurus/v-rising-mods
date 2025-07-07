@@ -61,7 +61,7 @@ class EcsSystemDumper
         var counts = systemHierarchy.Counts;
         sb.AppendLine($"[Counts]");
         sb.AppendLine($"ComponentSystemGroup: {counts.Group}");
-        sb.AppendLine($"ComponentSystemBase (excluding group instances): {counts.Base}");
+        sb.AppendLine($"ComponentSystemBase (excluding group instances): {counts.Managed}");
         sb.AppendLine($"ISystem: {counts.Unmanaged}");
         sb.AppendLine($"<unknown system type>: {counts.Unknown}");
     }
