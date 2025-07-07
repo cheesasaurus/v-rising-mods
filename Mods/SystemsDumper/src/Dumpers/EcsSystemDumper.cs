@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using cheesasaurus.VRisingMods.SystemsDumper.Models;
 
@@ -38,7 +39,7 @@ class EcsSystemDumper
         }
 
         // Multiple Parents section
-        if (systemHierarchy.FindNodesWithMultipleParents().Count > 0)
+        if (systemHierarchy.FindNodesWithMultipleParents().Any())
         {
             AppendSectionMultipleParents(sb, systemHierarchy);
             sb.AppendLine();
@@ -46,7 +47,7 @@ class EcsSystemDumper
         }
 
         // Update Hierarchy section
-        if (systemHierarchy.RootNodesUnordered.Count > 0)
+        if (systemHierarchy.RootNodesUnordered.Any())
         {
             AppendSectionUpdateHierarchy(sb, systemHierarchy);
             sb.AppendLine();
@@ -60,6 +61,7 @@ class EcsSystemDumper
     {
         var counts = systemHierarchy.Counts;
         sb.AppendLine($"[Counts]");
+        sb.AppendLine();
         sb.AppendLine($"ComponentSystemGroup: {counts.Group}");
         sb.AppendLine($"ComponentSystemBase (excluding group instances): {counts.Base}");
         sb.AppendLine($"ISystem: {counts.Unmanaged}");
@@ -70,11 +72,14 @@ class EcsSystemDumper
     {
         var knownUnknowns = systemHierarchy.KnownUnknowns;
         var singleIndent = new String(' ', _spacesPerIndent);
-        sb.AppendLine($"[Known Unknowns] - systems of <unknown system type> are likely one of these");
-        if (knownUnknowns.ContainsGenericParameters.Count > 0)
+        sb.AppendLine($"[Known Unknowns]");
+        sb.AppendLine();
+        sb.AppendLine($"Potential reasons for <unknown system type>.");
+        sb.AppendLine();
+        if (knownUnknowns.SystemNotFoundInWorld.Any())
         {
-            sb.AppendLine($"Issue: Cannot search for systems using Types containing unknown generic parameters");
-            foreach (var type in knownUnknowns.ContainsGenericParameters)
+            sb.AppendLine($"Issue: SystemHandle found in a group, but no corresponding system in the world");
+            foreach (var type in knownUnknowns.SystemNotFoundInWorld)
             {
                 sb.Append(singleIndent);
                 sb.Append($"{type}");
@@ -87,7 +92,10 @@ class EcsSystemDumper
     {
         var nodesWithMultipleParents = systemHierarchy.FindNodesWithMultipleParents();
         var singleIndent = new String(' ', _spacesPerIndent);
-        sb.AppendLine($"[Systems in multiple groups] - this probably shouldn't happen!");
+        sb.AppendLine($"[Systems in multiple groups]");
+        sb.AppendLine();
+        sb.AppendLine($"This probably shouldn't happen!");
+        sb.AppendLine();
         foreach (var node in nodesWithMultipleParents)
         {
             sb.AppendLine($"{SystemTypeDescription(node)} - belongs to {node.Parents.Count} groups");
@@ -98,13 +106,14 @@ class EcsSystemDumper
                 sb.AppendLine();
             }
         }
-        sb.AppendLine();
-        sb.AppendLine();
     }
 
     private void AppendSectionUpdateHierarchy(StringBuilder sb, EcsSystemHierarchy systemHierarchy)
     {
-        sb.AppendLine($"[Update Hierarchy] note: the ordering at root level is arbitrary, but everything within a group is in update order for that group");
+        sb.AppendLine($"[Update Hierarchy]");
+        sb.AppendLine();
+        sb.AppendLine($"Note: the ordering at root level is arbitrary, but everything within a group is in update order for that group");
+        sb.AppendLine();
         foreach (var node in systemHierarchy.RootNodesUnordered)
         {
             AppendTreeNode(sb, node, 0);
@@ -143,11 +152,11 @@ class EcsSystemDumper
         switch (node.Category)
         {
             case EcsSystemCategory.Group:
-                return $"{node.Type} (ComponentSystemGroup)";
+                return $"{node.Type.FullName} (ComponentSystemGroup)";
             case EcsSystemCategory.Base:
-                return $"{node.Type} (ComponentSystemBase)";
+                return $"{node.Type.FullName} (ComponentSystemBase)";
             case EcsSystemCategory.Unmanaged:
-                return $"{node.Type} (ISystem)";
+                return $"{node.Type.FullName} (ISystem)";
             default:
             case EcsSystemCategory.Unknown:
                 return "<unknown system type>";

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Entities;
 
 
@@ -71,10 +72,10 @@ public class EcsSystemCounts
 
 public class KnownUnknowns
 {
-    public ISet<Type> ContainsGenericParameters = new HashSet<Type>();
+    public ISet<SystemHandle> SystemNotFoundInWorld = new HashSet<SystemHandle>();
 
     public bool AreKnown()
     {
-        return ContainsGenericParameters.Count > 0;
+        return SystemNotFoundInWorld.Any();
     }
 }
