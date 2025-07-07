@@ -412,6 +412,17 @@ public static class DebugUtil
         LogUtil.LogInfo($"    OverrideProjectileSpeedMax: {apfogeds.OverrideProjectileSpeedMax}");
     }
 
+    public static string LookupPrefabName(Entity entity)
+    {
+        var entityManager = WorldUtil.Game.EntityManager;
+        if (!entityManager.HasComponent<PrefabGUID>(entity))
+        {
+            return "Entity does not have PrefabGUID component";
+        }
+        var prefabGuid = entityManager.GetComponentData<PrefabGUID>(entity);
+        return LookupPrefabName(prefabGuid);
+    }
+
     public static string LookupPrefabName(PrefabGUID prefabGuid)
     {
         var prefabCollectionSystem = WorldUtil.Game.GetExistingSystemManaged<PrefabCollectionSystem>();
