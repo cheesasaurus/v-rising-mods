@@ -61,7 +61,7 @@ class EcsSystemDumper
         var counts = systemHierarchy.Counts;
         sb.AppendLine($"[Counts]");
         sb.AppendLine($"ComponentSystemGroup: {counts.Group}");
-        sb.AppendLine($"ComponentSystemBase (excluding group instances): {counts.Managed}");
+        sb.AppendLine($"ComponentSystemBase (excluding group instances): {counts.Base}");
         sb.AppendLine($"ISystem: {counts.Unmanaged}");
         sb.AppendLine($"<unknown system type>: {counts.Unknown}");
     }
@@ -144,7 +144,7 @@ class EcsSystemDumper
         {
             case EcsSystemCategory.Group:
                 return $"{node.Type} (ComponentSystemGroup)";
-            case EcsSystemCategory.Managed:
+            case EcsSystemCategory.Base:
                 return $"{node.Type} (ComponentSystemBase)";
             case EcsSystemCategory.Unmanaged:
                 return $"{node.Type} (ISystem)";

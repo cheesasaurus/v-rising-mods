@@ -22,7 +22,48 @@ public class EcsSystemHierarchyService
     public EcsSystemHierarchy BuildSystemHiearchyForWorld(World world)
     {
         LogUtil.LogInfo($"building hierarchy for world: {world.Name}");
-        var counts = new EcsSystemCounts();
+        var nodes = FindSystems(world, out var counts);
+        var groupNodes = nodes.Values.Where(node => node.Category is EcsSystemCategory.Group);
+
+        foreach (var groupNode in groupNodes)
+        {
+            try
+            {
+                var group = (ComponentSystemGroup)groupNode.Instance;
+                var orderedSubsystems = group.GetAllSystems();
+                foreach (var subsystemHandle in orderedSubsystems)
+                {
+                    var childNode = nodes[subsystemHandle];
+                    groupNode.ChildrenOrderedForUpdate.Add(childNode);
+                    if (childNode.Parents.Count > 0)
+                    {
+                        Log.LogError($"Uh oh, a system belongs to multiple groups. This should not happen: {childNode.Type}");
+                    }
+                    childNode.Parents.Add(groupNode);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogUtil.LogDebug($"{groupNode.Type.FullName} ({groupNode.Category})");
+                LogUtil.LogWarning(ex);
+            } 
+        }
+
+        var rootNodes = nodes.Values.Where(node => node.Parents.Count is 0);
+
+        return new EcsSystemHierarchy
+        {
+            World = world,
+            Counts = counts,
+            KnownUnknowns = new KnownUnknowns(),
+            RootNodesUnordered = rootNodes.ToList(),
+        };
+    }
+
+    private Dictionary<SystemHandle, EcsSystemTreeNode> FindSystems(World world, out EcsSystemCounts counts)
+    {
+        var nodes = new Dictionary<SystemHandle, EcsSystemTreeNode>();
+        counts = new EcsSystemCounts();
 
         var systemTypeIndices = TypeManager.GetSystemTypeIndices();
         foreach (var systemTypeIndex in systemTypeIndices)
@@ -33,39 +74,39 @@ public class EcsSystemHierarchyService
                 counts.NotUsed++;
                 continue;
             }
-            
-            var systemType = world.Unmanaged.GetTypeOfSystem(systemHandle);
 
-            var category = systemTypeIndex.IsGroup ? EcsSystemCategory.Group : systemTypeIndex.IsManaged ? EcsSystemCategory.Managed : EcsSystemCategory.Unmanaged;
+            var systemType = world.Unmanaged.GetTypeOfSystem(systemHandle);
+            var category = CategorizeSystem(systemTypeIndex);
+            Log.LogInfo($"  {systemType.FullName} ({category})");
+
+            var node = new EcsSystemTreeNode(
+                category: category,
+                systemHandle: systemHandle,
+                type: systemType,
+                instance: world.GetExistingSystemInternal(systemTypeIndex)
+            );
+            nodes.Add(systemHandle, node);
+
             switch (category)
             {
                 case EcsSystemCategory.Group:
                     counts.Group++;
                     break;
-                case EcsSystemCategory.Managed:
-                    counts.Managed++;
+                case EcsSystemCategory.Base:
+                    counts.Base++;
                     break;
                 case EcsSystemCategory.Unmanaged:
                     counts.Unmanaged++;
                     break;
             }
-
-
-            Log.LogInfo($"  {systemType.FullName} ({category})");
-
-            //LogUtil.LogInfo(TypeManager.GetSystemName(systemTypeIndex));
         }
 
-        return new EcsSystemHierarchy
-        {
-            World = world,
-            Counts = counts,
-            KnownUnknowns = new KnownUnknowns(),
-            RootNodesUnordered = new List<EcsSystemTreeNode>(),
-        };
+        return nodes;
+    }
 
-        //throw new NotImplementedException();
-        // todo: implement
+    private EcsSystemCategory CategorizeSystem(SystemTypeIndex systemTypeIndex)
+    {
+        return systemTypeIndex.IsGroup ? EcsSystemCategory.Group : systemTypeIndex.IsManaged ? EcsSystemCategory.Base : EcsSystemCategory.Unmanaged;
     }
 
 }

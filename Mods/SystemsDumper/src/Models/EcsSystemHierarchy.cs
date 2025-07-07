@@ -9,7 +9,7 @@ namespace cheesasaurus.VRisingMods.SystemsDumper.Models;
 public enum EcsSystemCategory
 {
     Group, // is a ComponentSystemGroup
-    Managed, // is a ComponentSystemBase, but not a group
+    Base, // is a ComponentSystemBase, but not a group
     Unmanaged, // implements ISystem
     Unknown, // we don't know the type of system
 }
@@ -58,14 +58,14 @@ public class EcsSystemHierarchy
 public class EcsSystemCounts
 {
     public int Group = 0;
-    public int Managed = 0;
+    public int Base = 0;
     public int Unmanaged = 0;
     public int Unknown = 0;
     public int NotUsed = 0;
 
     public int SumUsed()
     {
-        return Group + Managed + Unmanaged + Unknown;
+        return Group + Base + Unmanaged + Unknown;
     }
 }
 
