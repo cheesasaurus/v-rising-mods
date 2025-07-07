@@ -4,6 +4,7 @@ using HarmonyLib;
 using HookDOTS;
 using VRisingMods.Core.Utilities;
 using VampireCommandFramework;
+using BepInEx.Logging;
 
 namespace cheesasaurus.VRisingMods.SystemsDumper;
 
@@ -12,6 +13,8 @@ namespace cheesasaurus.VRisingMods.SystemsDumper;
 [BepInDependency("gg.deca.VampireCommandFramework")]
 public class Plugin : BasePlugin
 {
+    public static ManualLogSource LogInstance;
+
     Harmony _harmony;
     HookDOTS.API.HookDOTS _hookDOTS;
 
@@ -19,6 +22,7 @@ public class Plugin : BasePlugin
     {
         // Plugin startup logic
         LogUtil.Init(Log);
+        LogInstance = Log;
         Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
 
         // Harmony patching
