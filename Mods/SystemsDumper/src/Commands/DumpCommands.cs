@@ -4,14 +4,14 @@ using VampireCommandFramework;
 
 namespace cheesasaurus.VRisingMods.SystemsDumper.Commands
 {
-    [CommandGroup("dump")]
+    [CommandGroup("DumpSystems", "ds")]
     internal class DumpCommands
     {
 
-        [Command("systems", "s", description: "Dumps ECS system hierarchies to files (per world)", adminOnly: true)]
+        [Command("UpdateTree", "ut", description: "Dumps ECS system update hierarchies to files (per world)", adminOnly: true)]
         public static void DumpSystems(ChatCommandContext ctx)
         {
-            var dir = "dump/systems/";
+            var dir = "Dump/Systems/UpdateTree/";
             Directory.CreateDirectory(dir);
             var dumper = new EcsSystemDumper(spacesPerIndent: 4);
             foreach (var world in World.s_AllWorlds)

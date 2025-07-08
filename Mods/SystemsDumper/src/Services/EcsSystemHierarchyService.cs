@@ -5,7 +5,6 @@ using System.Text;
 using BepInEx.Logging;
 using cheesasaurus.VRisingMods.SystemsDumper.Models;
 using Unity.Entities;
-using VRisingMods.Core.Utilities;
 
 namespace cheesasaurus.VRisingMods.SystemsDumper.Services;
 
@@ -21,7 +20,7 @@ public class EcsSystemHierarchyService
 
     public EcsSystemHierarchy BuildSystemHiearchyForWorld(World world)
     {
-        LogUtil.LogInfo($"building hierarchy for world: {world.Name}");
+        Log.LogInfo($"building hierarchy for world: {world.Name}");
         var knownUnknowns = new KnownUnknowns();
         var nodes = FindSystems(world, out var counts);
         var groupNodes = nodes.Values.Where(node => node.Category is EcsSystemCategory.Group);
@@ -42,7 +41,7 @@ public class EcsSystemHierarchyService
                         }
                         else
                         {
-                            LogUtil.LogWarning($"A Group's child system does not exist within the world. Group: {groupNode.Type.FullName} ({groupNode.Category})");
+                            Log.LogWarning($"A Group's child system does not exist within the world. Group: {groupNode.Type.FullName} ({groupNode.Category})");
                             counts.Unknown++;
                             knownUnknowns.SystemNotFoundInWorld.Add(subsystemHandle);
 
@@ -65,8 +64,8 @@ public class EcsSystemHierarchyService
             }
             catch (Exception ex)
             {
-                LogUtil.LogWarning($"{groupNode.Type.FullName} ({groupNode.Category})");
-                LogUtil.LogWarning(ex);
+                Log.LogWarning($"{groupNode.Type.FullName} ({groupNode.Category})");
+                Log.LogWarning(ex);
             }
         }
 
@@ -178,7 +177,7 @@ public class EcsSystemHierarchyService
             {
                 sb.Append($" (This might be a bug in the TypeManager)");
             }
-            LogUtil.LogDebug(sb.ToString());
+            Log.LogDebug(sb.ToString());
         }
 
         return true;
