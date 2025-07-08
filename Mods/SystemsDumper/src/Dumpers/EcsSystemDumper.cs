@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using cheesasaurus.VRisingMods.SystemsDumper.Models;
 using Il2CppInterop.Runtime;
 using ProjectM;
 using Unity.Entities;
 using Unity.Physics.Systems;
+using VRisingMods.Core.Utilities;
 
 namespace cheesasaurus.VRisingMods.SystemsDumper;
 
@@ -165,37 +167,51 @@ class EcsSystemDumper
 
     internal static string DescribeUnknownSystem(EcsSystemTreeNode node)
     {
-        if (TryGetTypeFromStrangePhysicsSystems(node.SystemHandle, out var type))
+        if (TryGetTypeForMissedSystem(node.SystemHandle, out var systemType))
         {
-            return $"{type.FullName} (Physics system not registered with TypeManager)";
+            return $"{systemType.FullName} (system was unknown but later found)";
         }
         return "<unknown system type>";
     }
 
-    internal static bool TryGetTypeFromStrangePhysicsSystems(SystemHandle systemHandle, out Il2CppSystem.Type type)
+    internal static bool TryGetTypeForMissedSystem(SystemHandle systemHandle, out Il2CppSystem.Type systemType)
     {
-        type = null;
+        systemType = null;
+        var serverWorld = WorldUtility.FindServerWorld();
+
         if (systemHandle.Equals(SystemHandle.Null))
         {
             return false;
         }
-
-        var serverWorld = WorldUtility.FindServerWorld();
-        var handle1 = serverWorld.GetExistingSystem<BuildStaticPhysicsWorld>();
-        if (handle1.Equals(systemHandle))
+        if (!serverWorld.Unmanaged.IsSystemValid(systemHandle))
         {
-            type = Il2CppType.Of<BuildStaticPhysicsWorld>();
-            return true;
+            return false;
+        }
+        
+        systemType = serverWorld.Unmanaged.GetTypeOfSystem(systemHandle);
+        if (systemType is null)
+        {
+            return false;
         }
 
-        var handle2 = serverWorld.GetExistingSystem<EndFixedStepSimulationEntityCommandBufferSystem>();
-        if (handle2.Equals(systemHandle))
+        var systemTypeIndex = TypeManager.GetSystemTypeIndex(systemType);
+        var existsInList = false;
+        foreach (var otherSystemTypeIndex in TypeManager.GetSystemTypeIndices())
         {
-            type = Il2CppType.Of<EndFixedStepSimulationEntityCommandBufferSystem>();
-            return true;
-        } 
+            if (systemTypeIndex.Equals(otherSystemTypeIndex))
+            {
+                existsInList = true;
+                break;
+            }
+        }
 
-        return false;
+        var sb = new StringBuilder();
+        sb.AppendLine($"Found missed system {systemType.FullName}");
+        sb.AppendLine($"  SystemTypeIndex.Index: {systemTypeIndex.Index} (retrieved from TypeManager.GetSystemTypeIndex)");
+        sb.AppendLine($"  is SystemTypeIndex in TypeManager.GetSystemTypeIndices: {existsInList}");
+        LogUtil.LogDebug(sb.ToString());
+
+        return true;
     }
 
 }
