@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Entities;
@@ -23,6 +22,18 @@ public class EcsSystemTreeNode(EcsSystemCategory category, SystemHandle systemHa
     public ComponentSystemBase Instance = instance;
     public IList<EcsSystemTreeNode> ChildrenOrderedForUpdate = new List<EcsSystemTreeNode>();
     public IList<EcsSystemTreeNode> Parents = new List<EcsSystemTreeNode>();
+
+    public int CountDescendants()
+    {
+        int count = 0;
+        foreach (var child in ChildrenOrderedForUpdate)
+        {
+            count++;
+            count += child.CountDescendants();
+        }
+        return count;
+    }
+
 }
 
 

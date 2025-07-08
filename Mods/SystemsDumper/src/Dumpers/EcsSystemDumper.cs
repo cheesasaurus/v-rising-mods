@@ -19,39 +19,34 @@ class EcsSystemDumper
     public string CreateDumpString(EcsSystemHierarchy systemHierarchy)
     {
         var sb = new StringBuilder();
+        var sectionSeparator = "\n----------------------------------------\n\n";
 
         // Header
         sb.AppendLine($"Information about ECS Systems in world: {systemHierarchy.World.Name}");
-        sb.AppendLine();
-        sb.AppendLine();
 
         // Counts section
+        sb.Append(sectionSeparator);
         AppendSectionCounts(sb, systemHierarchy);
-        sb.AppendLine();
-        sb.AppendLine();
 
         // Known Unknowns section
         if (systemHierarchy.Counts.Unknown > 0 && systemHierarchy.KnownUnknowns.AreKnown())
         {
+            sb.Append(sectionSeparator);
             AppendSectionKnownUnknowns(sb, systemHierarchy);
-            sb.AppendLine();
-            sb.AppendLine();
         }
 
         // Multiple Parents section
         if (systemHierarchy.FindNodesWithMultipleParents().Any())
         {
+            sb.Append(sectionSeparator);
             AppendSectionMultipleParents(sb, systemHierarchy);
-            sb.AppendLine();
-            sb.AppendLine();
         }
 
         // Update Hierarchy section
         if (systemHierarchy.RootNodesUnordered.Any())
         {
+            sb.Append(sectionSeparator);
             AppendSectionUpdateHierarchy(sb, systemHierarchy);
-            sb.AppendLine();
-            sb.AppendLine();
         }
         
         return sb.ToString();
@@ -112,7 +107,7 @@ class EcsSystemDumper
     {
         sb.AppendLine($"[Update Hierarchy]");
         sb.AppendLine();
-        sb.AppendLine($"Note: the ordering at root level is arbitrary, but everything within a group is in update order for that group");
+        sb.AppendLine($"The ordering at root level is arbitrary, but everything within a group is in update order for that group.");
         sb.AppendLine();
         foreach (var node in systemHierarchy.RootNodesUnordered)
         {
@@ -138,7 +133,8 @@ class EcsSystemDumper
         parts.Add(SystemTypeDescription(node));
         if (node.Category.Equals(EcsSystemCategory.Group))
         {
-            parts.Add($"{node.ChildrenOrderedForUpdate.Count} children");
+            parts.Add($"{node.CountDescendants()} descendants");
+            parts.Add($"{node.ChildrenOrderedForUpdate.Count} children");            
         }
         if (node.Parents.Count > 1)
         {
