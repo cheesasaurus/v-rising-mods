@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>SystemsDumper</AssemblyName>
-    <Description>Description of your mod</Description>
+    <Description>Development tool. Dumps information about ECS Systems.</Description>
     <Version>1.0.0</Version>
     <Authors>Nicholas Toby</Authors>
     <Copyright>Copyright (c) Nicholas Toby 2025</Copyright>
