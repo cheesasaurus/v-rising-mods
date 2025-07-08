@@ -4,6 +4,7 @@ using System.Linq;
 using BepInEx.Logging;
 using cheesasaurus.VRisingMods.SystemsDumper.Models;
 using Unity.Entities;
+using Unity.Physics.Systems;
 using VRisingMods.Core.Utilities;
 
 namespace cheesasaurus.VRisingMods.SystemsDumper.Services;
@@ -38,6 +39,10 @@ public class EcsSystemHierarchyService
                         LogUtil.LogWarning($"A Group's child system does not exist within the world. Group: {groupNode.Type.FullName} ({groupNode.Category})");
                         counts.Unknown++;
                         knownUnknowns.SystemNotFoundInWorld.Add(subsystemHandle);
+
+                        // BuildStaticPhysicsWorld ?
+                        // EndFixedStepSimulationEntityCommandBufferSystem ?
+
                         // There are only 2 systems where this happens.
                         // Both are in Unity.Entities.FixedStepSimulationSystemGroup.
                         // One of them is likely to be Unity.Physics.Systems.BuildStaticPhysicsWorld (ISystem)
@@ -83,10 +88,15 @@ public class EcsSystemHierarchyService
         foreach (var systemTypeIndex in systemTypeIndices)
         {
             var systemHandle = world.GetExistingSystem(systemTypeIndex);
-            if (!world.Unmanaged.IsSystemValid(systemHandle))
+            if (systemHandle.Equals(SystemHandle.Null))
             {
                 counts.NotUsed++;
                 continue;
+            }
+            if (!world.Unmanaged.IsSystemValid(systemHandle))
+            {
+                //counts.NotUsed++;
+                //continue;
             }
 
             var systemType = world.Unmanaged.GetTypeOfSystem(systemHandle);

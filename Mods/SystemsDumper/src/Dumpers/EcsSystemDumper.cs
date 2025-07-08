@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using cheesasaurus.VRisingMods.SystemsDumper.Models;
+using Il2CppInterop.Runtime;
+using ProjectM;
+using Unity.Entities;
+using Unity.Physics.Systems;
 
 namespace cheesasaurus.VRisingMods.SystemsDumper;
 
@@ -48,7 +52,7 @@ class EcsSystemDumper
             sb.Append(sectionSeparator);
             AppendSectionUpdateHierarchy(sb, systemHierarchy);
         }
-        
+
         return sb.ToString();
     }
 
@@ -134,7 +138,7 @@ class EcsSystemDumper
         if (node.Category.Equals(EcsSystemCategory.Group))
         {
             parts.Add($"{node.CountDescendants()} descendants");
-            parts.Add($"{node.ChildrenOrderedForUpdate.Count} children");            
+            parts.Add($"{node.ChildrenOrderedForUpdate.Count} children");
         }
         if (node.Parents.Count > 1)
         {
@@ -155,8 +159,43 @@ class EcsSystemDumper
                 return $"{node.Type.FullName} (ISystem)";
             default:
             case EcsSystemCategory.Unknown:
-                return "<unknown system type>";
+                return DescribeUnknownSystem(node);
         }
+    }
+
+    internal static string DescribeUnknownSystem(EcsSystemTreeNode node)
+    {
+        if (TryGetTypeFromStrangePhysicsSystems(node.SystemHandle, out var type))
+        {
+            return $"{type.FullName} (Physics system not registered with TypeManager)";
+        }
+        return "<unknown system type>";
+    }
+
+    internal static bool TryGetTypeFromStrangePhysicsSystems(SystemHandle systemHandle, out Il2CppSystem.Type type)
+    {
+        type = null;
+        if (systemHandle.Equals(SystemHandle.Null))
+        {
+            return false;
+        }
+
+        var serverWorld = WorldUtility.FindServerWorld();
+        var handle1 = serverWorld.GetExistingSystem<BuildStaticPhysicsWorld>();
+        if (handle1.Equals(systemHandle))
+        {
+            type = Il2CppType.Of<BuildStaticPhysicsWorld>();
+            return true;
+        }
+
+        var handle2 = serverWorld.GetExistingSystem<EndFixedStepSimulationEntityCommandBufferSystem>();
+        if (handle2.Equals(systemHandle))
+        {
+            type = Il2CppType.Of<EndFixedStepSimulationEntityCommandBufferSystem>();
+            return true;
+        } 
+
+        return false;
     }
 
 }
