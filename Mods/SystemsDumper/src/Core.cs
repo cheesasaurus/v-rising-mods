@@ -8,5 +8,6 @@ public static class Core
 {
     public static ManualLogSource Log { get; } = Plugin.LogInstance;
     public static EcsSystemHierarchyService EcsSystemHierarchyService { get; } = new(Log);
-    public static DumpService DumpService { get; } = new(EcsSystemHierarchyService, Log);
+    public static EcsSystemWithEntityQueriesService EcsSystemWithEntityQueriesService { get; } = new(Log);
+    public static DumpService DumpService { get; } = new(Log, EcsSystemHierarchyService, EcsSystemWithEntityQueriesService);
 }

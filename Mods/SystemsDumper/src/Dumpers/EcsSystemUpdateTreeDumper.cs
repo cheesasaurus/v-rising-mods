@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using cheesasaurus.VRisingMods.SystemsDumper.Models;
 
-namespace cheesasaurus.VRisingMods.SystemsDumper;
+namespace cheesasaurus.VRisingMods.SystemsDumper.Dumpers;
 
-class EcsSystemDumper
+class EcsSystemUpdateTreeDumper
 {
     private int _spacesPerIndent;
 
-    public EcsSystemDumper(int spacesPerIndent = 4)
+    public EcsSystemUpdateTreeDumper(int spacesPerIndent = 4)
     {
         _spacesPerIndent = spacesPerIndent;
     }
