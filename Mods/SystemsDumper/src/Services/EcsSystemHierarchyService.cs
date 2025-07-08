@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using BepInEx.Logging;
 using cheesasaurus.VRisingMods.SystemsDumper.Models;
 using Unity.Entities;
-using Unity.Physics.Systems;
 using VRisingMods.Core.Utilities;
 
 namespace cheesasaurus.VRisingMods.SystemsDumper.Services;
@@ -36,27 +36,29 @@ public class EcsSystemHierarchyService
                 {
                     if (!nodes.TryGetValue(subsystemHandle, out var childNode))
                     {
-                        LogUtil.LogWarning($"A Group's child system does not exist within the world. Group: {groupNode.Type.FullName} ({groupNode.Category})");
-                        counts.Unknown++;
-                        knownUnknowns.SystemNotFoundInWorld.Add(subsystemHandle);
+                        if (TryGetSystemTypeIndex_ForMissedSystem(world, subsystemHandle, out var subsystemTypeIndex))
+                        {
+                            childNode = BuildNodeAndIncrementAppropriateCount(world, subsystemTypeIndex, counts);
+                        }
+                        else
+                        {
+                            LogUtil.LogWarning($"A Group's child system does not exist within the world. Group: {groupNode.Type.FullName} ({groupNode.Category})");
+                            counts.Unknown++;
+                            knownUnknowns.SystemNotFoundInWorld.Add(subsystemHandle);
 
-                        // BuildStaticPhysicsWorld ?
-                        // EndFixedStepSimulationEntityCommandBufferSystem ?
-
-                        // There are only 2 systems where this happens.
-                        // Both are in Unity.Entities.FixedStepSimulationSystemGroup.
-                        // One of them is likely to be Unity.Physics.Systems.BuildStaticPhysicsWorld (ISystem)
-                        childNode = new EcsSystemTreeNode(
-                            category: EcsSystemCategory.Unknown,
-                            systemHandle: subsystemHandle,
-                            type: null,
-                            instance: null
-                        );
+                            childNode = new EcsSystemTreeNode(
+                                category: EcsSystemCategory.Unknown,
+                                systemHandle: subsystemHandle,
+                                type: null,
+                                instance: null
+                            );
+                        }
                     }
+
                     groupNode.ChildrenOrderedForUpdate.Add(childNode);
                     if (childNode.Parents.Count > 0)
                     {
-                        Log.LogError($"Uh oh, a system belongs to multiple groups. This should not happen: {childNode.Type}");
+                        Log.LogWarning($"Uh oh, a system belongs to multiple groups. This should not happen: {childNode.Type}");
                     }
                     childNode.Parents.Add(groupNode);
                 }
@@ -84,52 +86,102 @@ public class EcsSystemHierarchyService
         var nodes = new Dictionary<SystemHandle, EcsSystemTreeNode>();
         counts = new EcsSystemCounts();
 
-        var systemTypeIndices = TypeManager.GetSystemTypeIndices();
+        var systemTypeIndices = TypeManager.GetSystemTypeIndices(WorldSystemFilterFlags.All, 0);
         foreach (var systemTypeIndex in systemTypeIndices)
         {
             var systemHandle = world.GetExistingSystem(systemTypeIndex);
-            if (systemHandle.Equals(SystemHandle.Null))
+            if (!world.Unmanaged.IsSystemValid(systemHandle))
             {
                 counts.NotUsed++;
                 continue;
             }
-            if (!world.Unmanaged.IsSystemValid(systemHandle))
-            {
-                //counts.NotUsed++;
-                //continue;
-            }
 
-            var systemType = world.Unmanaged.GetTypeOfSystem(systemHandle);
-            var category = CategorizeSystem(systemTypeIndex);
-
-            var node = new EcsSystemTreeNode(
-                category: category,
-                systemHandle: systemHandle,
-                type: systemType,
-                instance: world.GetExistingSystemInternal(systemTypeIndex)
-            );
+            var node = BuildNodeAndIncrementAppropriateCount(world, systemTypeIndex, counts);
             nodes.Add(systemHandle, node);
-
-            switch (category)
-            {
-                case EcsSystemCategory.Group:
-                    counts.Group++;
-                    break;
-                case EcsSystemCategory.Base:
-                    counts.Base++;
-                    break;
-                case EcsSystemCategory.Unmanaged:
-                    counts.Unmanaged++;
-                    break;
-            }
         }
 
         return nodes;
     }
 
+    private EcsSystemTreeNode BuildNodeAndIncrementAppropriateCount(World world, SystemTypeIndex systemTypeIndex, EcsSystemCounts counts)
+    {
+        var systemHandle = world.GetExistingSystem(systemTypeIndex);
+        var systemType = world.Unmanaged.GetTypeOfSystem(systemHandle);
+        var category = CategorizeSystem(systemTypeIndex);
+
+        var node = new EcsSystemTreeNode(
+            category: category,
+            systemHandle: systemHandle,
+            type: systemType,
+            instance: world.GetExistingSystemInternal(systemTypeIndex)
+        );
+
+        switch (category)
+        {
+            case EcsSystemCategory.Group:
+                counts.Group++;
+                break;
+            case EcsSystemCategory.Base:
+                counts.Base++;
+                break;
+            case EcsSystemCategory.Unmanaged:
+                counts.Unmanaged++;
+                break;
+        }
+
+        return node;
+    }
+
     private EcsSystemCategory CategorizeSystem(SystemTypeIndex systemTypeIndex)
     {
         return systemTypeIndex.IsGroup ? EcsSystemCategory.Group : systemTypeIndex.IsManaged ? EcsSystemCategory.Base : EcsSystemCategory.Unmanaged;
+    }
+
+    private bool TryGetSystemTypeIndex_ForMissedSystem(World world, SystemHandle systemHandle, out SystemTypeIndex systemTypeIndex, bool logDebug = true)
+    {
+        systemTypeIndex = SystemTypeIndex.Null;
+
+        if (systemHandle.Equals(SystemHandle.Null))
+        {
+            return false;
+        }
+        if (!world.Unmanaged.IsSystemValid(systemHandle))
+        {
+            return false;
+        }
+        
+        var systemType = world.Unmanaged.GetTypeOfSystem(systemHandle);
+        if (systemType is null)
+        {
+            return false;
+        }
+
+        systemTypeIndex = TypeManager.GetSystemTypeIndex(systemType);
+
+        if (logDebug)
+        {
+            var existsInList = false;
+            foreach (var otherSystemTypeIndex in TypeManager.GetSystemTypeIndices())
+            {
+                if (systemTypeIndex.Equals(otherSystemTypeIndex))
+                {
+                    existsInList = true;
+                    break;
+                }
+            }
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"Found missed system {systemType.FullName}.");
+            sb.AppendLine($"  SystemTypeIndex.Index: {systemTypeIndex.Index} (retrieved from TypeManager.GetSystemTypeIndex)");
+            sb.Append($"  Is SystemTypeIndex in TypeManager.GetSystemTypeIndices: {existsInList}");
+            if (!existsInList)
+            {
+                sb.Append($" (This might be a bug in the TypeManager)");
+            }
+            LogUtil.LogDebug(sb.ToString());
+        }
+
+        return true;
     }
 
 }

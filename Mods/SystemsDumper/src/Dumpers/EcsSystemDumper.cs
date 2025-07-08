@@ -1,15 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using cheesasaurus.VRisingMods.SystemsDumper.Models;
-using Il2CppInterop.Runtime;
-using ProjectM;
-using Unity.Entities;
-using Unity.Physics.Systems;
-using VRisingMods.Core.Utilities;
 
 namespace cheesasaurus.VRisingMods.SystemsDumper;
 
@@ -161,57 +154,8 @@ class EcsSystemDumper
                 return $"{node.Type.FullName} (ISystem)";
             default:
             case EcsSystemCategory.Unknown:
-                return DescribeUnknownSystem(node);
+                return "<unknown system type>";
         }
-    }
-
-    internal static string DescribeUnknownSystem(EcsSystemTreeNode node)
-    {
-        if (TryGetTypeForMissedSystem(node.SystemHandle, out var systemType))
-        {
-            return $"{systemType.FullName} (system was unknown but later found)";
-        }
-        return "<unknown system type>";
-    }
-
-    internal static bool TryGetTypeForMissedSystem(SystemHandle systemHandle, out Il2CppSystem.Type systemType)
-    {
-        systemType = null;
-        var serverWorld = WorldUtility.FindServerWorld();
-
-        if (systemHandle.Equals(SystemHandle.Null))
-        {
-            return false;
-        }
-        if (!serverWorld.Unmanaged.IsSystemValid(systemHandle))
-        {
-            return false;
-        }
-        
-        systemType = serverWorld.Unmanaged.GetTypeOfSystem(systemHandle);
-        if (systemType is null)
-        {
-            return false;
-        }
-
-        var systemTypeIndex = TypeManager.GetSystemTypeIndex(systemType);
-        var existsInList = false;
-        foreach (var otherSystemTypeIndex in TypeManager.GetSystemTypeIndices())
-        {
-            if (systemTypeIndex.Equals(otherSystemTypeIndex))
-            {
-                existsInList = true;
-                break;
-            }
-        }
-
-        var sb = new StringBuilder();
-        sb.AppendLine($"Found missed system {systemType.FullName}");
-        sb.AppendLine($"  SystemTypeIndex.Index: {systemTypeIndex.Index} (retrieved from TypeManager.GetSystemTypeIndex)");
-        sb.AppendLine($"  is SystemTypeIndex in TypeManager.GetSystemTypeIndices: {existsInList}");
-        LogUtil.LogDebug(sb.ToString());
-
-        return true;
     }
 
 }
