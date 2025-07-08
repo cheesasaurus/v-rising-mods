@@ -19,10 +19,16 @@
     <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll;$(DistAdditionalLibs)" DestinationFolder="../../dist/modpack" />
   </Target>
 
-  <Target Name="DeployToDev" AfterTargets="PrepareLibsForDist" Condition="'$(VRisingServerPath)' != ''">
+  <Target Name="DeployToDevServer" AfterTargets="PrepareLibsForDist" Condition="'$(VRisingServerPath)' != ''">
     <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(VRisingServerPath)/BepInEx/BloodpebblePlugins" />
     <Copy SourceFiles="$(DistAdditionalLibs)" DestinationFolder="$(VRisingServerPath)/BepInEx/Plugins" Condition="$(DeployLibsToo) != ''"/>
     <Message Text="Deployed plugin $(AssemblyName).dll to your local v rising server." Importance="High" />
+  </Target>
+
+  <Target Name="DeployToDevClient" AfterTargets="PrepareLibsForDist" Condition="'$(VRisingClientPath)' != '' And $(DeployProjectToClient) != ''">
+    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(VRisingClientPath)/BepInEx/BloodpebblePlugins" />
+    <Copy SourceFiles="$(DistAdditionalLibs)" DestinationFolder="$(VRisingClientPath)/BepInEx/Plugins" Condition="$(DeployLibsToo) != ''"/>
+    <Message Text="Deployed plugin $(AssemblyName).dll to your v rising client." Importance="High" />
   </Target>
 
 </Project>

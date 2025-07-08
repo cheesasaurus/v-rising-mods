@@ -60,4 +60,8 @@
     </ThunderstoreManifestContent>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DeployProjectToClient>True</DeployProjectToClient>
+  </PropertyGroup>
+
 </Project>
