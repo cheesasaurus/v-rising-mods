@@ -95,6 +95,8 @@ class EntityQueriesDumper
             if (!namedQuery.Query.IsCacheValid)
             {
                 // todo: investigate this. is there a way to trigger the cacheing?
+                // for example, going into the blackbrew fight and dumping,
+                // gives us more usable queries on ProjectM.ProfessorCoilSystem_Server_Spawn.
                 sb.AppendLine($"could not access {namedQuery.Name} | IsCacheValid: {namedQuery.Query.IsCacheValid}");
                 return false;
             }
@@ -317,8 +319,9 @@ class EntityQueriesDumper
             sb.Append($"{indent}Options = ");
             var values = Enum.GetValues(typeof(EntityQueryOptions));
             var on = values.Cast<EntityQueryOptions>()
+                .Distinct() // IncludeDisabled and IncludeDisabledEntities use the same bit. don't list it twice.
                 .Where(value => (queryDesc.Options & value) != 0)
-                .Select(value => $"EntityQueryOptions.{value}") // todo: why does EntityQueryOptions.IncludeDisabled show twice?
+                .Select(value => $"EntityQueryOptions.{value}")
                 .ToList();
             sb.Append(string.Join(" | ", on));
             sb.AppendLine(",");
