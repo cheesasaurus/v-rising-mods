@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using BepInEx.Logging;
 using cheesasaurus.VRisingMods.SystemsDumper.Models;
+using Unity.Collections;
 using Unity.Entities;
+using VRisingMods.Core.Utilities;
 
 namespace cheesasaurus.VRisingMods.SystemsDumper.Services;
 
@@ -35,23 +37,16 @@ public class EcsSystemHierarchyService
                 {
                     if (!nodes.TryGetValue(subsystemHandle, out var childNode))
                     {
-                        if (TryGetSystemTypeIndex_ForMissedSystem(world, subsystemHandle, out var subsystemTypeIndex))
-                        {
-                            childNode = BuildNodeAndIncrementAppropriateCount(world, subsystemTypeIndex, counts);
-                        }
-                        else
-                        {
-                            Log.LogWarning($"A Group's child system does not exist within the world. Group: {groupNode.Type.FullName} ({groupNode.Category})");
-                            counts.Unknown++;
-                            knownUnknowns.SystemNotFoundInWorld.Add(subsystemHandle);
+                        Log.LogWarning($"A Group's child system does not exist within the world. Group: {groupNode.Type.FullName} ({groupNode.Category})");
+                        counts.Unknown++;
+                        knownUnknowns.SystemNotFoundInWorld.Add(subsystemHandle);
 
-                            childNode = new EcsSystemTreeNode(
-                                category: EcsSystemCategory.Unknown,
-                                systemHandle: subsystemHandle,
-                                type: null,
-                                instance: null
-                            );
-                        }
+                        childNode = new EcsSystemTreeNode(
+                            category: EcsSystemCategory.Unknown,
+                            systemHandle: subsystemHandle,
+                            type: null,
+                            instance: null
+                        );
                     }
 
                     groupNode.ChildrenOrderedForUpdate.Add(childNode);
@@ -97,6 +92,26 @@ public class EcsSystemHierarchyService
 
             var node = BuildNodeAndIncrementAppropriateCount(world, systemTypeIndex, counts);
             nodes.Add(systemHandle, node);
+        }
+
+        // TypeManager.GetSystemTypeIndices misses a few things somehow.
+        // Do a different scan to discover more systems.
+        foreach (var systemHandle in world.Unmanaged.GetAllSystems(Allocator.Temp))
+        {
+            if (nodes.ContainsKey(systemHandle))
+            {
+                continue;
+            }
+
+            if (TryGetSystemTypeIndex_ForMissedSystem(world, systemHandle, out var systemTypeIndex))
+            {
+                var node = BuildNodeAndIncrementAppropriateCount(world, systemTypeIndex, counts);
+                nodes.Add(systemHandle, node);
+            }
+            else
+            {
+                LogUtil.LogWarning($"Failed to get SystemTypeIndex for a SystemHandle in world {world.Name}");
+            }
         }
 
         return nodes;
