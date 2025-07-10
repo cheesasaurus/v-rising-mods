@@ -38,25 +38,6 @@ public class DumpService
         return pattern;
     }
 
-    public string DumpSystemsEntityQueries()
-    {
-        var dir = "Dump/Systems";
-        var queryCodeGen = new EntityQueryCodeGenerator(spacesPerIndent: 4, newLine: "\n");
-        var dumper = new EntityQueriesDumper(queryCodeGen);
-
-        foreach (var world in World.s_AllWorlds)
-        {
-            var worldDir = $"{dir}/{world.Name}";
-            Directory.CreateDirectory(worldDir);
-            var systemModels = EcsSystemWithEntityQueriesService.CollectSystemMetadata(world);
-            File.WriteAllText($"{worldDir}/EntityQueries.txt", dumper.ListAllQueries(world, systemModels));
-        }
-
-        var pattern = $"{dir}/<WorldName>/EntityQueries.txt";
-        Log.LogMessage($"Dumped system entity query files as {pattern}");
-        return pattern;
-    }
-
     public string DumpSystemsCodeGen()
     {
         var dir = "Dump/Systems";
@@ -81,6 +62,12 @@ public class DumpService
         var pattern = $"{dir}/<WorldName>/Code/<SystemFullName>.cs";
         Log.LogMessage($"Generated code snippet files as {pattern}");
         return pattern;
+    }
+
+    public string DumpSystemsComponentUsage()
+    {
+        // todo: implement
+        return "";
     }
 
 }

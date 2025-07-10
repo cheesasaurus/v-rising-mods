@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Text;
 using Il2CppInterop.Runtime;
-using VRisingMods.Core.Utilities;
 
 namespace cheesasaurus.VRisingMods.SystemsDumper.CodeGeneration;
 
