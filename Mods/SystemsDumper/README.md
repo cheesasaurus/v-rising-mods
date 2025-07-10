@@ -15,7 +15,7 @@ It dumps information about ECS Systems. For use with both client and server appl
 ## Chat Commands
 
 - `.DumpSystems UpdateTree`
-  - Dumps ECS system update hierarchies to files. One file per World. [Sample dumps](https://github.com/cheesasaurus/v-rising-mods/tree/master/Mods/SystemsDumper/sampledumps)
+  - Dumps ECS system update hierarchies to files. One file per World. [Sample](https://github.com/cheesasaurus/v-rising-modding-notes/blob/main/Dumps/VRisingDedicatedServer/Systems/Server/UpdateTree.txt)
   - Works on both client and server applications. (client dumps are dumped locally, server dumps are dumped to the server)
   - shortcut `.ds ut`
 
