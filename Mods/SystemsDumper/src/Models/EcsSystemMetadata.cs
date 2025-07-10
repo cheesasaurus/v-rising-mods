@@ -5,11 +5,13 @@ using Unity.Entities;
 
 namespace cheesasaurus.VRisingMods.SystemsDumper.Models;
 
-public class EcsSystemWithEntityQueries(EcsSystemCategory category, SystemHandle systemHandle, Il2CppSystem.Type type)
+
+public class EcsSystemMetadata(Il2CppSystem.Type type, SystemHandle systemHandle, SystemTypeIndex systemTypeIndex, EcsSystemCategory category)
 {
-    public EcsSystemCategory Category { get; set; } = category;
     public Il2CppSystem.Type Type { get; set; } = type;
     public SystemHandle SystemHandle { get; set; } = systemHandle;
+    public SystemTypeIndex SystemTypeIndex { get; set; } = systemTypeIndex;
+    public EcsSystemCategory Category { get; set; } = category;
     public SystemAttributes Attributes { get; set; } = new();
     public List<NamedEntityQuery> NamedEntityQueries { get; set; } = [];
     public Exception ExceptionFromQueryFinding { get; set; } = null;

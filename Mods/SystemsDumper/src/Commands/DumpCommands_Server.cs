@@ -24,6 +24,13 @@ internal static class DumpCommands_Server
         ctx.Reply($"Dumped system entity query files as {filePattern}");
     }
 
+    [Command("code", "c", description: "Generates code snippets for each system", adminOnly: true)]
+    public static void DumpSystemsCodeGen(ChatCommandContext ctx)
+    {
+        var filePattern = Core.DumpService.DumpSystemsCodeGen();
+        ctx.Reply($"Generated code snippet files as {filePattern}");
+    }
+
     // todo: remove
     [Command("debug", "d", description: "debug query builder", adminOnly: true)]
     unsafe public static void Debug(ChatCommandContext ctx)

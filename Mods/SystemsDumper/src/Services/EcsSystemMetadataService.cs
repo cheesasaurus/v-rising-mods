@@ -7,23 +7,22 @@ using cheesasaurus.VRisingMods.SystemsDumper.Models;
 using Il2CppInterop.Runtime;
 using Unity.Collections;
 using Unity.Entities;
-using VRisingMods.Core.Utilities;
 
 namespace cheesasaurus.VRisingMods.SystemsDumper.Services;
 
 // responsible for finding ecs systems with entity queries, for any given world
-public class EcsSystemWithEntityQueriesService
+public class EcsSystemMetadataService
 {
     private ManualLogSource Log;
 
-    public EcsSystemWithEntityQueriesService(ManualLogSource log)
+    public EcsSystemMetadataService(ManualLogSource log)
     {
         Log = log;
     }
 
-    public IEnumerable<EcsSystemWithEntityQueries> FindSystemsWithEntityQueries(World world)
+    public IEnumerable<EcsSystemMetadata> CollectSystemMetadata(World world)
     {
-        var models = new List<EcsSystemWithEntityQueries>();
+        var models = new List<EcsSystemMetadata>();
         var systemHandles = world.Unmanaged.GetAllSystems(Allocator.Temp);
 
         foreach (var systemHandle in systemHandles)
@@ -31,7 +30,7 @@ public class EcsSystemWithEntityQueriesService
             var systemType = world.Unmanaged.GetTypeOfSystem(systemHandle);
             var systemTypeIndex = TypeManager.GetSystemTypeIndex(systemType);
             var category = CategorizeSystem(systemTypeIndex);
-            var model = new EcsSystemWithEntityQueries(category, systemHandle, systemType);
+            var model = new EcsSystemMetadata(systemType, systemHandle, systemTypeIndex, category);
             FillAttrributes(model, systemType);
             try
             {
@@ -69,7 +68,7 @@ public class EcsSystemWithEntityQueriesService
             //   on 'ProjectM.EntityAddRemoveUpdateEvents`2+EventData[TComponent,TCompareComponent]'
             //   violates the constraint of type parameter 'TCompareComponent'.
             Log.LogWarning($"error getting System.Type for {systemType.AssemblyQualifiedName}:\n{ex}");
-            //Log.LogDebug($"  IsGenericType: {systemType.IsGenericType}");
+            Log.LogDebug($"  IsGenericTypeDefinition: {systemType.IsGenericTypeDefinition}");
             throw;
         }
 
@@ -88,6 +87,9 @@ public class EcsSystemWithEntityQueriesService
 
     private IEnumerable<NamedEntityQuery> FindNamedEntityQueriesFromSystem(Type type, object system)
     {
+        // todo: idea for resolving the queries. not sure if its the problem but worth a try.
+        // https://stackoverflow.com/questions/5379730/using-reflection-to-call-a-method-of-a-property
+
         var queries = new List<NamedEntityQuery>();
 
         var queryType = typeof(EntityQuery);
@@ -112,24 +114,7 @@ public class EcsSystemWithEntityQueriesService
         return queries;
     }
 
-    // todo: remove
-    private void CheckAttributes(Il2CppSystem.Type systemType)
-    {
-        foreach (var attr in systemType.GetCustomAttributes(true))
-        {
-            //LogUtil.LogInfo(attr.GetType().FullName);
-        }
-        foreach (var attr in systemType.GetCustomAttributes(Il2CppType.Of<UpdateBeforeAttribute>(), true))
-        {
-            var attr2 = (UpdateBeforeAttribute)attr.Cast<UpdateBeforeAttribute>();
-            var x = attr2.SystemType;
-
-            LogUtil.LogInfo($"[UpdateBefore(typeof({x.FullName}))");
-        }
-        // todo
-    }
-
-    private void FillAttrributes(EcsSystemWithEntityQueries system, Il2CppSystem.Type systemType)
+    private void FillAttrributes(EcsSystemMetadata system, Il2CppSystem.Type systemType)
     {
         foreach (var attr in systemType.GetCustomAttributes(Il2CppType.Of<UpdateInGroupAttribute>(), true))
         {

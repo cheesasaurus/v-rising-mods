@@ -18,7 +18,7 @@ class EntityQueriesDumper
         _spacesPerIndent = spacesPerIndent;
     }
 
-    public string ListAllQueries(World world, IEnumerable<EcsSystemWithEntityQueries> systems)
+    public string ListAllQueries(World world, IEnumerable<EcsSystemMetadata> systems)
     {
         var sb = new StringBuilder();
         var hr = "=".Repeat(72);
@@ -35,7 +35,7 @@ class EntityQueriesDumper
         return sb.ToString();
     }
 
-    private void AppendSystemSection(StringBuilder sb, EcsSystemWithEntityQueries system)
+    private void AppendSystemSection(StringBuilder sb, EcsSystemMetadata system)
     {
         var subsectionSeparator = "-------------------------------------\n\n";
 
@@ -44,13 +44,6 @@ class EntityQueriesDumper
         sb.AppendLine($"Entity Queries: {system.NamedEntityQueries.Count}");
         sb.AppendLine();
         sb.AppendLine(subsectionSeparator);
-
-        if (system.Attributes.Any())
-        {
-            AppendAttributesSubSection(sb, system);
-            sb.AppendLine();
-            sb.AppendLine(subsectionSeparator);
-        }
 
         if (system.ExceptionFromQueryFinding is not null)
         {
@@ -73,51 +66,7 @@ class EntityQueriesDumper
         }
     }
 
-    // todo: might move attributes to different files / dump command
-    // I think they would make searching for things annoying
-    private void AppendAttributesSubSection(StringBuilder sb, EcsSystemWithEntityQueries system)
-    {
-        foreach (var attr in system.Attributes.UpdateInGroup)
-        {
-            sb.Append($"[UpdateInGroup(typeof({attr.GroupType.FullName})");
-            if (attr.OrderFirst)
-            {
-                sb.Append(", OrderFirst = true");
-            }
-            if (attr.OrderLast)
-            {
-                sb.Append(", OrderLast = true");
-            }
-            sb.AppendLine(")]");
-        }
-
-        foreach (var attr in system.Attributes.UpdateBefore)
-        {
-            sb.AppendLine($"[UpdateBefore(typeof({attr.SystemType.FullName}))]");
-        }
-
-        foreach (var attr in system.Attributes.UpdateAfter)
-        {
-            sb.AppendLine($"[UpdateAfter(typeof({attr.SystemType.FullName}))]");
-        }
-
-        foreach (var attr in system.Attributes.CreateBefore)
-        {
-            sb.AppendLine($"[CreateBefore(typeof({attr.SystemType.FullName}))]");
-        }
-
-        foreach (var attr in system.Attributes.CreateAfter)
-        {
-            sb.AppendLine($"[CreateAfter(typeof({attr.SystemType.FullName}))]");
-        }
-
-        foreach (var attr in system.Attributes.DisableAutoCreation)
-        {
-            sb.AppendLine($"DisableAutoCreation]");
-        }
-    }
-
-    private string DescribeCategory(EcsSystemWithEntityQueries system)
+    private string DescribeCategory(EcsSystemMetadata system)
     {
         switch (system.Category)
         {
@@ -133,7 +82,7 @@ class EntityQueriesDumper
         }
     }
 
-    private bool ValidateAndAppendProblems(StringBuilder sb, NamedEntityQuery namedQuery, EcsSystemWithEntityQueries system)
+    private bool ValidateAndAppendProblems(StringBuilder sb, NamedEntityQuery namedQuery, EcsSystemMetadata system)
     {
         EntityQueryDesc queryDesc;
         try
@@ -181,7 +130,7 @@ class EntityQueriesDumper
     //  
     // which when using lots of components with a variety of filters, makes it rather unreadable.
     // The idea is to tell at a glance how the components are being used, and to also have a usable snippet.
-    unsafe private void AppendQueryBuilderSnippet(StringBuilder sb, NamedEntityQuery namedQuery, EcsSystemWithEntityQueries system)
+    unsafe private void AppendQueryBuilderSnippet(StringBuilder sb, NamedEntityQuery namedQuery, EcsSystemMetadata system)
     {
         var indent = new String(' ', _spacesPerIndent);
         var queryDesc = namedQuery.Query.GetEntityQueryDesc();
@@ -258,7 +207,7 @@ class EntityQueriesDumper
     }
 
     // EntityQueryDesc is not the way unity recommends, but it is a hell of a lot more convenient with our il2cpp restrictions.
-    unsafe private void AppendQueryDescSnippet(StringBuilder sb, NamedEntityQuery namedQuery, EcsSystemWithEntityQueries system)
+    unsafe private void AppendQueryDescSnippet(StringBuilder sb, NamedEntityQuery namedQuery, EcsSystemMetadata system)
     {
         var indent = new String(' ', _spacesPerIndent);
         var queryDesc = namedQuery.Query.GetEntityQueryDesc();
