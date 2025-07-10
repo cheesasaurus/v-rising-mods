@@ -15,6 +15,13 @@ internal static class DumpCommands_Client
                 CommandDumpSystemsUpdateTrees();
                 break;
 
+            case ".dumpsystems code":
+            case ".dumpsystems c":
+            case ".ds code":
+            case ".ds c":
+                CommandDumpSystemsCodeGen();
+                break;
+
             default:
                 break;
         }
@@ -23,7 +30,13 @@ internal static class DumpCommands_Client
     public static void CommandDumpSystemsUpdateTrees()
     {
         LogUtil.LogInfo("Dumping systems");
-        var dir = Core.DumpService.DumpSystemsUpdateTrees();
+        Core.DumpService.DumpSystemsUpdateTrees();
+    }
+
+    public static void CommandDumpSystemsCodeGen()
+    {
+        LogUtil.LogInfo("Dumping systems");
+        Core.DumpService.DumpSystemsCodeGen();
     }
     
 }
