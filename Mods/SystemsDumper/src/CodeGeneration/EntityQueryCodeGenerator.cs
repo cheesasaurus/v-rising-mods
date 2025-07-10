@@ -56,7 +56,7 @@ public class EntityQueryCodeGenerator
     /// which when using lots of components with a variety of filters, makes it rather unreadable.
     /// The idea is to tell at a glance how the components are being used, and to also have a usable snippet.
     /// </remarks>
-    public string CreateQueryFromBuilderSnippet(NamedEntityQuery namedQuery, EcsSystemMetadata system)
+    public string Snippet_CreateQueryFrom_QueryBuilder(NamedEntityQuery namedQuery, EcsSystemMetadata system)
     {
         var queryDesc = namedQuery.Query.GetEntityQueryDesc();
 
@@ -140,12 +140,27 @@ public class EntityQueryCodeGenerator
     /// <remarks>
     /// EntityQueryDesc is not the way unity recommends, but it is a hell of a lot more readable with our il2cpp constraints.
     /// </remarks>
-    unsafe public string CreateQueryFromQueryDescSnippet(NamedEntityQuery namedQuery, EcsSystemMetadata system)
+    unsafe public string Snippet_CreateQueryFrom_QueryDesc(NamedEntityQuery namedQuery, EcsSystemMetadata system)
+    {
+        var sw = NewStringWriter();
+        sw.Write($"var {namedQuery.Name} = entityManager.CreateEntityQuery(");
+        sw.Write(Snippet_QueryDesc(namedQuery, system));
+        sw.WriteLine(");");
+        return sw.ToString();
+    }
+
+    /// <summary>
+    /// Creates an EntityQuery snippet like <c>var query = entityManager.CreateEntityQuery(new EntityQueryDesc...</c> 
+    /// </summary>
+    /// <remarks>
+    /// EntityQueryDesc is not the way unity recommends, but it is a hell of a lot more readable with our il2cpp constraints.
+    /// </remarks>
+    unsafe public string Snippet_QueryDesc(NamedEntityQuery namedQuery, EcsSystemMetadata system)
     {
         var queryDesc = namedQuery.Query.GetEntityQueryDesc();
-        var sw = NewStringWriter();
 
-        sw.WriteLine($"var {namedQuery.Name} = entityManager.CreateEntityQuery(new EntityQueryDesc()");
+        var sw = NewStringWriter();
+        sw.WriteLine($"new EntityQueryDesc()");
         sw.WriteLine("{");
 
         // All
@@ -262,7 +277,8 @@ public class EntityQueryCodeGenerator
             sw.WriteLine(",");
         }
 
-        sw.WriteLine("});");
+        sw.Write("}");
         return sw.ToString();
     }
+
 }

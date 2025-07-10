@@ -118,7 +118,7 @@ class EntityQueriesDumper
     // EntityQueryDesc is not the way unity recommends, but it is a hell of a lot more convenient with our il2cpp restrictions.
     unsafe private void AppendQueryDescSnippet(StringBuilder sb, NamedEntityQuery namedQuery, EcsSystemMetadata system)
     {
-        sb.AppendLine(_queryCodeGen.CreateQueryFromQueryDescSnippet(namedQuery, system));
+        sb.AppendLine(_queryCodeGen.Snippet_CreateQueryFrom_QueryDesc(namedQuery, system));
     }
 
 }
