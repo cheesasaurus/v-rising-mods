@@ -4,8 +4,10 @@ using System.Linq;
 using System.Reflection;
 using BepInEx.Logging;
 using cheesasaurus.VRisingMods.SystemsDumper.Models;
+using Il2CppInterop.Runtime;
 using Unity.Collections;
 using Unity.Entities;
+using VRisingMods.Core.Utilities;
 
 namespace cheesasaurus.VRisingMods.SystemsDumper.Services;
 
@@ -30,6 +32,7 @@ public class EcsSystemWithEntityQueriesService
             var systemTypeIndex = TypeManager.GetSystemTypeIndex(systemType);
             var category = CategorizeSystem(systemTypeIndex);
             var model = new EcsSystemWithEntityQueries(category, systemHandle, systemType);
+            FillAttrributes(model, systemType);
             try
             {
                 var queries = FindNamedEntityQueriesFromSystem(world, systemHandle, systemTypeIndex, systemType);
@@ -107,6 +110,62 @@ public class EcsSystemWithEntityQueriesService
         }
         
         return queries;
+    }
+
+    // todo: remove
+    private void CheckAttributes(Il2CppSystem.Type systemType)
+    {
+        foreach (var attr in systemType.GetCustomAttributes(true))
+        {
+            //LogUtil.LogInfo(attr.GetType().FullName);
+        }
+        foreach (var attr in systemType.GetCustomAttributes(Il2CppType.Of<UpdateBeforeAttribute>(), true))
+        {
+            var attr2 = (UpdateBeforeAttribute)attr.Cast<UpdateBeforeAttribute>();
+            var x = attr2.SystemType;
+
+            LogUtil.LogInfo($"[UpdateBefore(typeof({x.FullName}))");
+        }
+        // todo
+    }
+
+    private void FillAttrributes(EcsSystemWithEntityQueries system, Il2CppSystem.Type systemType)
+    {
+        foreach (var attr in systemType.GetCustomAttributes(Il2CppType.Of<UpdateInGroupAttribute>(), true))
+        {
+            var attrIL = (UpdateInGroupAttribute)attr.Cast<UpdateInGroupAttribute>();
+            system.Attributes.UpdateInGroup.Add(attrIL);
+        }
+
+        foreach (var attr in systemType.GetCustomAttributes(Il2CppType.Of<UpdateBeforeAttribute>(), true))
+        {
+            var attrIL = (UpdateBeforeAttribute)attr.Cast<UpdateBeforeAttribute>();
+            system.Attributes.UpdateBefore.Add(attrIL);
+        }
+
+        foreach (var attr in systemType.GetCustomAttributes(Il2CppType.Of<UpdateAfterAttribute>(), true))
+        {
+            var attrIL = (UpdateAfterAttribute)attr.Cast<UpdateAfterAttribute>();
+            system.Attributes.UpdateAfter.Add(attrIL);
+        }
+
+        foreach (var attr in systemType.GetCustomAttributes(Il2CppType.Of<CreateBeforeAttribute>(), true))
+        {
+            var attrIL = (CreateBeforeAttribute)attr.Cast<CreateBeforeAttribute>();
+            system.Attributes.CreateBefore.Add(attrIL);
+        }
+
+        foreach (var attr in systemType.GetCustomAttributes(Il2CppType.Of<CreateAfterAttribute>(), true))
+        {
+            var attrIL = (CreateAfterAttribute)attr.Cast<CreateAfterAttribute>();
+            system.Attributes.CreateAfter.Add(attrIL);
+        }
+        
+        foreach (var attr in systemType.GetCustomAttributes(Il2CppType.Of<DisableAutoCreationAttribute>(), true))
+        {
+            var attrIL = (DisableAutoCreationAttribute)attr.Cast<DisableAutoCreationAttribute>();
+            system.Attributes.DisableAutoCreation.Add(attrIL);
+        }
     }
 
     private ComponentSystemBase GetExistingSystemManaged(World world, Type systemType)

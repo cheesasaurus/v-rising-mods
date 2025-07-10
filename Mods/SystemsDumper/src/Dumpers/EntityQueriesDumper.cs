@@ -37,11 +37,20 @@ class EntityQueriesDumper
 
     private void AppendSystemSection(StringBuilder sb, EcsSystemWithEntityQueries system)
     {
+        var subsectionSeparator = "-------------------------------------\n\n";
+
         sb.AppendLine($"{system.Type.FullName} ({DescribeCategory(system)})");
         sb.AppendLine();
         sb.AppendLine($"Entity Queries: {system.NamedEntityQueries.Count}");
         sb.AppendLine();
-        sb.AppendLine("-------------------------------------\n\n");
+        sb.AppendLine(subsectionSeparator);
+
+        if (system.Attributes.Any())
+        {
+            AppendAttributesSubSection(sb, system);
+            sb.AppendLine();
+            sb.AppendLine(subsectionSeparator);
+        }
 
         if (system.ExceptionFromQueryFinding is not null)
         {
@@ -61,6 +70,50 @@ class EntityQueriesDumper
             }
             sb.AppendLine();
             sb.AppendLine();
+        }
+    }
+
+    // todo: might move attributes to different files / dump command
+    // I think they would make searching for things annoying
+    private void AppendAttributesSubSection(StringBuilder sb, EcsSystemWithEntityQueries system)
+    {
+        foreach (var attr in system.Attributes.UpdateInGroup)
+        {
+            sb.Append($"[UpdateInGroup(typeof({attr.GroupType.FullName})");
+            if (attr.OrderFirst)
+            {
+                sb.Append(", OrderFirst = true");
+            }
+            if (attr.OrderLast)
+            {
+                sb.Append(", OrderLast = true");
+            }
+            sb.AppendLine(")]");
+        }
+
+        foreach (var attr in system.Attributes.UpdateBefore)
+        {
+            sb.AppendLine($"[UpdateBefore(typeof({attr.SystemType.FullName}))]");
+        }
+
+        foreach (var attr in system.Attributes.UpdateAfter)
+        {
+            sb.AppendLine($"[UpdateAfter(typeof({attr.SystemType.FullName}))]");
+        }
+
+        foreach (var attr in system.Attributes.CreateBefore)
+        {
+            sb.AppendLine($"[CreateBefore(typeof({attr.SystemType.FullName}))]");
+        }
+
+        foreach (var attr in system.Attributes.CreateAfter)
+        {
+            sb.AppendLine($"[CreateAfter(typeof({attr.SystemType.FullName}))]");
+        }
+
+        foreach (var attr in system.Attributes.DisableAutoCreation)
+        {
+            sb.AppendLine($"DisableAutoCreation]");
         }
     }
 
@@ -203,7 +256,7 @@ class EntityQueriesDumper
 
         sb.AppendLine($"{indent}.Build(entityManager);");
     }
-    
+
     // EntityQueryDesc is not the way unity recommends, but it is a hell of a lot more convenient with our il2cpp restrictions.
     unsafe private void AppendQueryDescSnippet(StringBuilder sb, NamedEntityQuery namedQuery, EcsSystemWithEntityQueries system)
     {
