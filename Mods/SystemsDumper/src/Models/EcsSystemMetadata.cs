@@ -9,6 +9,7 @@ namespace cheesasaurus.VRisingMods.SystemsDumper.Models;
 public class EcsSystemMetadata(Il2CppSystem.Type type, SystemHandle systemHandle, SystemTypeIndex systemTypeIndex, EcsSystemCategory category)
 {
     public Il2CppSystem.Type Type { get; set; } = type;
+    public System.Type TypeIL { get; set; } = null;
     public SystemHandle SystemHandle { get; set; } = systemHandle;
     public SystemTypeIndex SystemTypeIndex { get; set; } = systemTypeIndex;
     public EcsSystemCategory Category { get; set; } = category;
@@ -31,6 +32,7 @@ public class SystemAttributes
     public List<CreateBeforeAttribute> CreateBefore { get; set; } = [];
     public List<CreateAfterAttribute> CreateAfter { get; set; } = [];
     public List<DisableAutoCreationAttribute> DisableAutoCreation { get; set; } = [];
+    public List<RequireMatchingQueriesForUpdateAttribute> RequireMatchingQueriesForUpdateAttribute { get; set; } = [];
 
     public bool Any()
     {
@@ -39,6 +41,7 @@ public class SystemAttributes
             || UpdateAfter.Any()
             || CreateBefore.Any()
             || CreateAfter.Any()
-            || DisableAutoCreation.Any();
+            || DisableAutoCreation.Any()
+            || RequireMatchingQueriesForUpdateAttribute.Any();
     }
 }

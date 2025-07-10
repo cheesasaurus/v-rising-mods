@@ -7,6 +7,7 @@ using cheesasaurus.VRisingMods.SystemsDumper.Models;
 using Il2CppInterop.Runtime;
 using Unity.Collections;
 using Unity.Entities;
+using VRisingMods.Core.Utilities;
 
 namespace cheesasaurus.VRisingMods.SystemsDumper.Services;
 
@@ -31,7 +32,14 @@ public class EcsSystemMetadataService
             var systemTypeIndex = TypeManager.GetSystemTypeIndex(systemType);
             var category = CategorizeSystem(systemTypeIndex);
             var model = new EcsSystemMetadata(systemType, systemHandle, systemTypeIndex, category);
+
+            if (TryGetTypeIL(systemType, out var systemTypeIL))
+            {
+                model.TypeIL = systemTypeIL;
+            }
+
             FillAttrributes(model, systemType);
+
             try
             {
                 var queries = FindNamedEntityQueriesFromSystem(world, systemHandle, systemTypeIndex, systemType);
@@ -50,6 +58,28 @@ public class EcsSystemMetadataService
     private EcsSystemCategory CategorizeSystem(SystemTypeIndex systemTypeIndex)
     {
         return systemTypeIndex.IsGroup ? EcsSystemCategory.Group : systemTypeIndex.IsManaged ? EcsSystemCategory.Base : EcsSystemCategory.Unmanaged;
+    }
+
+    private bool TryGetTypeIL(Il2CppSystem.Type systemType, out System.Type systemTypeIL)
+    {
+        systemTypeIL = null;
+        try
+        {
+            systemTypeIL = Type.GetType(systemType.AssemblyQualifiedName);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            // todo: solve this
+            // Every error comes from CastleBuilding.blahblahEvent systems.
+            // 
+            // System.TypeLoadException: GenericArguments[1], 'TCompareComponent',
+            //   on 'ProjectM.EntityAddRemoveUpdateEvents`2+EventData[TComponent,TCompareComponent]'
+            //   violates the constraint of type parameter 'TCompareComponent'.
+            Log.LogWarning($"error getting System.Type for {systemType.AssemblyQualifiedName}:\n{ex}");
+            Log.LogDebug($"  IsGenericTypeDefinition: {systemType.IsGenericTypeDefinition}");
+            return false;
+        }
     }
 
     private IEnumerable<NamedEntityQuery> FindNamedEntityQueriesFromSystem(World world, SystemHandle systemHandle, SystemTypeIndex systemTypeIndex, Il2CppSystem.Type systemType)
@@ -87,9 +117,6 @@ public class EcsSystemMetadataService
 
     private IEnumerable<NamedEntityQuery> FindNamedEntityQueriesFromSystem(Type type, object system)
     {
-        // todo: idea for resolving the queries. not sure if its the problem but worth a try.
-        // https://stackoverflow.com/questions/5379730/using-reflection-to-call-a-method-of-a-property
-
         var queries = new List<NamedEntityQuery>();
 
         var queryType = typeof(EntityQuery);
@@ -116,6 +143,8 @@ public class EcsSystemMetadataService
 
     private void FillAttrributes(EcsSystemMetadata system, Il2CppSystem.Type systemType)
     {
+        // Enum TypeManager.SystemAttributeKind
+
         foreach (var attr in systemType.GetCustomAttributes(Il2CppType.Of<UpdateInGroupAttribute>(), true))
         {
             var attrIL = (UpdateInGroupAttribute)attr.Cast<UpdateInGroupAttribute>();
@@ -145,11 +174,17 @@ public class EcsSystemMetadataService
             var attrIL = (CreateAfterAttribute)attr.Cast<CreateAfterAttribute>();
             system.Attributes.CreateAfter.Add(attrIL);
         }
-        
+
         foreach (var attr in systemType.GetCustomAttributes(Il2CppType.Of<DisableAutoCreationAttribute>(), true))
         {
             var attrIL = (DisableAutoCreationAttribute)attr.Cast<DisableAutoCreationAttribute>();
             system.Attributes.DisableAutoCreation.Add(attrIL);
+        }
+        
+        foreach (var attr in systemType.GetCustomAttributes(Il2CppType.Of<RequireMatchingQueriesForUpdateAttribute>(), true))
+        {
+            var attrIL = (RequireMatchingQueriesForUpdateAttribute)attr.Cast<RequireMatchingQueriesForUpdateAttribute>();
+            system.Attributes.RequireMatchingQueriesForUpdateAttribute.Add(attrIL);
         }
     }
 

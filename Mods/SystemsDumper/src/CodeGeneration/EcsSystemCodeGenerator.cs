@@ -18,6 +18,7 @@ class EcsSystemCodeGenerator
     private int _spacesPerIndent;
     private string _indent;
     private string _newLine;
+    private EntityQueryCodeGenerator _queryCodeGen;
 
     public EcsSystemCodeGenerator(World world, EcsSystemMetadata system, int spacesPerIndent = 4, string newLine = "\n")
     {
@@ -27,6 +28,7 @@ class EcsSystemCodeGenerator
         _spacesPerIndent = spacesPerIndent;
         _indent = " ".Repeat(spacesPerIndent);
         _newLine = newLine;
+        _queryCodeGen = new EntityQueryCodeGenerator(spacesPerIndent, newLine);
     }
 
     private StringWriter NewStringWriter()
@@ -42,6 +44,12 @@ class EcsSystemCodeGenerator
         var indent = _indent.Repeat(indents);
         return indent + multiLineString.Replace(_newLine, $"{_newLine}{indent}");
     }
+    
+    private string AsComment(string multiLineString)
+    {
+        var comment = "// ";
+        return comment + multiLineString.Replace(_newLine, $"{_newLine}{comment} ");
+    }
 
     public string CreateCSharpFileContents()
     {
@@ -55,12 +63,21 @@ class EcsSystemCodeGenerator
             sw.WriteLine();
             sw.WriteLine();
         }
-        
+
         sw.Write(Indent(0, GenerateAttributeLines()));
-        sw.Write(Indent(0, GenerateMainSignatureLines()));
+        sw.Write(Indent(0, GenerateMainSignatureLines()));        
         sw.WriteLine("{");
-        sw.Write(Indent(1, GenerateEntityQueryDeclarationLines()));
+
+        if (_system.NamedEntityQueries.Any())
+        {
+            sw.Write(Indent(1, GenerateEntityQueriesDeclarationLines()));
+            sw.WriteLine();
+            sw.Write(Indent(1, GenerateEntityQueriesExampleInitializationLines()));
+            sw.WriteLine();
+        }
+
         // todo: more things?
+
         sw.WriteLine();
         sw.WriteLine("}");
         return sw.ToString();
@@ -114,16 +131,12 @@ class EcsSystemCodeGenerator
         return $"namespace {_type.Namespace};{_newLine}";
     }
 
+    /// <summary>
+    /// create attributes for each TypeManager.SystemAttributeKind
+    /// </summary>
     public string GenerateAttributeLines()
     {
         var sw = NewStringWriter();
-
-        // todo: see if there's something we can do with TypeManager.GetSystemAttributes.
-        // would be nice to have handling for every possible attribute.
-        // (currently manually doing everything due to Il2cpp types not passable as generics)
-
-        // todo: SpawnInWorld
-        // todo: RequiresMatchingQueriesForUpdate
 
         foreach (var attr in _system.Attributes.UpdateInGroup)
         {
@@ -164,7 +177,10 @@ class EcsSystemCodeGenerator
             sw.WriteLine($"[DisableAutoCreation]");
         }
 
-        // todo: BurstCompile
+        foreach (var attr in _system.Attributes.RequireMatchingQueriesForUpdateAttribute)
+        {
+            sw.WriteLine($"[RequireMatchingQueriesForUpdateAttribute]");
+        }
 
         return sw.ToString();
     }
@@ -234,13 +250,63 @@ class EcsSystemCodeGenerator
         return string.Join(", ", typeNames);
     }
 
-    public string GenerateEntityQueryDeclarationLines()
+    public string GenerateEntityQueriesDeclarationLines()
     {
         var sw = NewStringWriter();
         foreach (var namedQuery in _system.NamedEntityQueries)
         {
             sw.WriteLine($"EntityQuery {namedQuery.Name};");
         }
+        return sw.ToString();
+    }
+
+    public string GenerateEntityQueriesExampleInitializationLines()
+    {
+        if (_type.IsValueType)
+        {
+            // todo: queries for unmanaged systems
+            return $"// unmanaged system, skipped generating example queries";
+        }
+
+        var sw = NewStringWriter();
+        sw.WriteLine("public void Example_InitEntityQueries(EntityManager entityManager)");
+        sw.WriteLine("{");
+
+        foreach (var namedQuery in _system.NamedEntityQueries)
+        {
+            sw.Write(Indent(1, GenerateEntityQueryExampleInitializationLines(namedQuery)));
+            sw.WriteLine();
+        }
+
+        sw.WriteLine("}");
+        return sw.ToString();
+    }
+
+    private string GenerateEntityQueryExampleInitializationLines(NamedEntityQuery namedQuery)
+    {
+        var sw = NewStringWriter();
+
+        try
+        {
+            // Simply calling IsCacheValid prevents all the crashes. from managed systems.
+            // (IsCacheValid does not need to be true to access the queries.)
+            // Calling IsCacheValid from an unmanaged system causes a crash.
+            var _ = namedQuery.Query.IsCacheValid;
+
+            sw.Write($"{namedQuery.Name} = entityManager.CreateEntityQuery(");
+            sw.Write(_queryCodeGen.Snippet_QueryDesc(namedQuery, _system));
+            sw.WriteLine(");");
+        }
+        catch (Exception ex)
+        {
+            LogUtil.LogWarning($"Error processing {namedQuery.Name} on {_type.FullName}");
+
+            sw.WriteLine($"// Error processing {namedQuery.Name}");
+            sw.WriteLine($"// ");
+            sw.WriteLine(AsComment(ex.ToString()));
+            sw.WriteLine();
+        }
+        
         return sw.ToString();
     }
 
