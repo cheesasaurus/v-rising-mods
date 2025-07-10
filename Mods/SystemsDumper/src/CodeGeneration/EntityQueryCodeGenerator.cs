@@ -166,7 +166,7 @@ public class EntityQueryCodeGenerator
     }
 
     /// <summary>
-    /// Creates an EntityQuery snippet like <c>var query = entityManager.CreateEntityQuery(new EntityQueryDesc...</c> 
+    /// Creates an EntityQueryDesc snippet. 
     /// </summary>
     /// <remarks>
     /// EntityQueryDesc is not the way unity recommends, but it is a hell of a lot more readable with our il2cpp constraints.

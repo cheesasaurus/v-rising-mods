@@ -13,7 +13,7 @@ internal static class DumpCommands_Server
         ctx.Reply($"Dumped system update tree files as {filePattern}");
     }
 
-    [Command("code", "c", description: "Generates code snippets for each system", adminOnly: true)]
+    [Command("Code", "c", description: "Generates code snippets for each system", adminOnly: true)]
     public static void DumpSystemsCodeGen(ChatCommandContext ctx)
     {
         var filePattern = Core.DumpService.DumpSystemsCodeGen();

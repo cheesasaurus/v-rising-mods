@@ -14,10 +14,14 @@ It dumps information about ECS Systems. For use with both client and server appl
 
 ## Chat Commands
 
+Commands work on both client and server applications. (client dumps are dumped locally, server dumps are dumped to the server). AdminAuth required.
+
 - `.DumpSystems UpdateTree`
-  - Dumps ECS system update hierarchies to files. One file per World. [Sample](https://github.com/cheesasaurus/v-rising-modding-notes/blob/main/Dumps/VRisingDedicatedServer/Systems/Server/UpdateTree.txt)
-  - Works on both client and server applications. (client dumps are dumped locally, server dumps are dumped to the server)
+  - Dumps ECS system update hierarchies to files. One file per World. [Sample](https://github.com/cheesasaurus/v-rising-modding-notes/blob/main/Dumps/VRisingDedicatedServer/Systems/Server/UpdateTree.txt).
   - shortcut `.ds ut`
+- `.DumpSystems Code`
+  - Generates code snippets for each system, per world. One file per system. [Sample](https://github.com/cheesasaurus/v-rising-modding-notes/blob/main/Dumps/VRisingDedicatedServer/Systems/Server/Code/ProjectM.CastleBuilding.CastleBuildingWorkstationsSystem.cs).
+  - shortcut `.ds c`
 
 
 ## Support

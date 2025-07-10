@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>SystemsDumper</AssemblyName>
     <Description>Development tool. Dumps information about ECS Systems.</Description>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <Authors>Nicholas Toby</Authors>
     <Copyright>Copyright (c) Nicholas Toby 2025</Copyright>
     <WebsiteURL>https://github.com/cheesasaurus/v-rising-mods</WebsiteURL>
