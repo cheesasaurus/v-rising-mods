@@ -118,7 +118,9 @@ class EcsSystemCodeGenerator
         //     return type.Name;
         // }
 
-        return type.FullName;
+        // todo: generics like EntityAddRemoveUpdateEvents
+        var name = type.FullName;
+        return name.Replace("+", ".");
     }
 
     public string GenerateNamespaceLine()

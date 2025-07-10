@@ -29,6 +29,13 @@ public class EntityQueryCodeGenerator
         };
     }
 
+    private string ComponentTypeName(ComponentType componentType)
+    {
+        // todo: generics like EntityAddRemoveUpdateEvents
+        var name = componentType.GetManagedType().FullName;
+        return name.Replace("+", ".");
+    }
+
     /// <summary>
     /// Creates an EntityQuery snippet like <c>var query = new EntityQueryBuilder(Allocator.Temp...</c>
     /// </summary>
@@ -67,64 +74,70 @@ public class EntityQueryCodeGenerator
         // All
         foreach (var componentType in queryDesc.All)
         {
+            var typeName = ComponentTypeName(componentType);
             if (componentType.AccessModeType.Equals(AccessMode.ReadWrite))
             {
-                sw.WriteLine($"{_indent}.WithAllRW<{componentType.GetManagedType().FullName}>()");
+                sw.WriteLine($"{_indent}.WithAllRW<{typeName}>()");
             }
             else
             {
-                sw.WriteLine($"{_indent}.WithAll<{componentType.GetManagedType().FullName}>()");
+                sw.WriteLine($"{_indent}.WithAll<{typeName}>()");
             }
         }
 
         // Any
         foreach (var componentType in queryDesc.Any)
         {
+            var typeName = ComponentTypeName(componentType);
             if (componentType.AccessModeType.Equals(AccessMode.ReadWrite))
             {
-                sw.WriteLine($"{_indent}.WithAnyRW<{componentType.GetManagedType().FullName}>()");
+                sw.WriteLine($"{_indent}.WithAnyRW<{typeName}>()");
             }
             else
             {
-                sw.WriteLine($"{_indent}.WithAny<{componentType.GetManagedType().FullName}>()");
+                sw.WriteLine($"{_indent}.WithAny<{typeName}>()");
             }
         }
 
         // None
         foreach (var componentType in queryDesc.None)
         {
-            sw.WriteLine($"{_indent}.WithNone<{componentType.GetManagedType().FullName}>()");
+            var typeName = ComponentTypeName(componentType);
+            sw.WriteLine($"{_indent}.WithNone<{typeName}>()");
         }
 
         // Disabled
         foreach (var componentType in queryDesc.Disabled)
         {
+            var typeName = ComponentTypeName(componentType);
             if (componentType.AccessModeType.Equals(AccessMode.ReadWrite))
             {
-                sw.WriteLine($"{_indent}.WithDisabledRW<{componentType.GetManagedType().FullName}>()");
+                sw.WriteLine($"{_indent}.WithDisabledRW<{typeName}>()");
             }
             else
             {
-                sw.WriteLine($"{_indent}.WithDisabled<{componentType.GetManagedType().FullName}>()");
+                sw.WriteLine($"{_indent}.WithDisabled<{typeName}>()");
             }
         }
 
         // Absent
         foreach (var componentType in queryDesc.Absent)
         {
-            sw.WriteLine($"{_indent}.WithAbsent<{componentType.GetManagedType().FullName}>()");
+            var typeName = ComponentTypeName(componentType);
+            sw.WriteLine($"{_indent}.WithAbsent<{typeName}>()");
         }
 
         // Present
         foreach (var componentType in queryDesc.Present)
         {
+            var typeName = ComponentTypeName(componentType);
             if (componentType.AccessModeType.Equals(AccessMode.ReadWrite))
             {
-                sw.WriteLine($"{_indent}.WithPresentRW<{componentType.GetManagedType().FullName}>()");
+                sw.WriteLine($"{_indent}.WithPresentRW<{typeName}>()");
             }
             else
             {
-                sw.WriteLine($"{_indent}.WithPresent<{componentType.GetManagedType().FullName}>()");
+                sw.WriteLine($"{_indent}.WithPresent<{typeName}>()");
             }
         }
 
@@ -169,7 +182,7 @@ public class EntityQueryCodeGenerator
             sw.WriteLine($"{_indent}All = new ComponentType[] {{");
             foreach (var componentType in queryDesc.All)
             {
-                var typeName = componentType.GetManagedType().FullName;
+                var typeName = ComponentTypeName(componentType);
                 if (componentType.AccessModeType.Equals(AccessMode.ReadWrite))
                 {
                     sw.WriteLine($"{_indent}{_indent}ComponentType.ReadWrite<{typeName}>(),");
@@ -188,7 +201,7 @@ public class EntityQueryCodeGenerator
             sw.WriteLine($"{_indent}Any = new ComponentType[] {{");
             foreach (var componentType in queryDesc.Any)
             {
-                var typeName = componentType.GetManagedType().FullName;
+                var typeName = ComponentTypeName(componentType);
                 if (componentType.AccessModeType.Equals(AccessMode.ReadWrite))
                 {
                     sw.WriteLine($"{_indent}{_indent}ComponentType.ReadWrite<{typeName}>(),");
@@ -207,7 +220,7 @@ public class EntityQueryCodeGenerator
             sw.WriteLine($"{_indent}None = new ComponentType[] {{");
             foreach (var componentType in queryDesc.None)
             {
-                var typeName = componentType.GetManagedType().FullName;
+                var typeName = ComponentTypeName(componentType);
                 sw.WriteLine($"{_indent}{_indent}ComponentType.ReadOnly<{typeName}>(),");
             }
             sw.WriteLine($"{_indent}}},");
@@ -219,7 +232,7 @@ public class EntityQueryCodeGenerator
             sw.WriteLine($"{_indent}Disabled = new ComponentType[] {{");
             foreach (var componentType in queryDesc.Disabled)
             {
-                var typeName = componentType.GetManagedType().FullName;
+                var typeName = ComponentTypeName(componentType);
                 if (componentType.AccessModeType.Equals(AccessMode.ReadWrite))
                 {
                     sw.WriteLine($"{_indent}{_indent}ComponentType.ReadWrite<{typeName}>(),");
@@ -238,7 +251,7 @@ public class EntityQueryCodeGenerator
             sw.WriteLine($"{_indent}Absent = new ComponentType[] {{");
             foreach (var componentType in queryDesc.Absent)
             {
-                var typeName = componentType.GetManagedType().FullName;
+                var typeName = ComponentTypeName(componentType);
                 sw.WriteLine($"{_indent}{_indent}ComponentType.Exclude<{typeName}>(),");
             }
             sw.WriteLine($"{_indent}}},");
@@ -250,7 +263,7 @@ public class EntityQueryCodeGenerator
             sw.WriteLine($"{_indent}Present = new ComponentType[] {{");
             foreach (var componentType in queryDesc.Present)
             {
-                var typeName = componentType.GetManagedType().FullName;
+                var typeName = ComponentTypeName(componentType);
                 if (componentType.AccessModeType.Equals(AccessMode.ReadWrite))
                 {
                     sw.WriteLine($"{_indent}{_indent}ComponentType.ReadWrite<{typeName}>(),");
@@ -267,7 +280,7 @@ public class EntityQueryCodeGenerator
         if (queryDesc.Options != EntityQueryOptions.Default)
         {
             sw.Write($"{_indent}Options = ");
-            var values = Enum.GetValues(typeof(EntityQueryOptions));
+            var values = System.Enum.GetValues(typeof(EntityQueryOptions));
             var on = values.Cast<EntityQueryOptions>()
                 .Distinct() // IncludeDisabled and IncludeDisabledEntities use the same bit. don't list it twice.
                 .Where(value => (queryDesc.Options & value) != 0)
