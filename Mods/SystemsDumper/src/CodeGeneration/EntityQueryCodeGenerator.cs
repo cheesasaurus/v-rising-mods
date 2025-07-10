@@ -1,9 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using cheesasaurus.VRisingMods.SystemsDumper.Models;
 using Cpp2IL.Core.Extensions;
 using Unity.Entities;
+using Unity.Entities.UniversalDelegates;
+using VRisingMods.Core.Utilities;
 using static Unity.Entities.ComponentType;
 
 namespace cheesasaurus.VRisingMods.SystemsDumper.CodeGeneration;
@@ -31,9 +35,8 @@ public class EntityQueryCodeGenerator
 
     private string ComponentTypeName(ComponentType componentType)
     {
-        // todo: generics like EntityAddRemoveUpdateEvents
-        var name = componentType.GetManagedType().FullName;
-        return name.Replace("+", ".");
+        var type = componentType.GetManagedType();
+        return CodeGenUtil.FullTypeCode(type);
     }
 
     /// <summary>
@@ -185,12 +188,14 @@ public class EntityQueryCodeGenerator
                 var typeName = ComponentTypeName(componentType);
                 if (componentType.AccessModeType.Equals(AccessMode.ReadWrite))
                 {
-                    sw.WriteLine($"{_indent}{_indent}ComponentType.ReadWrite<{typeName}>(),");
+                    sw.Write($"{_indent}{_indent}ComponentType.ReadWrite<{typeName}>(),");
                 }
                 else
                 {
-                    sw.WriteLine($"{_indent}{_indent}ComponentType.ReadOnly<{typeName}>(),");
+                    sw.Write($"{_indent}{_indent}ComponentType.ReadOnly<{typeName}>(),");
                 }
+                AppendCommentIfGeneric(sw, componentType);
+                sw.WriteLine();
             }
             sw.WriteLine($"{_indent}}},");
         }
@@ -204,12 +209,14 @@ public class EntityQueryCodeGenerator
                 var typeName = ComponentTypeName(componentType);
                 if (componentType.AccessModeType.Equals(AccessMode.ReadWrite))
                 {
-                    sw.WriteLine($"{_indent}{_indent}ComponentType.ReadWrite<{typeName}>(),");
+                    sw.Write($"{_indent}{_indent}ComponentType.ReadWrite<{typeName}>(),");
                 }
                 else
                 {
-                    sw.WriteLine($"{_indent}{_indent}ComponentType.ReadOnly<{typeName}>(),");
+                    sw.Write($"{_indent}{_indent}ComponentType.ReadOnly<{typeName}>(),");
                 }
+                AppendCommentIfGeneric(sw, componentType);
+                sw.WriteLine();
             }
             sw.WriteLine($"{_indent}}},");
         }
@@ -221,7 +228,9 @@ public class EntityQueryCodeGenerator
             foreach (var componentType in queryDesc.None)
             {
                 var typeName = ComponentTypeName(componentType);
-                sw.WriteLine($"{_indent}{_indent}ComponentType.ReadOnly<{typeName}>(),");
+                sw.Write($"{_indent}{_indent}ComponentType.ReadOnly<{typeName}>(),");
+                AppendCommentIfGeneric(sw, componentType);
+                sw.WriteLine();
             }
             sw.WriteLine($"{_indent}}},");
         }
@@ -235,12 +244,14 @@ public class EntityQueryCodeGenerator
                 var typeName = ComponentTypeName(componentType);
                 if (componentType.AccessModeType.Equals(AccessMode.ReadWrite))
                 {
-                    sw.WriteLine($"{_indent}{_indent}ComponentType.ReadWrite<{typeName}>(),");
+                    sw.Write($"{_indent}{_indent}ComponentType.ReadWrite<{typeName}>(),");
                 }
                 else
                 {
-                    sw.WriteLine($"{_indent}{_indent}ComponentType.ReadOnly<{typeName}>(),");
+                    sw.Write($"{_indent}{_indent}ComponentType.ReadOnly<{typeName}>(),");
                 }
+                AppendCommentIfGeneric(sw, componentType);
+                sw.WriteLine();
             }
             sw.WriteLine($"{_indent}}},");
         }
@@ -252,8 +263,10 @@ public class EntityQueryCodeGenerator
             foreach (var componentType in queryDesc.Absent)
             {
                 var typeName = ComponentTypeName(componentType);
-                sw.WriteLine($"{_indent}{_indent}ComponentType.Exclude<{typeName}>(),");
-            }
+                sw.Write($"{_indent}{_indent}ComponentType.Exclude<{typeName}>(),");
+                AppendCommentIfGeneric(sw, componentType);
+                sw.WriteLine();
+            }            
             sw.WriteLine($"{_indent}}},");
         }
 
@@ -266,12 +279,14 @@ public class EntityQueryCodeGenerator
                 var typeName = ComponentTypeName(componentType);
                 if (componentType.AccessModeType.Equals(AccessMode.ReadWrite))
                 {
-                    sw.WriteLine($"{_indent}{_indent}ComponentType.ReadWrite<{typeName}>(),");
+                    sw.Write($"{_indent}{_indent}ComponentType.ReadWrite<{typeName}>(),");
                 }
                 else
                 {
-                    sw.WriteLine($"{_indent}{_indent}ComponentType.ReadOnly<{typeName}>(),");
+                    sw.Write($"{_indent}{_indent}ComponentType.ReadOnly<{typeName}>(),");
                 }
+                AppendCommentIfGeneric(sw, componentType);
+                sw.WriteLine();
             }
             sw.WriteLine($"{_indent}}},");
         }
@@ -292,6 +307,15 @@ public class EntityQueryCodeGenerator
 
         sw.Write("}");
         return sw.ToString();
+    }
+
+    private void AppendCommentIfGeneric(StringWriter sw, ComponentType componentType)
+    {
+        var type = componentType.GetManagedType();
+        if (type.IsGenericType)
+        {
+            sw.Write($" // {type.FullName}");
+        }
     }
 
 }

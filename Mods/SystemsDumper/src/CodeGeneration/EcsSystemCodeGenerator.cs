@@ -105,11 +105,11 @@ class EcsSystemCodeGenerator
         return namespaces;
     }
 
-    private string ShortTypeName(Il2CppSystem.Type type)
+    private string ShortTypeCode(Il2CppSystem.Type type)
     {
         if (type.Namespace == "Unity.Entities")
         {
-            return type.Name;
+            return CodeGenUtil.TypeCode(type);
         }
 
         // Only shorten if its a unity type. This makes it clear what's standard, and what's from the game.
@@ -119,8 +119,8 @@ class EcsSystemCodeGenerator
         // }
 
         // todo: generics like EntityAddRemoveUpdateEvents
-        var name = type.FullName;
-        return name.Replace("+", ".");
+
+        return CodeGenUtil.FullTypeCode(type);
     }
 
     public string GenerateNamespaceLine()
@@ -142,7 +142,7 @@ class EcsSystemCodeGenerator
 
         foreach (var attr in _system.Attributes.UpdateInGroup)
         {
-            sw.Write($"[UpdateInGroup(typeof({ShortTypeName(attr.GroupType)})");
+            sw.Write($"[UpdateInGroup(typeof({ShortTypeCode(attr.GroupType)})");
             if (attr.OrderFirst)
             {
                 sw.Write(", OrderFirst = true");
@@ -156,22 +156,22 @@ class EcsSystemCodeGenerator
 
         foreach (var attr in _system.Attributes.UpdateBefore)
         {
-            sw.WriteLine($"[UpdateBefore(typeof({ShortTypeName(attr.SystemType)}))]");
+            sw.WriteLine($"[UpdateBefore(typeof({ShortTypeCode(attr.SystemType)}))]");
         }
 
         foreach (var attr in _system.Attributes.UpdateAfter)
         {
-            sw.WriteLine($"[UpdateAfter(typeof({ShortTypeName(attr.SystemType)}))]");
+            sw.WriteLine($"[UpdateAfter(typeof({ShortTypeCode(attr.SystemType)}))]");
         }
 
         foreach (var attr in _system.Attributes.CreateBefore)
         {
-            sw.WriteLine($"[CreateBefore(typeof({ShortTypeName(attr.SystemType)}))]");
+            sw.WriteLine($"[CreateBefore(typeof({ShortTypeCode(attr.SystemType)}))]");
         }
 
         foreach (var attr in _system.Attributes.CreateAfter)
         {
-            sw.WriteLine($"[CreateAfter(typeof({ShortTypeName(attr.SystemType)}))]");
+            sw.WriteLine($"[CreateAfter(typeof({ShortTypeCode(attr.SystemType)}))]");
         }
 
         foreach (var attr in _system.Attributes.DisableAutoCreation)
@@ -241,12 +241,12 @@ class EcsSystemCodeGenerator
 
         if (_type.IsClass)
         {
-            typeNames.Add(ShortTypeName(_type.BaseType));
+            typeNames.Add(ShortTypeCode(_type.BaseType));
         }
 
         foreach (var interfaceType in _type.GetInterfaces())
         {
-            typeNames.Add(ShortTypeName(interfaceType));
+            typeNames.Add(ShortTypeCode(interfaceType));
         }
 
         return string.Join(", ", typeNames);
