@@ -41,7 +41,8 @@ public class DumpService
     public string DumpSystemsEntityQueries()
     {
         var dir = "Dump/Systems";
-        var dumper = new EntityQueriesDumper(spacesPerIndent: 4);
+        var queryCodeGen = new EntityQueryCodeGenerator(spacesPerIndent: 4, newLine: "\n");
+        var dumper = new EntityQueriesDumper(queryCodeGen);
 
         foreach (var world in World.s_AllWorlds)
         {
