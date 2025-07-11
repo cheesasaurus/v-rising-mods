@@ -112,10 +112,10 @@ public class EcsSystemMetadataService
             systemInstance = GetExistingSystemUnmanaged(world, systemTypeIL, systemHandle);
         }
 
-        return FindNamedEntityQueriesFromSystem(systemTypeIL, systemInstance);
+        return FindNamedEntityQueriesFromSystem(world, systemTypeIL, systemInstance);
     }
 
-    private IEnumerable<NamedEntityQuery> FindNamedEntityQueriesFromSystem(Type type, object system)
+    unsafe private IEnumerable<NamedEntityQuery> FindNamedEntityQueriesFromSystem(World world, Type type, object system)
     {
         var queries = new List<NamedEntityQuery>();
 
@@ -126,6 +126,11 @@ public class EcsSystemMetadataService
         foreach (var field in fields)
         {
             var query = (EntityQuery)field.GetValue(system);
+            // if (type.IsValueType)
+            // {
+            //     LogUtil.LogInfo($"is query null: {&query is null}");
+            //     LogUtil.LogInfo($"IsQueryValid: {world.EntityManager.IsQueryValid(query)}");
+            // }
             var namedQuery = new NamedEntityQuery(field.Name, query);
             queries.Add(namedQuery);
         }
