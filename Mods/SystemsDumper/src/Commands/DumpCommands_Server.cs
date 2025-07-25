@@ -1,6 +1,8 @@
+using System;
 using cheesasaurus.VRisingMods.SystemsDumper.CodeGeneration;
 using cheesasaurus.VRisingMods.SystemsDumper.Models;
 using Gameplay.Scripting.Systems;
+using Il2CppInterop.Runtime;
 using ProjectM;
 using ProjectM.Gameplay.Systems;
 using Unity.Collections.LowLevel.Unsafe;
@@ -60,12 +62,26 @@ internal static class DumpCommands_Server
 
         // var systemRef = world.Unmanaged.GetUnsafeSystemRef<DealDamageSystem>(systemHandle);
 
-        var systemPtr = (DealDamageSystem*)systemState->m_SystemPtr;
-        var q = systemPtr->_Query;
+
+        var type = typeof(DealDamageSystem);
+
+        //var systemPtr = (DealDamageSystem*)systemState->m_SystemPtr;
+        var systemPtr = systemState->m_SystemPtr; 
+        dynamic system = UnsafeUtil.DynamicDereference(systemPtr, type);
+
+
+        // var system = *systemPtr;
+        // var q = systemPtr->_Query;
+        var q = system._Query;
         var na = q.IsCacheValid;
 
         var nq = new NamedEntityQuery("_Query", q);
         LogUtil.LogDebug(queryCodeGen.Snippet_CreateQueryFrom_QueryDesc(nq));
+
+
+
+        //
+
 
 
         ctx.Reply($"Did the debug thing");

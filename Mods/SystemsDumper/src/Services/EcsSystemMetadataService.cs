@@ -200,11 +200,16 @@ public class EcsSystemMetadataService
         return (ComponentSystemBase)generic.Invoke(world, new object[] { });
     }
 
-    private object GetExistingSystemUnmanaged(World world, Type systemType, SystemHandle systemHandle)
+    private unsafe object GetExistingSystemUnmanaged(World world, Type systemType, SystemHandle systemHandle)
     {
         MethodInfo method = world.Unmanaged.GetType().GetMethod("GetUnsafeSystemRef");
         MethodInfo generic = method.MakeGenericMethod(systemType);
         return generic.Invoke(world.Unmanaged, new object[] { systemHandle });
+
+        // var systemState = world.Unmanaged.ResolveSystemState(systemHandle);
+        // var systemPtr = systemState->m_SystemPtr;
+        // var system = *(int*)systemPtr;
+        // return Convert.ChangeType(system, systemType);
     }
 
 }
