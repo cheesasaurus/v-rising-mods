@@ -1,8 +1,11 @@
 using cheesasaurus.VRisingMods.SystemsDumper.CodeGeneration;
 using cheesasaurus.VRisingMods.SystemsDumper.Models;
 using Gameplay.Scripting.Systems;
+using ProjectM;
 using ProjectM.Gameplay.Systems;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
+using Unity.Entities.UniversalDelegates;
 using VampireCommandFramework;
 using VRisingMods.Core.Utilities;
 
@@ -40,6 +43,7 @@ internal static class DumpCommands_Server
 
         for (var i = 0; i < queries.Length; i++)
         {
+            continue;
             var query = queries[i]; // does not crash
             var _ = query.IsCacheValid; // magically prevents crashes?
             var queryDesc = query.GetEntityQueryDesc(); // does not crash
@@ -48,7 +52,22 @@ internal static class DumpCommands_Server
 
             LogUtil.LogDebug(queryCodeGen.Snippet_CreateQueryFrom_QueryDesc(namedQuery));
         }
-        
+
+        // seems to start at __query_abc123_0
+        // then 1,2,3,...
+        // after those are done, goes on to the named queries, in no apparent order
+        // (and I'm not sure the 0,1,2,3 thing is consistent)
+
+        // var systemRef = world.Unmanaged.GetUnsafeSystemRef<DealDamageSystem>(systemHandle);
+
+        var systemPtr = (DealDamageSystem*)systemState->m_SystemPtr;
+        var q = systemPtr->_Query;
+        var na = q.IsCacheValid;
+
+        var nq = new NamedEntityQuery("_Query", q);
+        LogUtil.LogDebug(queryCodeGen.Snippet_CreateQueryFrom_QueryDesc(nq));
+
+
         ctx.Reply($"Did the debug thing");
     }
     
