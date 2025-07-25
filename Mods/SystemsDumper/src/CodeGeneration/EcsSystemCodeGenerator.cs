@@ -264,12 +264,6 @@ class EcsSystemCodeGenerator
 
     public string GenerateEntityQueriesExampleInitializationLines()
     {
-        if (_type.IsValueType)
-        {
-            // todo: queries for unmanaged systems
-            return $"// unmanaged system, skipped generating example queries";
-        }
-
         var sw = NewStringWriter();
         sw.WriteLine("public void Example_InitEntityQueries(EntityManager entityManager)");
         sw.WriteLine("{");
@@ -292,7 +286,6 @@ class EcsSystemCodeGenerator
         {
             // Simply calling IsCacheValid prevents all the crashes. from managed systems.
             // (IsCacheValid does not need to be true to access the queries.)
-            // Calling IsCacheValid from an unmanaged system causes a crash.
             var _ = namedQuery.Query.IsCacheValid;
 
             sw.Write($"{namedQuery.Name} = entityManager.CreateEntityQuery(");

@@ -126,11 +126,6 @@ public class EcsSystemMetadataService
         foreach (var field in fields)
         {
             var query = (EntityQuery)field.GetValue(system);
-            // if (type.IsValueType)
-            // {
-            //     LogUtil.LogInfo($"is query null: {&query is null}");
-            //     LogUtil.LogInfo($"IsQueryValid: {world.EntityManager.IsQueryValid(query)}");
-            // }
             var namedQuery = new NamedEntityQuery(field.Name, query);
             queries.Add(namedQuery);
         }
@@ -202,14 +197,8 @@ public class EcsSystemMetadataService
 
     private unsafe object GetExistingSystemUnmanaged(World world, Type systemType, SystemHandle systemHandle)
     {
-        MethodInfo method = world.Unmanaged.GetType().GetMethod("GetUnsafeSystemRef");
-        MethodInfo generic = method.MakeGenericMethod(systemType);
-        return generic.Invoke(world.Unmanaged, new object[] { systemHandle });
-
-        // var systemState = world.Unmanaged.ResolveSystemState(systemHandle);
-        // var systemPtr = systemState->m_SystemPtr;
-        // var system = *(int*)systemPtr;
-        // return Convert.ChangeType(system, systemType);
+        var systemState = world.Unmanaged.ResolveSystemState(systemHandle);
+        return UnsafeUtil.DynamicDereference(systemState->m_SystemPtr, systemType);
     }
 
 }

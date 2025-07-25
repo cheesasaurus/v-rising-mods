@@ -175,8 +175,6 @@ public class EntityQueryCodeGenerator
     {
         var queryDesc = namedQuery.Query.GetEntityQueryDesc();
 
-        // todo: try query.GetQueryTypes instead of using querydesc.
-
         var sw = NewStringWriter();
         sw.WriteLine($"new EntityQueryDesc()");
         sw.WriteLine("{");
