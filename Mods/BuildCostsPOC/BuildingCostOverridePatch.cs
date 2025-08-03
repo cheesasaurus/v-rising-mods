@@ -13,7 +13,7 @@ namespace cheesasaurus.VRisingMods.BuildCostsPOC;
 /// 
 /// placing a palisade door costs an extra 1 power core
 /// </remarks>
-[HarmonyPatch]
+//[HarmonyPatch]
 public class BuildingCostOverridePatch
 {
     private static readonly Dictionary<PrefabGUID, List<(PrefabGUID, int)>> CustomCostMap = new()
