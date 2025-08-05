@@ -1,0 +1,143 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using HarmonyLib;
+using ProjectM;
+using ProjectM.CastleBuilding.Placement;
+using Stunlock.Core;
+using Unity.Collections;
+using Unity.Entities;
+using VRisingMods.Core.Utilities;
+
+namespace cheesasaurus.VRisingMods.BuildCostsPOC.Patches;
+
+
+[HarmonyPatch]
+public class PrefabInitializationPatches
+{
+
+    [HarmonyPatch(typeof(GameDataSystem), nameof(GameDataSystem.OnUpdate))]
+    [HarmonyPostfix]
+    public static void RegisterBlueprints_Postfix(GameDataSystem __instance)
+    {
+        LogUtil.LogWarning($"Modifying blueprints");
+
+        var _world = WorldUtility.FindServerWorld();
+        var _entityManager = _world.EntityManager;
+        var _gameDataSystem = _world.GetExistingSystemManaged<GameDataSystem>();
+
+        var _prefabCollectionSystem = _world.GetExistingSystemManaged<PrefabCollectionSystem>();
+        var _prefabLookupMap = _prefabCollectionSystem._PrefabLookupMap;
+        
+        var _serverGameSettingsSystem = _world.GetExistingSystemManaged<ServerGameSettingsSystem>();
+        var _serverGameSettings = _serverGameSettingsSystem._Settings;
+
+        var prefabGuidHash = -1259825508;
+        var prefabGuid = new PrefabGUID(prefabGuidHash);
+        if (!_gameDataSystem.BlueprintHashLookupMap.TryGetValue(prefabGuid, out var blueprintData))
+        {
+            return;
+        }
+
+        var newConfiguredCosts = new List<ConfiguredCost>()
+        {
+            new("Item_Ingredient_Wood_Standard", 23),
+            new("Item_Ingredient_Plant_PlantFiber", 42),
+        };
+
+        if (!TryParseCosts(_prefabLookupMap, _gameDataSystem, newConfiguredCosts, out var newCosts))
+        {
+            return;
+        }
+
+        var costFactor = _serverGameSettings.BuildCostModifier;
+        newCosts = newCosts.Select(c => c * costFactor).ToList();
+
+        if (!TryModifyBuildingCosts(_entityManager, blueprintData.Entity, newCosts))
+        {
+            return;
+        }
+
+        var sb = new StringBuilder();
+        sb.AppendLine($"Changed cost of blueprint {_prefabLookupMap.GetName(prefabGuid)} to:");
+        foreach (var cost in newCosts)
+        {
+            sb.AppendLine($"  {_prefabLookupMap.GetName(cost.PrefabGUID)} x{cost.Amount}");
+        }
+        LogUtil.LogWarning(sb.ToString());
+    }
+
+    private class ConfiguredCost
+    {
+        public ConfiguredCost(string prefabName, int amount)
+        {
+            PrefabName = prefabName;
+            Amount = amount;
+        }
+
+        public string PrefabName { get; set; }
+        public int Amount { get; set; }
+    }
+
+    private class Cost
+    {
+        public PrefabGUID PrefabGUID { get; set; }
+        public int Amount { get; set; }
+
+        public static Cost operator *(Cost cost, double factor)
+        {
+            return new Cost()
+            {
+                PrefabGUID = cost.PrefabGUID,
+                Amount = Convert.ToInt32(cost.Amount * factor),
+            };
+        }
+    }
+
+    private static bool TryParseCosts(PrefabLookupMap _prefabLookupMap, GameDataSystem _gameDataSystem, List<ConfiguredCost> configuredCosts, out List<Cost> costs)
+    {
+        costs = [];
+        foreach (var configuredCost in configuredCosts)
+        {
+            if (!_prefabLookupMap.TryGetPrefabGuidWithName(configuredCost.PrefabName, out var prefabGuid))
+            {
+                LogUtil.LogWarning($"Failed to find prefab named '{configuredCost.PrefabName}'");
+                return false;
+            }
+
+            if (!_gameDataSystem.ItemHashLookupMap.ContainsKey(prefabGuid))
+            {
+                LogUtil.LogWarning($"'{configuredCost.PrefabName}' is not an item, and thus cannot be used as a cost!");
+                return false;
+            }
+
+            costs.Add(new Cost
+            {
+                PrefabGUID = prefabGuid,
+                Amount = configuredCost.Amount,
+            });
+        }
+        return true;
+    }
+
+    private static bool TryModifyBuildingCosts(EntityManager _entityManager, Entity blueprintEntity, List<Cost> newCosts)
+    {
+        if (!_entityManager.TryGetBuffer<BlueprintRequirementBuffer>(blueprintEntity, out var blueprintRequirements))
+        {
+            return false;
+        }
+
+        blueprintRequirements.Clear();
+        foreach (var cost in newCosts)
+        {
+            blueprintRequirements.Add(new BlueprintRequirementBuffer
+            {
+                PrefabGUID = cost.PrefabGUID,
+                Amount = cost.Amount,
+            });
+        }
+
+        return true;
+    }
+}
