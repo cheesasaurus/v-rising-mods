@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using cheesasaurus.VRisingMods.EventScheduler.Models;
 using VRisingMods.Core.Config;
+using VRisingMods.Core.Utilities;
 
 namespace cheesasaurus.VRisingMods.EventScheduler.Config;
 
@@ -17,14 +19,34 @@ public class EventsConfig : AbstractJsonConfig
 
     }
 
+    public bool TryGetScheduledEvent(string eventId, out ScheduledEvent scheduledEvent, bool caseInsensitive = true)
+    {
+        if (caseInsensitive)
+        {
+            scheduledEvent = ScheduledEvents
+                .Where(ev => ev.EventId.ToLowerInvariant().Equals(eventId.ToLowerInvariant()))
+                .FirstOrDefault();
+        }
+        else
+        {
+            scheduledEvent = ScheduledEvents
+                .Where(ev => ev.EventId.Equals(eventId))
+                .FirstOrDefault();
+        }
+        
+        return scheduledEvent is not null;
+    }
+
     public override string ToJson()
     {
-        var options = new JsonSerializerOptions {
+        var options = new JsonSerializerOptions
+        {
             WriteIndented = true,
         };
 
         var eventsRaw = new List<ScheduledEventRaw>();
-        foreach (var scheduledEvent in ScheduledEvents) {
+        foreach (var scheduledEvent in ScheduledEvents)
+        {
             eventsRaw.Add(scheduledEvent._raw);
         }
 

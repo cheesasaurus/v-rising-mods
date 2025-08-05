@@ -7,6 +7,7 @@ Enables server operators to schedule recurring Events.
 
 - Install [BepInEx](https://v-rising.thunderstore.io/package/BepInEx/BepInExPack_V_Rising/).
 - Install [HookDOTS](https://thunderstore.io/c/v-rising/p/cheesasaurus/HookDOTS_API/).
+- Install [VampireCommandFramework](https://thunderstore.io/c/v-rising/p/deca/VampireCommandFramework/).
 - Extract `EventScheduler.dll` into `(VRising folder)/BepInEx/plugins`.
 
 
@@ -60,7 +61,7 @@ Example:
                 "overdueTolerance": "1 minute",
             },
             "chatCommands": [
-                ".give all 9 wood",
+                ".giveToAll wood 9",
             ]
         },
 
@@ -91,6 +92,10 @@ examples:
 - `1 second`
 
 
+## Chat commands
+
+- `.testRunEvent "Hourly lumber gift"`
+  - Do an immediate test run of the event with id "Hourly lumber gift"
 
 
 ## Support

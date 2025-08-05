@@ -40,7 +40,7 @@
                 "overdueTolerance": "1 minute",
             },
             "chatCommands": [
-                ".give all 9 wood",
+                ".giveToAll wood 9",
             ]
         },
 

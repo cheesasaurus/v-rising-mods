@@ -14,7 +14,8 @@ public class EventRunner {
     private IEventHistoryRepository EventHistory;
     private EventsConfig EventsConfig;
 
-    private Dictionary<string, DateTime> _nextRunTimes = new();
+    private Dictionary<string, DateTime> _nextRunTimes = [];
+    private Queue<ScheduledEvent> _testRunQueue = [];
 
     public EventRunner(EventsConfig eventsConfig, IEventHistoryRepository eventHistory)
     {
@@ -24,9 +25,24 @@ public class EventRunner {
 
     public void OnBeforeChatMessageSystemUpdates()
     {
-        foreach (var scheduledEvent in EventsConfig.ScheduledEvents) {
+        while (_testRunQueue.TryDequeue(out var testRunEvent))
+        {
+            LogUtil.LogMessage($"{DateTime.Now}: Doing a test run of the event {testRunEvent.EventId}");
+            try
+            {
+                SpawnChatCommands(testRunEvent);
+            }
+            catch (Exception ex)
+            {
+                LogUtil.LogError(ex);
+            }            
+        }
+        
+        foreach (var scheduledEvent in EventsConfig.ScheduledEvents)
+        {
             var nextRun = GetOrDetermineNextRun(scheduledEvent);
-            if (nextRun <= DateTime.Now) {
+            if (nextRun <= DateTime.Now)
+            {
                 var overdueCutoff = nextRun + scheduledEvent.Schedule.OverdueTolerance;
                 if (overdueCutoff < DateTime.Now)
                 {
@@ -55,6 +71,11 @@ public class EventRunner {
     public void OnAfterChatMessageSystemUpdates()
     {
         TryRestoreExecutingUserPrivileges();
+    }
+
+    public void PrepareTestRun(ScheduledEvent scheduledEvent)
+    {
+        _testRunQueue.Enqueue(scheduledEvent);
     }
 
     private void SpawnChatCommands(ScheduledEvent scheduledEvent)
