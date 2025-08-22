@@ -90,7 +90,7 @@ public static class Core
 
         _eventHistory = new EventHistoryRepository_JSON(MyPluginInfo.PLUGIN_GUID, "EventHistory.json");
         _eventHistory.TryLoad();
-        EventRunner = new EventRunner(EventsConfig, _eventHistory);
+        EventRunner = new EventRunner(_log, EventsConfig, _eventHistory);
         Hooks.BeforeChatMessageSystemUpdates += RunBeforeChatMessageSystemUpdates;
         Hooks.AfterChatMessageSystemUpdates += RunAfterChatMessageSystemUpdates;
         Hooks.BeforeWorldSave += Save;

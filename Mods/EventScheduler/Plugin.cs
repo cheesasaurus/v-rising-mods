@@ -24,20 +24,29 @@ public class Plugin : BasePlugin
         _hookDOTS = new HookDOTS.API.HookDOTS(MyPluginInfo.PLUGIN_GUID, Log);
         _hookDOTS.RegisterAnnotatedHooks();
 
-        Core.Initialize(Log);
-
         CommandRegistry.RegisterAll();
+
+        Hooks.EarlyUpdateGroup_Updated += OnEarlyUpdate;
 
         Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
     }
 
     public override bool Unload()
     {
+        Hooks.EarlyUpdateGroup_Updated -= OnEarlyUpdate;
         CommandRegistry.UnregisterAssembly();
         Core.Dispose();
         _hookDOTS?.Dispose();
         _harmony?.UnpatchSelf();
         return true;
+    }
+
+    public void OnEarlyUpdate()
+    {
+        if (!Core.IsInitialized && WorldUtil.IsServerInitialized)
+        {
+            Core.Initialize(Log);
+        }
     }
     
 }

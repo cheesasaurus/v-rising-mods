@@ -10,6 +10,7 @@ public static class Hooks
 {
     public static event Action BeforeChatMessageSystemUpdates;
     public static event Action AfterChatMessageSystemUpdates;
+    public static event Action EarlyUpdateGroup_Updated;
     public static event Action BeforeWorldSave;
 
     [EcsSystemUpdatePrefix(typeof(ChatMessageSystem), onlyWhenSystemRuns: false)]
@@ -22,6 +23,12 @@ public static class Hooks
     public static void ChatMessageSystem_Postfix()
     {
         AfterChatMessageSystemUpdates?.Invoke();
+    }
+
+    [EcsSystemUpdatePostfix(typeof(EarlyUpdateGroup), onlyWhenSystemRuns: false)]
+    public static void EarlyUpdateGroup_Postfix()
+    {
+        EarlyUpdateGroup_Updated?.Invoke();
     }
 
     [HarmonyPatch(typeof(TriggerPersistenceSaveSystem), nameof(TriggerPersistenceSaveSystem.TriggerSave))]

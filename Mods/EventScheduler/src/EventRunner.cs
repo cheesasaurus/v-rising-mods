@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using BepInEx.Logging;
 using cheesasaurus.VRisingMods.EventScheduler.Config;
 using cheesasaurus.VRisingMods.EventScheduler.Models;
 using cheesasaurus.VRisingMods.EventScheduler.Repositories;
+using ProjectM;
 using VRisingMods.Core.Chat;
 using VRisingMods.Core.Player;
 using VRisingMods.Core.Utilities;
@@ -11,34 +13,43 @@ namespace cheesasaurus.VRisingMods.EventScheduler;
 
 
 public class EventRunner {
-    private IEventHistoryRepository EventHistory;
-    private EventsConfig EventsConfig;
+    private readonly ManualLogSource _log;
+    private readonly IEventHistoryRepository _eventHistory;
+    private readonly EventsConfig _eventsConfig;
 
-    private Dictionary<string, DateTime> _nextRunTimes = [];
-    private Queue<ScheduledEvent> _testRunQueue = [];
+    private readonly Dictionary<string, DateTime> _nextRunTimes = [];
+    private readonly Queue<ScheduledEvent> _testRunQueue = [];
 
-    public EventRunner(EventsConfig eventsConfig, IEventHistoryRepository eventHistory)
+    private readonly ChatMessageSystem _chatMessageSystem;
+    private bool _wasChatMessageSystemEnabled = false;
+
+    public EventRunner(ManualLogSource log, EventsConfig eventsConfig, IEventHistoryRepository eventHistory)
     {
-        EventsConfig = eventsConfig;
-        EventHistory = eventHistory;
+        _log = log;
+        _eventsConfig = eventsConfig;
+        _eventHistory = eventHistory;
+        _chatMessageSystem = WorldUtil.Server.GetExistingSystemManaged<ChatMessageSystem>();
     }
 
     public void OnBeforeChatMessageSystemUpdates()
     {
+        _wasChatMessageSystemEnabled = _chatMessageSystem.Enabled;
+        bool didSpawnChatCommands = false;
+
         while (_testRunQueue.TryDequeue(out var testRunEvent))
         {
-            LogUtil.LogMessage($"{DateTime.Now}: Doing a test run of the event {testRunEvent.EventId}");
+            _log.LogMessage($"{DateTime.Now}: Doing a test run of the event {testRunEvent.EventId}");
             try
             {
-                SpawnChatCommands(testRunEvent);
+                didSpawnChatCommands |= TrySpawnChatCommands(testRunEvent);
             }
             catch (Exception ex)
             {
-                LogUtil.LogError(ex);
-            }            
+                _log.LogError(ex);
+            }
         }
-        
-        foreach (var scheduledEvent in EventsConfig.ScheduledEvents)
+
+        foreach (var scheduledEvent in _eventsConfig.ScheduledEvents)
         {
             var nextRun = GetOrDetermineNextRun(scheduledEvent);
             if (nextRun <= DateTime.Now)
@@ -46,30 +57,37 @@ public class EventRunner {
                 var overdueCutoff = nextRun + scheduledEvent.Schedule.OverdueTolerance;
                 if (overdueCutoff < DateTime.Now)
                 {
-                    LogUtil.LogWarning($"{DateTime.Now}: Skipping overdue event {scheduledEvent.EventId}\n  scheduled time : {nextRun}\n  overdue cutoff:{overdueCutoff}");
+                    _log.LogWarning($"{DateTime.Now}: Skipping overdue event {scheduledEvent.EventId}\n  scheduled time : {nextRun}\n  overdue cutoff:{overdueCutoff}");
                 }
                 else
                 {
-                    LogUtil.LogMessage($"{DateTime.Now}: Running the event {scheduledEvent.EventId}");
-                    EventHistory.SetLastRun(scheduledEvent.EventId, nextRun);
+                    _log.LogMessage($"{DateTime.Now}: Running the event {scheduledEvent.EventId}");
+                    _eventHistory.SetLastRun(scheduledEvent.EventId, nextRun);
                     try
                     {
-                        SpawnChatCommands(scheduledEvent);
+                        didSpawnChatCommands |= TrySpawnChatCommands(scheduledEvent);
                     }
                     catch (Exception ex)
                     {
-                        LogUtil.LogError(ex);
+                        _log.LogError(ex);
                     }
                 }
                 var nextRunAfterThis = DetermineNextRun(scheduledEvent);
-                LogUtil.LogDebug($"Setting next run: {nextRunAfterThis}");
+                _log.LogDebug($"Setting next run: {nextRunAfterThis}");
                 _nextRunTimes[scheduledEvent.EventId] = nextRunAfterThis;
             }
+        }
+
+        if (didSpawnChatCommands)
+        {
+            _chatMessageSystem.Enabled = true;
+            TryElevateExecutingUserPrivileges();
         }
     }
 
     public void OnAfterChatMessageSystemUpdates()
     {
+        _chatMessageSystem.Enabled = _wasChatMessageSystemEnabled;
         TryRestoreExecutingUserPrivileges();
     }
 
@@ -78,18 +96,18 @@ public class EventRunner {
         _testRunQueue.Enqueue(scheduledEvent);
     }
 
-    private void SpawnChatCommands(ScheduledEvent scheduledEvent)
+    private bool TrySpawnChatCommands(ScheduledEvent scheduledEvent)
     {
         if (!TryGetOrFindExecutingUser(out UserModel executingUser))
         {
-            LogUtil.LogError($"Could not run event {scheduledEvent.EventId}: there is no user with steamId {EventsConfig.ExecuterSteamId}");
-            return;
+            _log.LogError($"Could not run event {scheduledEvent.EventId}: there is no user with steamId {_eventsConfig.ExecuterSteamId}");
+            return false;
         }
-        TryElevateExecutingUserPrivileges();
         foreach (var message in scheduledEvent.ChatCommands)
         {
             ChatUtil.ForgeMessage(executingUser, message);
         }
+        return true;
     }
 
     private UserModel _executingUser;
@@ -101,7 +119,7 @@ public class EventRunner {
             return true;
         }
         
-        if (UserUtil.TryFindUserByPlatformId(EventsConfig.ExecuterSteamId, out userModel))
+        if (UserUtil.TryFindUserByPlatformId(_eventsConfig.ExecuterSteamId, out userModel))
         {
             _executingUser = userModel;
             return true;
@@ -165,7 +183,7 @@ public class EventRunner {
 
         // Keep in mind that the schedule might be edited after already running.
         // This is why we check that lastRun >= nextRun
-        var ran = EventHistory.TryGetLastRun(scheduledEvent.EventId, out var lastRun);
+        var ran = _eventHistory.TryGetLastRun(scheduledEvent.EventId, out var lastRun);
         if (ran && lastRun >= nextRun)
         {
             nextRun = AddTime(lastRun, schedule.Frequency);

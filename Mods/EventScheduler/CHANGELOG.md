@@ -1,3 +1,6 @@
+# 1.2.1
+- Potential fix for events not running when scheduled.
+
 # 1.2.0
 - Added command `.testRunEvent` to immediately do a test run of a specific scheduled event.
 
