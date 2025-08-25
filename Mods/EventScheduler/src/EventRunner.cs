@@ -182,15 +182,18 @@ public class EventRunner {
         var nextRun = schedule.FirstRun;
 
         // Keep in mind that the schedule might be edited after already running.
-        // This is why we check that lastRun >= nextRun
+        // In that case, lastRun could be less than firstRun.
         var ran = _eventHistory.TryGetLastRun(scheduledEvent.EventId, out var lastRun);
-        if (ran && lastRun >= nextRun)
+        bool ignoreLastRun = !ran || lastRun < schedule.FirstRun;
+
+        if (!ignoreLastRun)
         {
             nextRun = AddTime(lastRun, schedule.Frequency);
         }
 
+        bool alreadyRan(DateTime candidateRun) => !ignoreLastRun && candidateRun <= lastRun;
         var cursor = nextRun + scheduledEvent.Schedule.OverdueTolerance;
-        while (cursor < now)
+        while (cursor < now || alreadyRan(nextRun))
         {
             nextRun = AddTime(nextRun, scheduledEvent.Schedule.Frequency);
             cursor = nextRun + scheduledEvent.Schedule.OverdueTolerance;
