@@ -1,3 +1,6 @@
+# 1.2.2
+- Another potential fix for events not running when scheduled.
+
 # 1.2.1
 - Potential fix for events not running when scheduled.
 

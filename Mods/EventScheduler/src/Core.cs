@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 using BepInEx.Logging;
 using cheesasaurus.VRisingMods.EventScheduler.Config;
 using cheesasaurus.VRisingMods.EventScheduler.Repositories;
@@ -81,6 +82,7 @@ public static class Core
         try
         {
             EventsConfig = EventsConfig.Init(MyPluginInfo.PLUGIN_GUID, "events.jsonc");
+            DebugLogEventsConfig(EventsConfig);
         }
         catch (Exception ex)
         {
@@ -129,6 +131,20 @@ public static class Core
             return;
         }
         EventRunner?.OnAfterChatMessageSystemUpdates();
-    }    
+    }
+
+    private static void DebugLogEventsConfig(EventsConfig config)
+    {
+        var dtFormat = "yyyy-MM-dd HH:mm:ss zzz";
+
+        var sb = new StringBuilder();
+        sb.Append("Config parsed.");        
+        foreach (var ev in config.ScheduledEvents)
+        {
+            sb.AppendLine();
+            sb.Append($"  Interpreted first run `{ev._raw.schedule.firstRun}` as `{ev.Schedule.FirstRun.ToString(dtFormat)}` ({ev.EventId})");
+        }
+        _log.LogDebug(sb.ToString());
+    }
 
 }
