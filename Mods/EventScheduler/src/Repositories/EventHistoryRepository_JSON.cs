@@ -11,7 +11,7 @@ public class EventHistoryRepository_JSON : IEventHistoryRepository
 {
     private string FilePath;
 
-    private Dictionary<string, DateTime> _lastRunTime_byEventId = new();
+    private Dictionary<string, DateTimeOffset> _lastRunTime_byEventId = new();
 
     public EventHistoryRepository_JSON(string pluginGUID, string filename)
     {
@@ -21,12 +21,12 @@ public class EventHistoryRepository_JSON : IEventHistoryRepository
         FilePath = Path.Combine(dir, filename);
     }
 
-    public bool TryGetLastRun(string eventId, out DateTime lastRun)
+    public bool TryGetLastRun(string eventId, out DateTimeOffset lastRun)
     {
         return _lastRunTime_byEventId.TryGetValue(eventId, out lastRun);
     }
 
-    public void SetLastRun(string eventId, DateTime lastRun)
+    public void SetLastRun(string eventId, DateTimeOffset lastRun)
     {
         _lastRunTime_byEventId[eventId] = lastRun;
     }
@@ -42,7 +42,7 @@ public class EventHistoryRepository_JSON : IEventHistoryRepository
         try
         {
             var json = File.ReadAllText(FilePath);
-            _lastRunTime_byEventId = JsonSerializer.Deserialize<Dictionary<string, DateTime>>(json);
+            _lastRunTime_byEventId = JsonSerializer.Deserialize<Dictionary<string, DateTimeOffset>>(json);
             return true;
         }
         catch (Exception ex)

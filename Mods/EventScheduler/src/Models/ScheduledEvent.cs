@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using VRisingMods.Core.Utilities;
 
 namespace cheesasaurus.VRisingMods.EventScheduler.Models;
 
@@ -11,14 +10,15 @@ public class ScheduledEvent {
     public readonly List<string> ChatCommands;
     public readonly Schedule Schedule;
 
-    public ScheduledEvent(ScheduledEventRaw raw) {
+    public ScheduledEvent(ScheduledEventRaw raw)
+    {
         _raw = raw;
         EventId = raw.eventId;
         ChatCommands = raw.chatCommands;
         Schedule = new Schedule()
         {
             Frequency = new Frequency(raw.schedule.frequency),
-            FirstRun = DateTime.Parse(raw.schedule.firstRun),
+            FirstRun = DateTimeOffset.Parse(raw.schedule.firstRun),
             OverdueTolerance = Frequency.AsTimeSpan(raw.schedule.overdueTolerance),
         };
     }
@@ -28,7 +28,7 @@ public class ScheduledEvent {
 public class Schedule
 {
     public Frequency Frequency;
-    public DateTime FirstRun;
+    public DateTimeOffset FirstRun;
     public TimeSpan OverdueTolerance;
 }
 

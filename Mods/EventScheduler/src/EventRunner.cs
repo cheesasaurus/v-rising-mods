@@ -17,7 +17,7 @@ public class EventRunner {
     private readonly IEventHistoryRepository _eventHistory;
     private readonly EventsConfig _eventsConfig;
 
-    private readonly Dictionary<string, DateTime> _nextRunTimes = [];
+    private readonly Dictionary<string, DateTimeOffset> _nextRunTimes = [];
     private readonly Queue<ScheduledEvent> _testRunQueue = [];
 
     private readonly ChatMessageSystem _chatMessageSystem;
@@ -35,10 +35,11 @@ public class EventRunner {
     {
         _wasChatMessageSystemEnabled = _chatMessageSystem.Enabled;
         bool didSpawnChatCommands = false;
+        var now = DateTimeOffset.Now;
 
         while (_testRunQueue.TryDequeue(out var testRunEvent))
         {
-            _log.LogMessage($"{DateTime.Now}: Doing a test run of the event {testRunEvent.EventId}");
+            _log.LogMessage($"{now}: Doing a test run of the event {testRunEvent.EventId}");
             try
             {
                 didSpawnChatCommands |= TrySpawnChatCommands(testRunEvent);
@@ -52,16 +53,16 @@ public class EventRunner {
         foreach (var scheduledEvent in _eventsConfig.ScheduledEvents)
         {
             var nextRun = GetOrDetermineNextRun(scheduledEvent);
-            if (nextRun <= DateTime.Now)
+            if (nextRun <= now)
             {
                 var overdueCutoff = nextRun + scheduledEvent.Schedule.OverdueTolerance;
-                if (overdueCutoff < DateTime.Now)
+                if (overdueCutoff < now)
                 {
-                    _log.LogWarning($"{DateTime.Now}: Skipping overdue event {scheduledEvent.EventId}\n  scheduled time : {nextRun}\n  overdue cutoff:{overdueCutoff}");
+                    _log.LogWarning($"{now}: Skipping overdue event {scheduledEvent.EventId}\n  scheduled time : {nextRun}\n  overdue cutoff:{overdueCutoff}");
                 }
                 else
                 {
-                    _log.LogMessage($"{DateTime.Now}: Running the event {scheduledEvent.EventId}");
+                    _log.LogMessage($"{now}: Running the event {scheduledEvent.EventId}");
                     _eventHistory.SetLastRun(scheduledEvent.EventId, nextRun);
                     try
                     {
@@ -162,9 +163,9 @@ public class EventRunner {
         return true;
     }
 
-    private DateTime GetOrDetermineNextRun(ScheduledEvent scheduledEvent)
+    private DateTimeOffset GetOrDetermineNextRun(ScheduledEvent scheduledEvent)
     {
-        DateTime nextRun;
+        DateTimeOffset nextRun;
         if (_nextRunTimes.TryGetValue(scheduledEvent.EventId, out nextRun))
         {
             return nextRun;
@@ -175,9 +176,9 @@ public class EventRunner {
     }
 
 
-    private DateTime DetermineNextRun(ScheduledEvent scheduledEvent)
+    private DateTimeOffset DetermineNextRun(ScheduledEvent scheduledEvent)
     {
-        var now = DateTime.Now;
+        var now = DateTimeOffset.Now;
         var schedule = scheduledEvent.Schedule;
         var nextRun = schedule.FirstRun;
 
@@ -191,7 +192,7 @@ public class EventRunner {
             nextRun = AddTime(lastRun, schedule.Frequency);
         }
 
-        bool alreadyRan(DateTime candidateRun) => !ignoreLastRun && candidateRun <= lastRun;
+        bool alreadyRan(DateTimeOffset candidateRun) => !ignoreLastRun && candidateRun <= lastRun;
         var cursor = nextRun + scheduledEvent.Schedule.OverdueTolerance;
         while (cursor < now || alreadyRan(nextRun))
         {
@@ -201,7 +202,7 @@ public class EventRunner {
         return nextRun;
     }
 
-    private static DateTime AddTime(DateTime dt, Frequency frequency)
+    private static DateTimeOffset AddTime(DateTimeOffset dt, Frequency frequency)
     {
         switch (frequency.Unit)
         {
